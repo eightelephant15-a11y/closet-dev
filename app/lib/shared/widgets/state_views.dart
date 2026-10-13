@@ -100,3 +100,23 @@ class PageBody extends StatelessWidget {
     ),
   );
 }
+
+/// A column that is centred when it fits and scrolls when it does not (large text, small phones).
+class CenteredScroll extends StatelessWidget {
+  const CenteredScroll({required this.children, super.key});
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, box) => SingleChildScrollView(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(minHeight: box.maxHeight),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: children,
+        ),
+      ),
+    ),
+  );
+}

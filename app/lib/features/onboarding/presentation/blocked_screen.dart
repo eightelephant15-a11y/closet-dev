@@ -12,8 +12,7 @@ class BlockedScreen extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     return Scaffold(
       body: PageBody(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: CenteredScroll(
           children: [
             ExcludeSemantics(
               child: Icon(

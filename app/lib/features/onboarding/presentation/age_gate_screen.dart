@@ -15,8 +15,7 @@ class AgeGateScreen extends ConsumerWidget {
     final ctl = ref.read(onboardingControllerProvider.notifier);
     return Scaffold(
       body: PageBody(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: CenteredScroll(
           children: [
             Text(
               l10n.ageTitle,

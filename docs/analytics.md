@@ -21,6 +21,7 @@ event is never emitted by the app flows.
 
 | Event | Fired when | Properties |
 |---|---|---|
+| `app_first_frame` | First frame drawn after launch (once per process) | `ms` (main() to first frame), `flavor`, `within_budget` (<= 2000 ms) |
 | `onboarding_started` | Onboarding state is created for a new user (after guest start or sign-in) | `variant` (`quiz_first`/`closet_first`) |
 | `welcome_viewed` | Welcome screen shown | none |
 | `guest_started` | "Try it first" tapped | none |

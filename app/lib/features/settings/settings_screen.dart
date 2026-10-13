@@ -8,6 +8,7 @@ import 'package:stylist/features/auth/domain/auth_provider.dart';
 import 'package:stylist/features/settings/account_actions.dart';
 import 'package:stylist/l10n/gen/app_localizations.dart';
 import 'package:stylist/shared/widgets/state_views.dart';
+import 'package:stylist/theme/tokens.dart';
 
 abstract final class SettingsRoutes {
   static const root = '/settings';
@@ -67,17 +68,23 @@ class SettingsScreen extends ConsumerWidget {
         child: ListView(
           children: [
             _Header(l10n.settingsAccount),
-            if (isGuest)
+            if (isGuest) ...[
               ListTile(
                 leading: const Icon(Icons.person_outline),
                 title: Text(l10n.settingsGuest),
                 subtitle: Text(l10n.settingsGuestBody),
-                trailing: FilledButton(
-                  onPressed: () => _upgrade(context, ref),
-                  child: Text(l10n.signInWithGoogle),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: Spacing.md),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: FilledButton(
+                    onPressed: () => _upgrade(context, ref),
+                    child: Text(l10n.signInWithGoogle),
+                  ),
                 ),
-              )
-            else
+              ),
+            ] else
               ListTile(
                 leading: const Icon(Icons.person_outline),
                 title: Text(l10n.settingsSignedInAs(session.user?.email ?? '')),

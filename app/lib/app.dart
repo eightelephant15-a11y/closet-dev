@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:stylist/core/analytics/abandonment_tracker.dart';
+import 'package:stylist/core/analytics/analytics_event.dart';
 import 'package:stylist/core/providers.dart';
+import 'package:stylist/core/startup/startup_timer.dart';
 import 'package:stylist/core/sync/sync_triggers.dart';
 import 'package:stylist/l10n/gen/app_localizations.dart';
 import 'package:stylist/router/app_router.dart';
@@ -26,8 +28,18 @@ class StylistApp extends ConsumerWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: AppLocalizations.supportedLocales,
-      builder: (context, child) => SyncTriggers(
-        child: AbandonmentTracker(child: child ?? const SizedBox.shrink()),
+      builder: (context, child) => StartupReporter(
+        onReport: (ms) => ref.read(analyticsServiceProvider).track(
+          AnalyticsEvent.appFirstFrame,
+          {
+            'ms': ms,
+            'flavor': config.flavor.name,
+            'within_budget': ms <= StartupTimer.budgetMs,
+          },
+        ),
+        child: SyncTriggers(
+          child: AbandonmentTracker(child: child ?? const SizedBox.shrink()),
+        ),
       ),
     );
   }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:stylist/core/analytics/analytics_event.dart';
 import 'package:stylist/core/analytics/analytics_service.dart';
+import 'package:stylist/core/startup/startup_timer.dart';
 import 'package:stylist/features/onboarding/domain/onboarding_state.dart';
 
 import 'flows/flows.dart';
@@ -34,6 +35,9 @@ void main() {
 
     // 1) Complete guest journey: everything in the funnel.
     final journey = Harness();
+    StartupTimer.instance
+      ..markMainEntered()
+      ..reportFirstFrame();
     await guestJourney(tester, journey);
     collect(journey.analytics);
     await tester.pumpWidget(const SizedBox());

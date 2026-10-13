@@ -6,8 +6,10 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:stylist/app.dart';
 import 'package:stylist/core/app_config.dart';
 import 'package:stylist/core/providers.dart';
+import 'package:stylist/core/startup/startup_timer.dart';
 
 Future<void> bootstrap(Flavor flavor) async {
+  StartupTimer.instance.markMainEntered();
   WidgetsFlutterBinding.ensureInitialized();
   final config = AppConfig.forFlavor(flavor);
   if (!config.useMock && !config.useDevAuth) {
@@ -28,14 +30,21 @@ Future<void> bootstrap(Flavor flavor) async {
   );
   if (config.sentryDsn.isEmpty) {
     runApp(app);
+    StartupTimer.instance.watchFirstFrame();
     return;
   }
   // Crash reporting: no PII, errors and slow-start traces only.
-  await SentryFlutter.init((options) {
-    options
-      ..dsn = config.sentryDsn
-      ..environment = config.flavor.name
-      ..sendDefaultPii = false
-      ..tracesSampleRate = 0.1;
-  }, appRunner: () => runApp(app));
+  await SentryFlutter.init(
+    (options) {
+      options
+        ..dsn = config.sentryDsn
+        ..environment = config.flavor.name
+        ..sendDefaultPii = false
+        ..tracesSampleRate = 0.1;
+    },
+    appRunner: () {
+      runApp(app);
+      StartupTimer.instance.watchFirstFrame();
+    },
+  );
 }

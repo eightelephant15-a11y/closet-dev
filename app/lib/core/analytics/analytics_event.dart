@@ -1,5 +1,6 @@
 /// Typed event taxonomy. Keep in sync with docs/analytics.md.
 enum AnalyticsEvent {
+  appFirstFrame('app_first_frame'),
   onboardingStarted('onboarding_started'),
   welcomeViewed('welcome_viewed'),
   guestStarted('guest_started'),

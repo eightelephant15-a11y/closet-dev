@@ -38,8 +38,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     final l10n = AppLocalizations.of(context);
     return Scaffold(
       body: PageBody(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: CenteredScroll(
           children: [
             Text(
               l10n.signInTitle,

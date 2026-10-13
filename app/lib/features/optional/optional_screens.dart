@@ -115,8 +115,7 @@ class PartnerPlaceholderScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text(l10n.partnerTitle)),
       body: PageBody(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: CenteredScroll(
           children: [
             ExcludeSemantics(
               child: Icon(
