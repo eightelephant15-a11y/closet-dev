@@ -203,5 +203,3 @@ def test_local_server_refuses_to_run_with_prod_env(monkeypatch: pytest.MonkeyPat
             local_server.main()
     finally:
         get_settings.cache_clear()
-
-
