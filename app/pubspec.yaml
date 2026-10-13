@@ -53,6 +53,8 @@ dependencies:
   permission_handler: ^13.0.2
   url_launcher: ^6.3.3
   share_plus: ^13.3.1
+  posthog_flutter: ^5.54.0
+  sentry_flutter: ^8.14.2
 
 dev_dependencies:
   flutter_test:

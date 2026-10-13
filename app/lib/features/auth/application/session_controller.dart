@@ -92,6 +92,7 @@ class SessionController extends Notifier<SessionState> {
     }
     await _auth.signOut();
     await ref.read(keyValueStoreProvider).remove(_cacheKey);
+    ref.read(analyticsServiceProvider).reset();
     state = const SessionState(status: SessionStatus.signedOut);
   }
 
@@ -129,6 +130,8 @@ class SessionController extends Notifier<SessionState> {
         status = SessionStatus.pendingDeletion;
       }
       await _remember(user);
+      // Internal id only: never email or name.
+      ref.read(analyticsServiceProvider).identify(user.id);
       state = SessionState(status: status, user: user);
     } on ApiException catch (e) {
       if (!e.isOffline) rethrow;

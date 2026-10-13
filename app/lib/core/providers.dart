@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stylist/core/analytics/analytics_service.dart';
+import 'package:stylist/core/analytics/posthog_analytics.dart';
 import 'package:stylist/core/app_config.dart';
 import 'package:stylist/core/network/api_client.dart';
 import 'package:stylist/core/permissions/permissions_service.dart';
@@ -117,9 +118,10 @@ final onboardingRepositoryProvider = Provider<OnboardingRepository>((ref) {
 });
 
 /// The real analytics backend (PostHog when configured, otherwise a no-op).
-final analyticsBackendProvider = Provider<AnalyticsService>(
-  (ref) => NoopAnalytics(),
-);
+final analyticsBackendProvider = Provider<AnalyticsService>((ref) {
+  final key = ref.watch(appConfigProvider).posthogKey;
+  return key.isEmpty ? NoopAnalytics() : PostHogAnalyticsService(apiKey: key);
+});
 
 /// Gate in front of the backend: events are buffered until the consent decision
 /// is known; nothing is sent before opt-in.

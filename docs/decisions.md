@@ -17,3 +17,5 @@
 15. **Sign-out wipes this device's user data** (onboarding, closet, consent cache); progress returns from the server on next sign-in.
 16. **First-items step has no separate Skip**: the "Use sample closet" shortcut is the skip path since the first outfit needs a closet.
 17. **Places**: `/v1/places/autocomplete` and the app's `PlacesService` return city names only from a canned list; no coordinates anywhere.
+18. **Crash reporting** (Sentry app + API) is not behind the analytics opt-in: it carries errors and traces only (`sendDefaultPii = false`), no user identifiers beyond the request id. Revisit with counsel before launch.
+19. **PostHog** is initialised lazily on first (consented) event, so a user who never opts in never starts the SDK. Native auto-init is disabled in the Android manifest and iOS Info.plist.
