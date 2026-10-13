@@ -99,7 +99,26 @@ CI (GitHub Actions): `ci-api`, `ci-app`, `ci-infra`; `deploy-staging` exists but
 `integration_test/` re-runs the two full journeys on a device/emulator:
 `flutter test integration_test --flavor dev`.
 
+## More docs
+
+| Doc | What it is |
+|---|---|
+| [docs/go-live-checklist.md](docs/go-live-checklist.md) | ordered runbook for when you have Firebase / AWS / PostHog / Sentry accounts and a real device |
+| [docs/placeholders.md](docs/placeholders.md) | every placeholder value and the file to change it in |
+| [docs/rename-app.md](docs/rename-app.md) | app name, bundle ID, icons, Firebase files, iOS + Android flavors |
+| [docs/local-api.md](docs/local-api.md) | running the real API without Docker; dev tokens and their safety rules |
+| [docs/performance.md](docs/performance.md) | measuring cold start on a device |
+| [docs/checklist.md](docs/checklist.md) | requirement -> code -> test mapping with an honest status per item |
+
+## Tooling notes
+
+* **macOS + Xcode**: `make`, `pod install` and Flutter native-asset builds all stop with "You have not agreed to the Xcode license" until you run
+  `sudo xcodebuild -license accept` once.
+* **Flutter version** is pinned in CI (`FLUTTER_VERSION` in `.github/workflows/ci-app.yml`); `dart format` output changes between SDK releases, so use
+  the same version locally (3.41.9 at the time of writing).
+* iOS flavors are defined by `app/ios/Flutter/flavors/*.xcconfig`; `make ios-flavors-setup` re-applies them to the Xcode project.
+
 ## Known gaps and things only you can supply
 
-See the end of [docs/checklist.md](docs/checklist.md) for the honest list (Firebase project and config files,
-real-device performance numbers, iOS flavor schemes, Docker/compose not exercised on the build machine, ...).
+See the end of [docs/checklist.md](docs/checklist.md) for the honest list (Firebase project and config files, real-device performance numbers,
+Docker/compose not exercised, ...).
