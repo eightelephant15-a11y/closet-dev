@@ -44,7 +44,13 @@ def test_upgrade_matches_models_and_downgrades(cfg: Config, tmp_path: Path) -> N
         # test-only tables registered by other tests are not part of migrations
         diff = [d for d in diff if "test_" not in repr(d)]
         assert diff == []
-        assert {"users", "device_sessions", "feature_flags"} <= set(inspect(conn).get_table_names())
+        assert {
+            "users",
+            "device_sessions",
+            "feature_flags",
+            "onboarding_state",
+            "preferences",
+        } <= set(inspect(conn).get_table_names())
     command.downgrade(cfg, "base")
     with engine.connect() as conn:
         assert "users" not in inspect(conn).get_table_names()

@@ -28,6 +28,17 @@ class Base(DeclarativeBase):
     pass
 
 
+# Tables keyed by a unique user_id. They follow a user when a guest is merged into an existing
+# account, and are removed on hard delete. Models register themselves with the decorator.
+MERGEABLE: list[type[Base]] = []
+
+
+def register_mergeable[M: type[Base]](model: M) -> M:
+    if model not in MERGEABLE:
+        MERGEABLE.append(model)
+    return model
+
+
 _engine: AsyncEngine | None = None
 _sessionmaker: async_sessionmaker[AsyncSession] | None = None
 

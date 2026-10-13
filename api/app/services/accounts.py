@@ -7,19 +7,12 @@ from sqlalchemy import delete, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.auth import VerifiedToken
-from app.core.db import Base
+from app.core.db import MERGEABLE, register_mergeable
 from app.core.errors import ApiError
 from app.models import DeviceSession, User, UserStatus
 from app.schemas.user import SessionRequest
 
-# Tables keyed by user_id that must follow a user when a guest is merged into an existing
-# account. Later slices register their models here (user_id must be unique per row).
-MERGEABLE: list[type[Base]] = []
-
-
-def register_mergeable(model: type[Base]) -> None:
-    if model not in MERGEABLE:
-        MERGEABLE.append(model)
+__all__ = ["MERGEABLE", "register_mergeable"]
 
 
 async def find_user(session: AsyncSession, uid: str) -> User | None:
