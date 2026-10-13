@@ -10,6 +10,7 @@ abstract final class OutboxOps {
   static const ageConfirm = 'age.confirm';
   static const preferencesPut = 'preferences.put';
   static const userPatch = 'user.patch';
+  static const consentsPut = 'consents.put';
 }
 
 Future<void> executeOutboxOp(Ref ref, OutboxOp op) async {
@@ -41,6 +42,15 @@ Future<void> executeOutboxOp(Ref ref, OutboxOp op) async {
             ),
           );
       ref.read(sessionControllerProvider.notifier).updateUser(updated);
+    case OutboxOps.consentsPut:
+      final p = op.payload;
+      await ref
+          .read(consentRepositoryProvider)
+          .put(
+            analyticsOptIn: p['analytics_opt_in'] as bool?,
+            noAiTraining: p['no_ai_training'] as bool?,
+            locationExplained: p['location_explained'] as bool?,
+          );
     default:
       throw StateError('Unknown outbox op ${op.type}');
   }

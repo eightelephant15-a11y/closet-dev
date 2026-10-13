@@ -1077,6 +1077,270 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Settings'**
   String get homeSettings;
+
+  /// No description provided for @consentPromptTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Help us improve'**
+  String get consentPromptTitle;
+
+  /// No description provided for @consentPromptBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Share anonymous usage data, like which screens you use. We never include your photos. You can change this any time in Settings.'**
+  String get consentPromptBody;
+
+  /// No description provided for @consentAllow.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow analytics'**
+  String get consentAllow;
+
+  /// No description provided for @consentDecline.
+  ///
+  /// In en, this message translates to:
+  /// **'No thanks'**
+  String get consentDecline;
+
+  /// No description provided for @settingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settingsTitle;
+
+  /// No description provided for @settingsAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get settingsAccount;
+
+  /// No description provided for @settingsGuest.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re using a guest account'**
+  String get settingsGuest;
+
+  /// No description provided for @settingsGuestBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to keep your wardrobe and preferences on every device.'**
+  String get settingsGuestBody;
+
+  /// No description provided for @settingsSignedInAs.
+  ///
+  /// In en, this message translates to:
+  /// **'Signed in as {email}'**
+  String settingsSignedInAs(String email);
+
+  /// No description provided for @settingsPrivacySection.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy'**
+  String get settingsPrivacySection;
+
+  /// No description provided for @settingsConsentCentre.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy choices'**
+  String get settingsConsentCentre;
+
+  /// No description provided for @settingsPrivacyPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy policy'**
+  String get settingsPrivacyPolicy;
+
+  /// No description provided for @settingsTerms.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of service'**
+  String get settingsTerms;
+
+  /// No description provided for @settingsDataSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data'**
+  String get settingsDataSection;
+
+  /// No description provided for @settingsExport.
+  ///
+  /// In en, this message translates to:
+  /// **'Export my data'**
+  String get settingsExport;
+
+  /// No description provided for @settingsDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete my account'**
+  String get settingsDelete;
+
+  /// No description provided for @settingsSignOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out'**
+  String get settingsSignOut;
+
+  /// No description provided for @signOutConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out?'**
+  String get signOutConfirmTitle;
+
+  /// No description provided for @signOutConfirmBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data stays safe in your account. You can sign back in any time.'**
+  String get signOutConfirmBody;
+
+  /// No description provided for @consentCentreTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy choices'**
+  String get consentCentreTitle;
+
+  /// No description provided for @consentAnalyticsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Share anonymous usage analytics'**
+  String get consentAnalyticsTitle;
+
+  /// No description provided for @consentAnalyticsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Helps us understand which parts of the app work well. Off until you turn it on.'**
+  String get consentAnalyticsBody;
+
+  /// No description provided for @consentNoAiTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Do not use my photos to train AI models'**
+  String get consentNoAiTitle;
+
+  /// No description provided for @consentNoAiBody.
+  ///
+  /// In en, this message translates to:
+  /// **'On by default. Your photos are only used to style your outfits.'**
+  String get consentNoAiBody;
+
+  /// No description provided for @consentLocationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'How we use your location'**
+  String get consentLocationTitle;
+
+  /// No description provided for @consentLocationBody.
+  ///
+  /// In en, this message translates to:
+  /// **'If you allow it, we use your approximate location to check the weather. We never store your exact position, only the city you type.'**
+  String get consentLocationBody;
+
+  /// No description provided for @consentPolicyVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Policy version {version}'**
+  String consentPolicyVersion(String version);
+
+  /// No description provided for @exportTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Export my data'**
+  String get exportTitle;
+
+  /// No description provided for @exportBody.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ll prepare a JSON file with everything we hold about you. It can take a moment.'**
+  String get exportBody;
+
+  /// No description provided for @exportRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Request export'**
+  String get exportRequest;
+
+  /// No description provided for @exportPreparing.
+  ///
+  /// In en, this message translates to:
+  /// **'Preparing your export…'**
+  String get exportPreparing;
+
+  /// No description provided for @exportReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Your export is ready.'**
+  String get exportReady;
+
+  /// No description provided for @exportShare.
+  ///
+  /// In en, this message translates to:
+  /// **'Download and share'**
+  String get exportShare;
+
+  /// No description provided for @exportFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t prepare your export. Please try again.'**
+  String get exportFailed;
+
+  /// No description provided for @exportShared.
+  ///
+  /// In en, this message translates to:
+  /// **'Export saved'**
+  String get exportShared;
+
+  /// No description provided for @deleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete my account'**
+  String get deleteTitle;
+
+  /// No description provided for @deleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This signs you out everywhere and schedules your account for deletion. All your data and images are removed within 30 days. Until then you can sign back in to cancel.'**
+  String get deleteBody;
+
+  /// No description provided for @deleteTypePrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Type DELETE to confirm'**
+  String get deleteTypePrompt;
+
+  /// No description provided for @deleteConfirmWord.
+  ///
+  /// In en, this message translates to:
+  /// **'DELETE'**
+  String get deleteConfirmWord;
+
+  /// No description provided for @deleteButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete my account'**
+  String get deleteButton;
+
+  /// No description provided for @deleteDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account is scheduled for deletion. It will be fully removed within 30 days.'**
+  String get deleteDone;
+
+  /// No description provided for @restoreTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account is scheduled for deletion'**
+  String get restoreTitle;
+
+  /// No description provided for @restoreBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore it now to keep your data, or sign out and let the deletion go ahead.'**
+  String get restoreBody;
+
+  /// No description provided for @restoreButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore my account'**
+  String get restoreButton;
 }
 
 class _AppLocalizationsDelegate

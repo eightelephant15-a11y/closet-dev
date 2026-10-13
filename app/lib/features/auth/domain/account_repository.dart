@@ -10,4 +10,10 @@ abstract class AccountRepository {
   Future<AppUser> me();
   Future<AppUser> patchMe(UserPatch patch);
   Future<void> signOut();
+
+  /// `DELETE /v1/me`: soft delete now, everything purged after 30 days. Returns the purge date.
+  Future<DateTime> deleteAccount();
+
+  /// `POST /v1/me/restore`: cancels a pending deletion.
+  Future<AppUser> restore();
 }

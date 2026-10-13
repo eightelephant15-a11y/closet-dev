@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:stylist/features/auth/application/session_controller.dart';
 import 'package:stylist/features/optional/optional_screens.dart';
+import 'package:stylist/features/settings/settings_screen.dart';
 import 'package:stylist/l10n/gen/app_localizations.dart';
 import 'package:stylist/shared/widgets/state_views.dart';
 import 'package:stylist/theme/tokens.dart';
@@ -15,7 +17,16 @@ class HomeScreen extends ConsumerWidget {
     final session = ref.watch(sessionControllerProvider);
     final name = session.user?.displayName;
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.homeTitle)),
+      appBar: AppBar(
+        title: Text(l10n.homeTitle),
+        actions: [
+          IconButton(
+            tooltip: l10n.homeSettings,
+            icon: const Icon(Icons.settings_outlined),
+            onPressed: () => context.push(SettingsRoutes.root),
+          ),
+        ],
+      ),
       body: PageBody(
         child: ListView(
           children: [

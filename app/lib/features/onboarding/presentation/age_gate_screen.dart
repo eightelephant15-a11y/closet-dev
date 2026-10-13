@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:stylist/features/consent/presentation/consent_prompt.dart';
 import 'package:stylist/features/onboarding/application/onboarding_controller.dart';
 import 'package:stylist/l10n/gen/app_localizations.dart';
 import 'package:stylist/shared/widgets/state_views.dart';
@@ -28,7 +29,10 @@ class AgeGateScreen extends ConsumerWidget {
             SizedBox(
               width: double.infinity,
               child: FilledButton(
-                onPressed: ctl.confirmAge,
+                onPressed: () async {
+                  await askAnalyticsConsentIfNeeded(context, ref);
+                  await ctl.confirmAge();
+                },
                 child: Text(l10n.ageConfirmButton),
               ),
             ),

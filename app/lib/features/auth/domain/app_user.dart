@@ -5,6 +5,13 @@ part 'app_user.g.dart';
 
 enum Units { imperial, metric }
 
+enum UserStatus {
+  active,
+  @JsonValue('pending_deletion')
+  pendingDeletion,
+  deleted,
+}
+
 enum ClothingDepartment { menswear, womenswear, both, everything }
 
 @freezed
@@ -14,6 +21,7 @@ abstract class AppUser with _$AppUser {
     required bool isAnonymous,
     @Default('en-US') String locale,
     @Default(Units.imperial) Units units,
+    @Default(UserStatus.active) UserStatus status,
     String? email,
     String? displayName,
     String? city,

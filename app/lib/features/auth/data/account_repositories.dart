@@ -61,6 +61,20 @@ class HttpAccountRepository implements AccountRepository {
 
   @override
   Future<void> signOut() => guarded(() => _dio.post<void>('/v1/auth/sign-out'));
+
+  @override
+  Future<DateTime> deleteAccount() async {
+    final res = await guarded(
+      () => _dio.delete<Map<String, dynamic>>('/v1/me'),
+    );
+    return DateTime.parse(res.data!['purge_after'] as String);
+  }
+
+  @override
+  Future<AppUser> restore() async {
+    await guarded(() => _dio.post<void>('/v1/me/restore'));
+    return me();
+  }
 }
 
 /// In-memory + locally persisted fake of the server's account behaviour,
@@ -194,4 +208,36 @@ class MockAccountRepository implements AccountRepository {
 
   @override
   Future<void> signOut() async {}
+
+  /// Deleted accounts stay (as pending) until purge, like the real server.
+  @override
+  Future<DateTime> deleteAccount() async {
+    _guardOnline();
+    final users = _load();
+    final row = users[_authUser.uid];
+    if (row == null) {
+      throw const ApiException(code: 'no_session', message: 'No session');
+    }
+    final purgeAfter = DateTime.now().toUtc().add(const Duration(days: 30));
+    row
+      ..['status'] = 'pending_deletion'
+      ..['purge_after'] = purgeAfter.toIso8601String();
+    await _save(users);
+    return purgeAfter;
+  }
+
+  @override
+  Future<AppUser> restore() async {
+    _guardOnline();
+    final users = _load();
+    final row = users[_authUser.uid];
+    if (row == null) {
+      throw const ApiException(code: 'no_session', message: 'No session');
+    }
+    row
+      ..['status'] = 'active'
+      ..remove('purge_after');
+    await _save(users);
+    return AppUser.fromJson(row);
+  }
 }

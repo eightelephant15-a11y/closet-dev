@@ -5,6 +5,9 @@ import 'package:stylist/core/providers.dart';
 import 'package:stylist/features/auth/application/boot.dart';
 import 'package:stylist/features/auth/application/session_controller.dart';
 import 'package:stylist/features/auth/presentation/sign_in_screen.dart';
+import 'package:stylist/features/consent/presentation/consent_centre_screen.dart';
+import 'package:stylist/features/data_rights/delete_account_screen.dart';
+import 'package:stylist/features/data_rights/export_screen.dart';
 import 'package:stylist/features/first_items/first_items_screen.dart';
 import 'package:stylist/features/first_outfit/first_outfit_screen.dart';
 import 'package:stylist/features/home/home_screen.dart';
@@ -19,6 +22,8 @@ import 'package:stylist/features/onboarding/presentation/splash_screen.dart';
 import 'package:stylist/features/onboarding/presentation/welcome_screen.dart';
 import 'package:stylist/features/optional/optional_screens.dart';
 import 'package:stylist/features/permissions/permissions_screen.dart';
+import 'package:stylist/features/settings/restore_screen.dart';
+import 'package:stylist/features/settings/settings_screen.dart';
 
 abstract final class Routes {
   static const splash = '/splash';
@@ -27,6 +32,7 @@ abstract final class Routes {
   static const blocked = '/blocked';
   static const home = '/home';
   static const resume = '/onboarding/resume';
+  static const restore = '/restore';
 }
 
 /// Pure routing decision, unit-tested separately from widgets.
@@ -44,6 +50,9 @@ String? decideRedirect({
   if (!bootDone) return result(go(Routes.splash));
   if (blocked) return result(go(Routes.blocked));
   if (session == SessionStatus.unknown) return result(go(Routes.splash));
+  if (session == SessionStatus.pendingDeletion) {
+    return result(go(Routes.restore));
+  }
   if (session == SessionStatus.signedOut) {
     if (location == Routes.signIn && !guestEnabled) return null;
     if (location == Routes.welcome && guestEnabled) return null;
@@ -51,6 +60,7 @@ String? decideRedirect({
   }
   // Signed in from here.
   if (onboarding == null) return result(go(Routes.splash));
+  if (location.startsWith('/settings')) return null;
   if (onboarding.isDone) {
     if (location.startsWith('/optional/')) return null;
     final inFlow =
@@ -64,7 +74,7 @@ String? decideRedirect({
     return inFlow ? Routes.home : null;
   }
   final target = onboarding.current.path;
-  if (location == Routes.resume) return target;
+  if (location == Routes.resume || location == '/resume') return target;
   if (location.startsWith('/optional/') &&
       onboarding.current == OnboardingStep.optional) {
     return null;
@@ -131,6 +141,23 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: Routes.signIn, builder: (_, _) => const SignInScreen()),
       GoRoute(path: Routes.blocked, builder: (_, _) => const BlockedScreen()),
       GoRoute(path: Routes.home, builder: (_, _) => const HomeScreen()),
+      GoRoute(path: Routes.restore, builder: (_, _) => const RestoreScreen()),
+      GoRoute(
+        path: SettingsRoutes.root,
+        builder: (_, _) => const SettingsScreen(),
+      ),
+      GoRoute(
+        path: SettingsRoutes.consent,
+        builder: (_, _) => const ConsentCentreScreen(),
+      ),
+      GoRoute(
+        path: SettingsRoutes.export,
+        builder: (_, _) => const ExportScreen(),
+      ),
+      GoRoute(
+        path: SettingsRoutes.delete,
+        builder: (_, _) => const DeleteAccountScreen(),
+      ),
       GoRoute(path: Routes.resume, builder: (_, _) => const SplashScreen()),
       GoRoute(
         path: OnboardingStep.age.path,

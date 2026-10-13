@@ -115,4 +115,24 @@ void main() {
     expect(redirect(Routes.welcome, onboarding: done), Routes.home);
     expect(redirect(Routes.home, onboarding: done), isNull);
   });
+
+  test('deep link aliases resume the saved step', () {
+    final s = state(OnboardingStep.basics);
+    expect(redirect('/resume', onboarding: s), '/onboarding/basics');
+  });
+
+  test('pending deletion is routed to restore, settings stay reachable', () {
+    expect(
+      redirect('/home', session: SessionStatus.pendingDeletion),
+      Routes.restore,
+    );
+    final done = state(
+      OnboardingStep.done,
+    ).copyWith(completedAt: DateTime(2026));
+    expect(redirect('/settings/export', onboarding: done), isNull);
+    expect(
+      redirect('/settings', onboarding: state(OnboardingStep.quiz)),
+      isNull,
+    );
+  });
 }

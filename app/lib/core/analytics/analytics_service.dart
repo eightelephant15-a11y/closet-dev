@@ -51,6 +51,14 @@ class ConsentGatedAnalytics implements AnalyticsService {
 
   bool? get consent => _consent;
 
+  /// Back to "undecided" (e.g. after sign-out on a shared device).
+  void clearDecision() {
+    _consent = null;
+    _buffer.clear();
+    _pendingUserId = null;
+    _inner.reset();
+  }
+
   void setConsent({required bool granted}) {
     _consent = granted;
     if (granted) {

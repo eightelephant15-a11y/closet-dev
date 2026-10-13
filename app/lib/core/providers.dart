@@ -21,6 +21,9 @@ import 'package:stylist/features/closet/data/sample_closet_data.dart';
 import 'package:stylist/features/closet/domain/closet_item.dart';
 import 'package:stylist/features/config/data/config_repositories.dart';
 import 'package:stylist/features/config/domain/remote_config.dart';
+import 'package:stylist/features/consent/data/consent_repositories.dart';
+import 'package:stylist/features/consent/domain/consent.dart';
+import 'package:stylist/features/data_rights/data_rights.dart';
 import 'package:stylist/features/onboarding/application/outbox_executor.dart';
 import 'package:stylist/features/onboarding/data/onboarding_repositories.dart';
 import 'package:stylist/features/onboarding/domain/onboarding_repository.dart';
@@ -113,10 +116,30 @@ final onboardingRepositoryProvider = Provider<OnboardingRepository>((ref) {
   return HttpOnboardingRepository(ref.watch(dioProvider));
 });
 
-/// Gated analytics: events are buffered until the consent decision is known.
-final analyticsServiceProvider = Provider<AnalyticsService>(
+/// The real analytics backend (PostHog when configured, otherwise a no-op).
+final analyticsBackendProvider = Provider<AnalyticsService>(
   (ref) => NoopAnalytics(),
 );
+
+/// Gate in front of the backend: events are buffered until the consent decision
+/// is known; nothing is sent before opt-in.
+final analyticsGateProvider = Provider<ConsentGatedAnalytics>(
+  (ref) => ConsentGatedAnalytics(ref.watch(analyticsBackendProvider)),
+);
+
+/// What the app tracks through.
+final analyticsServiceProvider = Provider<AnalyticsService>(
+  (ref) => ref.watch(analyticsGateProvider),
+);
+
+final consentRepositoryProvider = Provider<ConsentRepository>((ref) {
+  return ref.watch(appConfigProvider).useMock
+      ? MockConsentRepository(
+          ref.watch(authProviderProvider),
+          ref.watch(keyValueStoreProvider),
+        )
+      : HttpConsentRepository(ref.watch(dioProvider));
+});
 
 final outboxProvider = Provider<Outbox>((ref) {
   return Outbox(
@@ -154,3 +177,16 @@ final recommendationServiceProvider = Provider<RecommendationService>(
 final closetItemsProvider = FutureProvider<List<ClosetItem>>(
   (ref) => ref.watch(closetRepositoryProvider).items(),
 );
+
+final exportRepositoryProvider = Provider<ExportRepository>((ref) {
+  return ref.watch(appConfigProvider).useMock
+      ? MockExportRepository(
+          ref.watch(authProviderProvider),
+          ref.watch(keyValueStoreProvider),
+        )
+      : HttpExportRepository(ref.watch(dioProvider));
+});
+
+final fileSharerProvider = Provider<FileSharer>((ref) => SharePlusFileSharer());
+
+final urlOpenerProvider = Provider<UrlOpener>((ref) => DeviceUrlOpener());

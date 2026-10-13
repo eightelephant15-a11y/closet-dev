@@ -8,7 +8,7 @@ import 'package:stylist/features/auth/domain/account_repository.dart';
 import 'package:stylist/features/auth/domain/app_user.dart';
 import 'package:stylist/features/auth/domain/auth_provider.dart';
 
-enum SessionStatus { unknown, signedOut, guest, member }
+enum SessionStatus { unknown, signedOut, guest, member, pendingDeletion }
 
 class SessionState {
   const SessionState({
@@ -101,6 +101,17 @@ class SessionController extends Notifier<SessionState> {
     state = const SessionState(status: SessionStatus.signedOut);
   }
 
+  /// Cancels a pending deletion and carries on.
+  Future<void> restoreAccount() async {
+    final user = await _accounts.restore();
+    await _remember(user);
+    final anon = _auth.currentUser?.isAnonymous ?? false;
+    state = SessionState(
+      status: anon ? SessionStatus.guest : SessionStatus.member,
+      user: user,
+    );
+  }
+
   void updateUser(AppUser user) {
     state = SessionState(
       status: state.status,
@@ -111,9 +122,12 @@ class SessionController extends Notifier<SessionState> {
   }
 
   Future<void> _sync(AuthUser u) async {
-    final status = u.isAnonymous ? SessionStatus.guest : SessionStatus.member;
+    var status = u.isAnonymous ? SessionStatus.guest : SessionStatus.member;
     try {
       final user = await _accounts.createSession();
+      if (user.status == UserStatus.pendingDeletion) {
+        status = SessionStatus.pendingDeletion;
+      }
       await _remember(user);
       state = SessionState(status: status, user: user);
     } on ApiException catch (e) {

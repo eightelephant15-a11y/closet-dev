@@ -11,3 +11,9 @@
 9. **Signing in / starting as guest completes the welcome step**; the age gate follows. Under-16 hard-deletes the server account and wipes local data; a non-identifying `age_blocked` marker stays on the device.
 10. **Idempotent PUT semantics**: `PUT /v1/onboarding` only grows `completed_steps`; first `time_to_first_outfit_ms` wins, so replays from stale offline devices are safe.
 11. Quiz uses Dart/Python mirrored preference models (v1); the server value is authoritative, the Dart one lets the mock/offline app rank locally.
+12. **Idempotency table dropped; consents are created with the user** (default: analytics undecided, no-AI-training ON with timestamp + policy version). Guest-to-account merge keeps the existing account's consents.
+13. **Export** runs as a FastAPI background task and, as a safety net, via `python -m app.jobs exports`; files live in S3 (SSE) in AWS and on local disk in dev/tests; download requires auth and expires after 24h.
+14. **Deletion** is a soft delete (`pending_deletion`, sessions revoked, Firebase refresh tokens revoked). `python -m app.jobs purge` (daily scheduled task) hard-deletes every row, export file, registered purge hooks (Phase 2 images) and the Firebase user, leaving only a hashed audit-log entry. Signing in during the window shows a restore screen.
+15. **Sign-out wipes this device's user data** (onboarding, closet, consent cache); progress returns from the server on next sign-in.
+16. **First-items step has no separate Skip**: the "Use sample closet" shortcut is the skip path since the first outfit needs a closet.
+17. **Places**: `/v1/places/autocomplete` and the app's `PlacesService` return city names only from a canned list; no coordinates anywhere.

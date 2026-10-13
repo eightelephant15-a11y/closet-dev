@@ -553,4 +553,151 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get homeSettings => 'Settings';
+
+  @override
+  String get consentPromptTitle => 'Help us improve';
+
+  @override
+  String get consentPromptBody =>
+      'Share anonymous usage data, like which screens you use. We never include your photos. You can change this any time in Settings.';
+
+  @override
+  String get consentAllow => 'Allow analytics';
+
+  @override
+  String get consentDecline => 'No thanks';
+
+  @override
+  String get settingsTitle => 'Settings';
+
+  @override
+  String get settingsAccount => 'Account';
+
+  @override
+  String get settingsGuest => 'You\'re using a guest account';
+
+  @override
+  String get settingsGuestBody =>
+      'Sign in to keep your wardrobe and preferences on every device.';
+
+  @override
+  String settingsSignedInAs(String email) {
+    return 'Signed in as $email';
+  }
+
+  @override
+  String get settingsPrivacySection => 'Privacy';
+
+  @override
+  String get settingsConsentCentre => 'Privacy choices';
+
+  @override
+  String get settingsPrivacyPolicy => 'Privacy policy';
+
+  @override
+  String get settingsTerms => 'Terms of service';
+
+  @override
+  String get settingsDataSection => 'Your data';
+
+  @override
+  String get settingsExport => 'Export my data';
+
+  @override
+  String get settingsDelete => 'Delete my account';
+
+  @override
+  String get settingsSignOut => 'Sign out';
+
+  @override
+  String get signOutConfirmTitle => 'Sign out?';
+
+  @override
+  String get signOutConfirmBody =>
+      'Your data stays safe in your account. You can sign back in any time.';
+
+  @override
+  String get consentCentreTitle => 'Privacy choices';
+
+  @override
+  String get consentAnalyticsTitle => 'Share anonymous usage analytics';
+
+  @override
+  String get consentAnalyticsBody =>
+      'Helps us understand which parts of the app work well. Off until you turn it on.';
+
+  @override
+  String get consentNoAiTitle => 'Do not use my photos to train AI models';
+
+  @override
+  String get consentNoAiBody =>
+      'On by default. Your photos are only used to style your outfits.';
+
+  @override
+  String get consentLocationTitle => 'How we use your location';
+
+  @override
+  String get consentLocationBody =>
+      'If you allow it, we use your approximate location to check the weather. We never store your exact position, only the city you type.';
+
+  @override
+  String consentPolicyVersion(String version) {
+    return 'Policy version $version';
+  }
+
+  @override
+  String get exportTitle => 'Export my data';
+
+  @override
+  String get exportBody =>
+      'We\'ll prepare a JSON file with everything we hold about you. It can take a moment.';
+
+  @override
+  String get exportRequest => 'Request export';
+
+  @override
+  String get exportPreparing => 'Preparing your export…';
+
+  @override
+  String get exportReady => 'Your export is ready.';
+
+  @override
+  String get exportShare => 'Download and share';
+
+  @override
+  String get exportFailed =>
+      'We couldn\'t prepare your export. Please try again.';
+
+  @override
+  String get exportShared => 'Export saved';
+
+  @override
+  String get deleteTitle => 'Delete my account';
+
+  @override
+  String get deleteBody =>
+      'This signs you out everywhere and schedules your account for deletion. All your data and images are removed within 30 days. Until then you can sign back in to cancel.';
+
+  @override
+  String get deleteTypePrompt => 'Type DELETE to confirm';
+
+  @override
+  String get deleteConfirmWord => 'DELETE';
+
+  @override
+  String get deleteButton => 'Delete my account';
+
+  @override
+  String get deleteDone =>
+      'Your account is scheduled for deletion. It will be fully removed within 30 days.';
+
+  @override
+  String get restoreTitle => 'Your account is scheduled for deletion';
+
+  @override
+  String get restoreBody =>
+      'Restore it now to keep your data, or sign out and let the deletion go ahead.';
+
+  @override
+  String get restoreButton => 'Restore my account';
 }
