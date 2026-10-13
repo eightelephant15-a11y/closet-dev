@@ -6,3 +6,8 @@
 4. **Android flavors** via Gradle product flavors (`dev` -> `com.example.stylist.dev`, `staging` -> `.staging`, `prod` -> `com.example.stylist`). iOS flavors need Xcode schemes; configured via xcconfig (see README).
 5. **Riverpod 2.x** pinned (not 3.x) for stable codegen-free API.
 6. **Generated l10n** (`lib/l10n/gen`) is committed so analysis works without a pre-step.
+7. **Analytics consent**: events are buffered in memory (cap 200) until the consent decision; opt-in flushes, opt-out discards. Nothing leaves the device before opt-in, but the onboarding funnel before the consent prompt is kept when users opt in. (Supersedes the plan's "drop everything pre-consent".)
+8. **closet_first** order: welcome, age, basics, permissions, first_items, quiz, first_outfit, optional. Quiz moves after first items; permissions stay directly before first items because priming is shown in context.
+9. **Signing in / starting as guest completes the welcome step**; the age gate follows. Under-16 hard-deletes the server account and wipes local data; a non-identifying `age_blocked` marker stays on the device.
+10. **Idempotent PUT semantics**: `PUT /v1/onboarding` only grows `completed_steps`; first `time_to_first_outfit_ms` wins, so replays from stale offline devices are safe.
+11. Quiz uses Dart/Python mirrored preference models (v1); the server value is authoritative, the Dart one lets the mock/offline app rank locally.

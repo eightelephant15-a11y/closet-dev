@@ -4,9 +4,11 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stylist/core/analytics/analytics_service.dart';
 import 'package:stylist/core/app_config.dart';
 import 'package:stylist/core/network/api_client.dart';
 import 'package:stylist/core/storage/key_value_store.dart';
+import 'package:stylist/core/sync/outbox.dart';
 import 'package:stylist/features/auth/application/session_controller.dart';
 import 'package:stylist/features/auth/data/account_repositories.dart';
 import 'package:stylist/features/auth/data/fake_auth_provider.dart';
@@ -15,6 +17,9 @@ import 'package:stylist/features/auth/domain/account_repository.dart';
 import 'package:stylist/features/auth/domain/auth_provider.dart';
 import 'package:stylist/features/config/data/config_repositories.dart';
 import 'package:stylist/features/config/domain/remote_config.dart';
+import 'package:stylist/features/onboarding/application/outbox_executor.dart';
+import 'package:stylist/features/onboarding/data/onboarding_repositories.dart';
+import 'package:stylist/features/onboarding/domain/onboarding_repository.dart';
 import 'package:uuid/uuid.dart';
 
 /// Overridden in each flavor entrypoint.
@@ -87,3 +92,29 @@ final configRepositoryProvider = Provider<ConfigRepository>((ref) {
 final remoteConfigProvider = FutureProvider<RemoteConfig>(
   (ref) => ref.watch(configRepositoryProvider).load(),
 );
+
+final onboardingRepositoryProvider = Provider<OnboardingRepository>((ref) {
+  final config = ref.watch(appConfigProvider);
+  if (config.useMock) {
+    return MockOnboardingRepository(
+      ref.watch(authProviderProvider),
+      ref.watch(keyValueStoreProvider),
+      () =>
+          ref.read(remoteConfigProvider).valueOrNull?.onboardingVariant ??
+          OnboardingVariant.quizFirst,
+    );
+  }
+  return HttpOnboardingRepository(ref.watch(dioProvider));
+});
+
+/// Gated analytics: events are buffered until the consent decision is known.
+final analyticsServiceProvider = Provider<AnalyticsService>(
+  (ref) => NoopAnalytics(),
+);
+
+final outboxProvider = Provider<Outbox>((ref) {
+  return Outbox(
+    ref.watch(keyValueStoreProvider),
+    (op) => executeOutboxOp(ref, op),
+  );
+});

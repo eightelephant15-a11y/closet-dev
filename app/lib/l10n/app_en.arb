@@ -4,8 +4,123 @@
   "homeTitle": "Home",
   "homePlaceholder": "Your stylist is getting ready.",
   "loading": "Loading",
-  "errorGeneric": "Something went wrong.",
+  "errorGeneric": "Something went wrong. Please try again.",
+  "errorOffline": "You're offline. Check your connection and try again.",
   "retry": "Try again",
   "offlineBanner": "You're offline. Changes will sync when you reconnect.",
-  "emptyState": "Nothing here yet."
+  "emptyState": "Nothing here yet.",
+  "back": "Back",
+  "next": "Next",
+  "skip": "Skip",
+  "continueLabel": "Continue",
+  "done": "Done",
+  "cancel": "Cancel",
+  "close": "Close",
+  "welcomeTitle1": "Your wardrobe, styled",
+  "welcomeBody1": "Snap the clothes you own and get outfit ideas that actually use them.",
+  "welcomeTitle2": "Outfits that feel like you",
+  "welcomeBody2": "Answer a few quick questions and your stylist learns your taste.",
+  "welcomeTitle3": "Dress with less thinking",
+  "welcomeBody3": "Get a fresh outfit suggestion whenever you need one, for work, dates and travel.",
+  "welcomePageIndicator": "Page {current} of {total}",
+  "@welcomePageIndicator": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "tryItFirst": "Try it first",
+  "signInWithGoogle": "Sign in with Google",
+  "signInTitle": "Sign in to continue",
+  "signInBody": "Sign in with Google to keep your wardrobe and preferences safe.",
+  "signInFailed": "Sign-in didn't work. Please try again.",
+  "ageTitle": "Quick check",
+  "ageBody": "You must be 16 or older to use this app. We only record that you confirmed it, not your birth date.",
+  "ageConfirmButton": "I am 16 or older",
+  "ageUnderButton": "I am under 16",
+  "blockedTitle": "Thanks for stopping by",
+  "blockedBody": "This app is for people 16 and older. We haven't kept any of your information. Come back when you're 16!",
+  "quizProgress": "Question {current} of {total}",
+  "@quizProgress": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "quizFinish": "Finish",
+  "quizHintMulti": "Pick as many as you like",
+  "quizHintNone": "Pick any, or skip if none apply",
+  "quizQDepartment": "Which clothes should we show you?",
+  "quizQFit": "How do you like your clothes to fit?",
+  "quizQColors": "Which colours do you love?",
+  "quizQNeverWear": "Anything you would never wear?",
+  "quizQDressCode": "How dressed up is your usual day?",
+  "quizQGoals": "What do you want help with?",
+  "deptMenswear": "Menswear",
+  "deptWomenswear": "Womenswear",
+  "deptBoth": "Both",
+  "deptEverything": "Show everything",
+  "fitRelaxed": "Relaxed",
+  "fitRegular": "Regular",
+  "fitSlim": "Slim",
+  "dressCode0": "Very casual",
+  "dressCode1": "Casual",
+  "dressCode2": "Smart casual",
+  "dressCode3": "Business",
+  "dressCode4": "Formal",
+  "goalWork": "Work",
+  "goalDates": "Dates",
+  "goalTravel": "Travel",
+  "goalEveryday": "Everyday",
+  "colorBlack": "Black",
+  "colorWhite": "White",
+  "colorGrey": "Grey",
+  "colorNavy": "Navy",
+  "colorBeige": "Beige",
+  "colorBrown": "Brown",
+  "colorOlive": "Olive",
+  "colorRed": "Red",
+  "colorPink": "Pink",
+  "colorBlue": "Blue",
+  "colorGreen": "Green",
+  "colorYellow": "Yellow",
+  "colorPurple": "Purple",
+  "colorOrange": "Orange",
+  "neverSleeveless": "Sleeveless",
+  "neverShorts": "Shorts",
+  "neverBrightColors": "Bright colours",
+  "neverSuits": "Suits",
+  "neverTies": "Ties",
+  "neverHats": "Hats",
+  "neverHeels": "Heels",
+  "neverSkirts": "Skirts",
+  "neverDresses": "Dresses",
+  "neverCropTops": "Crop tops",
+  "optionSelected": "{label}, selected",
+  "@optionSelected": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "optionNotSelected": "{label}, not selected",
+  "@optionNotSelected": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "startingUp": "Getting things ready",
+  "quizNoneOfThese": "Nothing, I'll wear anything",
+  "quizDressCodeHint": "Pick the closest match"
 }

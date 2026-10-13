@@ -15,4 +15,5 @@ linter:
     avoid_dynamic_calls: false
     sort_pub_dependencies: false
     one_member_abstracts: false
+    cascade_invocations: false
     always_use_package_imports: true
