@@ -1,5 +1,10 @@
 """Token verification (interface + Firebase and fake implementations) and auth dependencies."""
 
+import base64
+import hashlib
+import hmac
+import json
+import time
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from typing import Annotated, Protocol
@@ -8,6 +13,7 @@ from fastapi import Depends, Header
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.config import DEV_AUTH_ENVS, Settings, get_settings
 from app.core.db import get_session
 from app.core.errors import ApiError
 from app.models import DeviceSession, User, UserStatus
@@ -102,6 +108,63 @@ class FakeTokenVerifier:
         self.deleted.append(uid)
 
 
+class DevTokenVerifier:
+    """Local-only verifier for HMAC-signed dev tokens (``dev.<payload>.<signature>``).
+
+    It exists so the real API can run on a laptop with no Firebase project. It refuses to
+    construct outside DEV_AUTH_ENVS, in addition to the Settings validator.
+    """
+
+    def __init__(self, settings: Settings | None = None) -> None:
+        settings = settings or get_settings()
+        if settings.auth_mode != "dev" or settings.app_env.strip().lower() not in DEV_AUTH_ENVS:
+            raise RuntimeError("DevTokenVerifier is only available with AUTH_MODE=dev in a dev env")
+        if len(settings.dev_auth_secret) < 16:
+            raise RuntimeError("DEV_AUTH_SECRET is required for AUTH_MODE=dev")
+        self._secret = settings.dev_auth_secret.encode()
+        self.revoked: list[str] = []
+        self.deleted: list[str] = []
+
+    def mint(
+        self,
+        uid: str,
+        email: str | None = None,
+        name: str | None = None,
+        *,
+        ttl_seconds: int = 86400,
+    ) -> str:
+        payload = {"uid": uid, "email": email, "name": name, "exp": int(time.time()) + ttl_seconds}
+        body = base64.urlsafe_b64encode(json.dumps(payload).encode()).decode().rstrip("=")
+        return f"dev.{body}.{self._sign(body)}"
+
+    def _sign(self, body: str) -> str:
+        return hmac.new(self._secret, body.encode(), hashlib.sha256).hexdigest()
+
+    async def verify(self, token: str) -> VerifiedToken:
+        invalid = ApiError(401, "invalid_token", "Invalid or expired credentials")
+        parts = token.split(".")
+        if len(parts) != 3 or parts[0] != "dev":
+            raise invalid
+        if not hmac.compare_digest(self._sign(parts[1]), parts[2]):
+            raise invalid
+        try:
+            payload = json.loads(base64.urlsafe_b64decode(parts[1] + "=" * (-len(parts[1]) % 4)))
+            uid = str(payload["uid"])
+            expires = int(payload["exp"])
+        except (ValueError, KeyError, TypeError) as exc:
+            raise invalid from exc
+        if expires < time.time():
+            raise invalid
+        email = payload.get("email")
+        return VerifiedToken(uid=uid, email=email, name=payload.get("name"), is_anonymous=not email)
+
+    async def revoke_all(self, uid: str) -> None:
+        self.revoked.append(uid)
+
+    async def delete_user(self, uid: str) -> None:
+        self.deleted.append(uid)
+
+
 _verifier: TokenVerifier | None = None
 
 
@@ -113,7 +176,9 @@ def set_verifier(v: TokenVerifier) -> None:
 def get_verifier() -> TokenVerifier:
     global _verifier
     if _verifier is None:
-        _verifier = FirebaseTokenVerifier()
+        _verifier = (
+            DevTokenVerifier() if get_settings().auth_mode == "dev" else FirebaseTokenVerifier()
+        )
     return _verifier
 
 

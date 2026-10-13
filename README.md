@@ -30,18 +30,34 @@ sign-in (account "Ada Lovelace"), a fake backend that persists in local storage 
 resuming works), canned city autocomplete and the sample closet. The same interfaces are implemented over
 HTTP for the real API, selected with `USE_MOCK=false` and `--dart-define=API_BASE_URL=...`.
 
-### Run the real API locally
+### Run the real API locally, no Docker
 
 ```bash
-cp api/.env.example api/.env      # edit as needed; no secrets are committed
-make up                           # docker compose: api + postgres + redis (applies migrations)
-curl localhost:8000/health
-curl localhost:8000/v1/config
-open localhost:8000/docs          # Swagger UI
+make api-local          # FastAPI + SQLite + in-process fake Redis; migrates, seeds flags; http://127.0.0.1:8000
+make api-smoke          # hits every /v1 endpoint on that server, prints PASS/FAIL (17 checks)
+make run-app-local-api  # Flutter dev flavor talking to it (no mock, no Firebase)
 ```
 
-Authenticated endpoints verify Firebase ID tokens. Locally use the Firebase Auth emulator
-(`FIREBASE_AUTH_EMULATOR_HOST`) or a dev project; see [docs/firebase-setup.md](docs/firebase-setup.md).
+`make api-local` uses `AUTH_MODE=dev`: instead of Firebase, the server accepts HMAC-signed dev tokens that
+the app gets from `POST /dev/token`. **This mode cannot be enabled outside `APP_ENV` in `dev|local|test`**:
+the settings refuse to load (tests in `api/tests/api/test_dev_auth_and_smoke.py` cover prod, staging, `ENV=prod`,
+typos and empty values), the `/dev/token` route is only mounted in dev mode, and the Flutter app only honours it
+in the `dev` flavor. Set `DATABASE_URL` to use a local Postgres instead of SQLite and `REDIS_URL` for a real Redis.
+On an Android emulator `localhost` is mapped to `10.0.2.2` automatically; on a physical phone pass
+`API_BASE_URL=http://<your-LAN-IP>:8000`. Details: [docs/local-api.md](docs/local-api.md).
+
+### Docker Compose (**unverified**)
+
+`make up` starts the API with Postgres and Redis in containers. The compose file has **not been run yet**
+(Docker is not installed on the machine this was built on). Treat it as a draft until someone has run it
+and removed this note.
+
+```bash
+cp api/.env.example api/.env && make up && curl localhost:8000/health
+```
+
+Real Firebase auth (non-dev) needs the Firebase Auth emulator or a dev project; see
+[docs/firebase-setup.md](docs/firebase-setup.md).
 
 ## Architecture in one screen
 

@@ -1,4 +1,4 @@
-.PHONY: ios-flavors-setup setup api-test api-lint app-test app-lint app-gen up down run-mock test lint openapi
+.PHONY: api-local api-smoke run-app-local-api ios-flavors-setup setup api-test api-lint app-test app-lint app-gen up down run-mock test lint openapi
 
 setup:
 	cd api && python3.12 -m venv .venv && . .venv/bin/activate && pip install -e ".[dev]"
@@ -48,3 +48,20 @@ ios-flavors-setup:  ## re-apply iOS flavor config to the Xcode project (idempote
 	cd app/ios && ruby ../tool/setup_ios_flavors.rb
 	python3 app/tool/make_flavor_icons.py
 	python3 app/tool/gen_ios_strings.py
+
+# ---- the real API on this laptop, no Docker -------------------------------------------------
+# api-local          FastAPI + SQLite + in-process fake Redis + AUTH_MODE=dev (no Firebase). Migrates + seeds flags.
+# api-smoke          hit every /v1 endpoint on the running local server and print PASS/FAIL
+# run-app-local-api  run the Flutter dev flavor against it (Android emulator: localhost is mapped to 10.0.2.2)
+PORT ?= 8000
+
+api-local:
+	cd api && . .venv/bin/activate && PORT=$(PORT) python -m app.local_server
+
+api-smoke:
+	cd api && . .venv/bin/activate && python -m app.smoke http://127.0.0.1:$(PORT)
+
+run-app-local-api:
+	cd app && flutter run --flavor dev -t lib/main_dev.dart \
+	  --dart-define=USE_MOCK=false --dart-define=AUTH_MODE=dev \
+	  --dart-define=API_BASE_URL=http://localhost:$(PORT)

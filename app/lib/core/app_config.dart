@@ -7,6 +7,10 @@ class AppConfig {
     required this.appName,
     required this.apiBaseUrl,
     required this.useMock,
+    this.authMode = const String.fromEnvironment(
+      'AUTH_MODE',
+      defaultValue: 'firebase',
+    ),
     this.sentryDsn = const String.fromEnvironment('SENTRY_DSN'),
     this.posthogKey = const String.fromEnvironment('POSTHOG_KEY'),
     this.googleServerClientId = const String.fromEnvironment(
@@ -49,6 +53,9 @@ class AppConfig {
   final String appName;
   final String apiBaseUrl;
   final bool useMock;
+
+  /// `firebase` (default) or `dev`: the local API's token minting (`make run-app-local-api`).
+  final String authMode;
   final String sentryDsn;
   final String posthogKey;
 
@@ -56,4 +63,8 @@ class AppConfig {
   final String googleServerClientId;
   final String privacyUrl;
   final String termsUrl;
+
+  /// Dev auth talks to a local API that accepts dev tokens. It is only honoured in the `dev`
+  /// flavor, so staging and prod builds can never use it, whatever `--dart-define` says.
+  bool get useDevAuth => authMode == 'dev' && flavor == Flavor.dev && !useMock;
 }

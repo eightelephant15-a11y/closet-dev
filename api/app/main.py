@@ -24,6 +24,10 @@ def create_app() -> FastAPI:
         return {"status": "ok"}
 
     app.include_router(v1_router, prefix="/v1")
+    if settings.auth_mode == "dev":  # unreachable in prod: Settings refuses to load
+        from app.api.dev import router as dev_router
+
+        app.include_router(dev_router)
     return app
 
 

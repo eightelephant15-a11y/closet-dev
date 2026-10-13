@@ -10,7 +10,7 @@ import 'package:stylist/core/providers.dart';
 Future<void> bootstrap(Flavor flavor) async {
   WidgetsFlutterBinding.ensureInitialized();
   final config = AppConfig.forFlavor(flavor);
-  if (!config.useMock) {
+  if (!config.useMock && !config.useDevAuth) {
     await Firebase.initializeApp();
     await GoogleSignIn.instance.initialize(
       serverClientId: config.googleServerClientId.isEmpty

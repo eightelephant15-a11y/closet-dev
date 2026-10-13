@@ -13,6 +13,7 @@ import 'package:stylist/core/storage/key_value_store.dart';
 import 'package:stylist/core/sync/outbox.dart';
 import 'package:stylist/features/auth/application/session_controller.dart';
 import 'package:stylist/features/auth/data/account_repositories.dart';
+import 'package:stylist/features/auth/data/dev_auth_provider.dart';
 import 'package:stylist/features/auth/data/fake_auth_provider.dart';
 import 'package:stylist/features/auth/data/firebase_auth_provider.dart';
 import 'package:stylist/features/auth/domain/account_repository.dart';
@@ -55,17 +56,34 @@ final deviceIdProvider = Provider<String>((ref) {
   return id;
 });
 
+/// `localhost` means the phone itself on an Android emulator; the host machine is 10.0.2.2.
+String resolveApiBaseUrl(String url, {bool? isAndroid}) {
+  final android = isAndroid ?? Platform.isAndroid;
+  if (!android) return url;
+  final uri = Uri.parse(url);
+  return const {'localhost', '127.0.0.1'}.contains(uri.host)
+      ? uri.replace(host: '10.0.2.2').toString()
+      : url;
+}
+
 final authProviderProvider = Provider<AuthProvider>((ref) {
   final config = ref.watch(appConfigProvider);
-  return config.useMock
-      ? FakeAuthProvider(store: ref.watch(keyValueStoreProvider))
-      : FirebaseAuthProvider();
+  if (config.useMock) {
+    return FakeAuthProvider(store: ref.watch(keyValueStoreProvider));
+  }
+  if (config.useDevAuth) {
+    return DevAuthProvider(
+      baseUrl: resolveApiBaseUrl(config.apiBaseUrl),
+      store: ref.watch(keyValueStoreProvider),
+    );
+  }
+  return FirebaseAuthProvider();
 });
 
 final dioProvider = Provider<Dio>((ref) {
   final config = ref.watch(appConfigProvider);
   return buildDio(
-    baseUrl: config.apiBaseUrl,
+    baseUrl: resolveApiBaseUrl(config.apiBaseUrl),
     deviceId: ref.watch(deviceIdProvider),
     getToken: ({forceRefresh = false}) =>
         ref.read(authProviderProvider).idToken(forceRefresh: forceRefresh),
