@@ -1,6 +1,19 @@
 {
   "components": {
     "schemas": {
+      "AgeConfirmation": {
+        "properties": {
+          "confirmed_16_plus": {
+            "title": "Confirmed 16 Plus",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "confirmed_16_plus"
+        ],
+        "title": "AgeConfirmation",
+        "type": "object"
+      },
       "AuthSessionResponse": {
         "properties": {
           "is_new_user": {
@@ -89,6 +102,216 @@
           }
         },
         "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "OnboardingOut": {
+        "properties": {
+          "completed_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Completed At"
+          },
+          "completed_steps": {
+            "items": {
+              "enum": [
+                "welcome",
+                "age",
+                "quiz",
+                "basics",
+                "permissions",
+                "first_items",
+                "first_outfit",
+                "optional",
+                "done"
+              ],
+              "type": "string"
+            },
+            "title": "Completed Steps",
+            "type": "array"
+          },
+          "current_step": {
+            "enum": [
+              "welcome",
+              "age",
+              "quiz",
+              "basics",
+              "permissions",
+              "first_items",
+              "first_outfit",
+              "optional",
+              "done"
+            ],
+            "title": "Current Step",
+            "type": "string"
+          },
+          "started_at": {
+            "format": "date-time",
+            "title": "Started At",
+            "type": "string"
+          },
+          "time_to_first_outfit_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Time To First Outfit Ms"
+          },
+          "variant": {
+            "enum": [
+              "quiz_first",
+              "closet_first"
+            ],
+            "title": "Variant",
+            "type": "string"
+          }
+        },
+        "required": [
+          "variant",
+          "current_step",
+          "completed_steps",
+          "started_at",
+          "completed_at",
+          "time_to_first_outfit_ms"
+        ],
+        "title": "OnboardingOut",
+        "type": "object"
+      },
+      "OnboardingPut": {
+        "properties": {
+          "completed": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Completed"
+          },
+          "completed_steps": {
+            "anyOf": [
+              {
+                "items": {
+                  "enum": [
+                    "welcome",
+                    "age",
+                    "quiz",
+                    "basics",
+                    "permissions",
+                    "first_items",
+                    "first_outfit",
+                    "optional",
+                    "done"
+                  ],
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Completed Steps"
+          },
+          "current_step": {
+            "anyOf": [
+              {
+                "enum": [
+                  "welcome",
+                  "age",
+                  "quiz",
+                  "basics",
+                  "permissions",
+                  "first_items",
+                  "first_outfit",
+                  "optional",
+                  "done"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Current Step"
+          },
+          "time_to_first_outfit_ms": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Time To First Outfit Ms"
+          }
+        },
+        "title": "OnboardingPut",
+        "type": "object"
+      },
+      "PreferencesOut": {
+        "properties": {
+          "answers": {
+            "additionalProperties": true,
+            "title": "Answers",
+            "type": "object"
+          },
+          "model_version": {
+            "title": "Model Version",
+            "type": "integer"
+          },
+          "updated_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated At"
+          },
+          "weights": {
+            "additionalProperties": true,
+            "title": "Weights",
+            "type": "object"
+          }
+        },
+        "required": [
+          "model_version",
+          "answers",
+          "weights"
+        ],
+        "title": "PreferencesOut",
+        "type": "object"
+      },
+      "PreferencesPut": {
+        "properties": {
+          "answers": {
+            "additionalProperties": true,
+            "title": "Answers",
+            "type": "object"
+          }
+        },
+        "required": [
+          "answers"
+        ],
+        "title": "PreferencesPut",
         "type": "object"
       },
       "SessionOut": {
@@ -238,6 +461,17 @@
             "title": "Created At",
             "type": "string"
           },
+          "daily_outfit_time": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Daily Outfit Time"
+          },
           "display_name": {
             "anyOf": [
               {
@@ -290,6 +524,7 @@
           "city",
           "clothing_department",
           "age_confirmed_at",
+          "daily_outfit_time",
           "status",
           "created_at"
         ],
@@ -319,6 +554,18 @@
                 "type": "null"
               }
             ]
+          },
+          "daily_outfit_time": {
+            "anyOf": [
+              {
+                "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Daily Outfit Time"
           },
           "display_name": {
             "anyOf": [
@@ -926,6 +1173,502 @@
         "summary": "Patch Me",
         "tags": [
           "me"
+        ]
+      }
+    },
+    "/v1/me/age-confirmation": {
+      "post": {
+        "operationId": "confirm_age_v1_me_age_confirmation_post",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-device-id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Device-Id"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AgeConfirmation"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Confirm Age",
+        "tags": [
+          "onboarding"
+        ]
+      }
+    },
+    "/v1/me/preferences": {
+      "get": {
+        "operationId": "get_preferences_v1_me_preferences_get",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-device-id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Device-Id"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PreferencesOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Preferences",
+        "tags": [
+          "onboarding"
+        ]
+      },
+      "put": {
+        "operationId": "put_preferences_v1_me_preferences_put",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-device-id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Device-Id"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PreferencesPut"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PreferencesOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Put Preferences",
+        "tags": [
+          "onboarding"
+        ]
+      }
+    },
+    "/v1/onboarding": {
+      "get": {
+        "operationId": "get_onboarding_v1_onboarding_get",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-device-id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Device-Id"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OnboardingOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Onboarding",
+        "tags": [
+          "onboarding"
+        ]
+      },
+      "put": {
+        "operationId": "put_onboarding_v1_onboarding_put",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-device-id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Device-Id"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OnboardingPut"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OnboardingOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Put Onboarding",
+        "tags": [
+          "onboarding"
+        ]
+      }
+    },
+    "/v1/places/autocomplete": {
+      "get": {
+        "description": "Stub for the PlacesService seam: canned US city names, no coordinates.",
+        "operationId": "autocomplete_v1_places_autocomplete_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "default": "",
+              "maxLength": 60,
+              "title": "Q",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-device-id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Device-Id"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "title": "Response Autocomplete V1 Places Autocomplete Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Autocomplete",
+        "tags": [
+          "sample"
+        ]
+      }
+    },
+    "/v1/sample/closet": {
+      "get": {
+        "description": "Read-only sample items for guests. Phase 2 replaces this with the real closet.",
+        "operationId": "sample_closet_v1_sample_closet_get",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-device-id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Device-Id"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  "title": "Response Sample Closet V1 Sample Closet Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Sample Closet",
+        "tags": [
+          "sample"
         ]
       }
     }

@@ -45,6 +45,7 @@ class User(Base):
         _enum(ClothingDepartment)
     )
     age_confirmed_at: Mapped[datetime | None] = mapped_column(UtcDateTime)
+    daily_outfit_time: Mapped[str | None] = mapped_column(String(5))  # local "HH:MM"
     status: Mapped[UserStatus] = mapped_column(_enum(UserStatus), default=UserStatus.active)
     created_at: Mapped[datetime] = mapped_column(UtcDateTime, default=utcnow)
     updated_at: Mapped[datetime] = mapped_column(UtcDateTime, default=utcnow, onupdate=utcnow)

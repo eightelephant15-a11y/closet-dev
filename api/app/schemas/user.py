@@ -18,6 +18,7 @@ class UserOut(BaseModel):
     city: str | None
     clothing_department: ClothingDepartment | None
     age_confirmed_at: datetime | None
+    daily_outfit_time: str | None
     status: UserStatus
     created_at: datetime
 
@@ -28,6 +29,7 @@ class UserPatch(BaseModel):
     city: str | None = Field(default=None, max_length=120)
     clothing_department: ClothingDepartment | None = None
     locale: str | None = Field(default=None, max_length=16)
+    daily_outfit_time: str | None = Field(default=None, pattern=r"^([01]\d|2[0-3]):[0-5]\d$")
 
 
 class SessionRequest(BaseModel):
