@@ -4,14 +4,25 @@ on:
     paths: ["infra/**", ".github/workflows/ci-infra.yml"]
   push:
     branches: [main]
+concurrency:
+  group: ci-infra-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   validate:
+    name: terraform fmt + validate (${{ matrix.env }})
     runs-on: ubuntu-latest
     strategy:
       matrix:
         env: [staging, prod]
+    env:
+      TF_PLUGIN_CACHE_DIR: ${{ github.workspace }}/.terraform-plugin-cache
     steps:
       - uses: actions/checkout@v4
+      - run: mkdir -p "$TF_PLUGIN_CACHE_DIR"
+      - uses: actions/cache@v4
+        with:
+          path: .terraform-plugin-cache
+          key: tf-plugins-${{ runner.os }}-${{ hashFiles('infra/envs/*/.terraform.lock.hcl') }}
       - uses: hashicorp/setup-terraform@v3
       - run: terraform fmt -check -recursive
         working-directory: infra

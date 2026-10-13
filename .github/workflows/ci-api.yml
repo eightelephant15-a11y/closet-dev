@@ -1,11 +1,15 @@
 name: ci-api
 on:
   pull_request:
-    paths: ["api/**", ".github/workflows/ci-api.yml"]
+    paths: ["api/**", "docs/openapi.json", ".github/workflows/ci-api.yml"]
   push:
     branches: [main]
+concurrency:
+  group: ci-api-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
-  test:
+  lint-test:
+    name: api lint + mypy + pytest
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -20,10 +24,34 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-        with: { python-version: "3.12", cache: pip }
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: api/pyproject.toml
       - run: pip install -e ".[dev]"
-      - run: ruff check . && ruff format --check .
+      - run: ruff check .
+      - run: ruff format --check .
       - run: mypy app
       - run: pytest -q
       - name: OpenAPI drift check
         run: python -m app.export_openapi | diff - ../docs/openapi.json
+
+  local-server-smoke:
+    name: real local server + smoke test (no Docker)
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: api } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: api/pyproject.toml
+      - run: pip install -e ".[dev]"
+      - name: Start the local API (SQLite, fake Redis, AUTH_MODE=dev)
+        run: |
+          PORT=8123 python -m app.local_server > server.log 2>&1 &
+          for i in $(seq 1 30); do curl -sf localhost:8123/health && break; sleep 1; done
+      - run: python -m app.smoke http://127.0.0.1:8123
+      - if: failure()
+        run: cat server.log

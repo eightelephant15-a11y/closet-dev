@@ -1,35 +1,72 @@
 name: ci-app
 on:
   pull_request:
-    paths: ["app/**", ".github/workflows/ci-app.yml"]
+    paths: ["app/**", "docs/openapi.json", "api/app/domain/**", ".github/workflows/ci-app.yml"]
   push:
     branches: [main]
+concurrency:
+  group: ci-app-${{ github.ref }}
+  cancel-in-progress: true
+env:
+  # Pinned: `dart format` output differs between SDK releases, and the iOS/Android builds must be reproducible.
+  FLUTTER_VERSION: "3.41.9"
 jobs:
-  test:
+  lint-test:
+    name: app format + analyze + test
     runs-on: ubuntu-latest
     defaults: { run: { working-directory: app } }
     steps:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
-        with: { channel: stable, cache: true }
+        with: { flutter-version: "${{ env.FLUTTER_VERSION }}", channel: stable, cache: true }
       - run: flutter pub get
       - run: flutter gen-l10n
       - run: dart format lib/l10n/gen
       - name: Generated l10n is committed and up to date
         run: git diff --exit-code lib/l10n/gen
+      - name: iOS permission strings are generated from the ARB
+        run: python3 tool/gen_ios_strings.py && git diff --exit-code ios/Runner/en.lproj
       - run: dart run build_runner build -d
       - run: dart format --set-exit-if-changed lib test integration_test
       - run: flutter analyze
       - run: flutter test
+
   build-android:
+    name: android debug build (dev flavor)
     runs-on: ubuntu-latest
-    needs: test
+    needs: lint-test
     defaults: { run: { working-directory: app } }
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
-        with: { distribution: temurin, java-version: "17" }
+        with: { distribution: temurin, java-version: "17", cache: gradle }
       - uses: subosito/flutter-action@v2
-        with: { channel: stable, cache: true }
+        with: { flutter-version: "${{ env.FLUTTER_VERSION }}", channel: stable, cache: true }
       - run: flutter pub get && dart run build_runner build -d
-      - run: flutter build apk --flavor dev -t lib/main_dev.dart --dart-define=USE_MOCK=true
+      - run: flutter build apk --debug --flavor dev -t lib/main_dev.dart --dart-define=USE_MOCK=true
+
+  build-ios:
+    name: ios build, no code signing (${{ matrix.flavor }})
+    runs-on: macos-latest
+    needs: lint-test
+    strategy:
+      fail-fast: false
+      matrix:
+        flavor: [dev, staging, prod]
+    defaults: { run: { working-directory: app } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with: { flutter-version: "${{ env.FLUTTER_VERSION }}", channel: stable, cache: true }
+      - uses: actions/cache@v4
+        with:
+          path: app/ios/Pods
+          key: pods-${{ runner.os }}-${{ hashFiles('app/pubspec.lock', 'app/ios/Podfile') }}
+      - run: flutter pub get && dart run build_runner build -d
+      - run: flutter build ios --release --no-codesign --flavor ${{ matrix.flavor }} -t lib/main_${{ matrix.flavor }}.dart --dart-define=USE_MOCK=true
+      - name: The built app has the flavor's identity
+        run: |
+          APP=$(find build/ios/iphoneos -maxdepth 1 -name '*.app' | head -1)
+          echo "built: $APP"
+          /usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP/Info.plist"
+          /usr/libexec/PlistBuddy -c 'Print :CFBundleDisplayName' "$APP/Info.plist"
