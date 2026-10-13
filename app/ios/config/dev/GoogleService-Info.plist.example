@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- PLACEHOLDER (dev). Download the real file from Firebase console (Project settings -> iOS app
+	     with this flavor's bundle ID) and save it next to this file as GoogleService-Info.plist.
+	     The real file is git-ignored; this example only documents the slot. -->
+	<key>BUNDLE_ID</key>
+	<string>com.example.stylist.dev</string>
+	<key>CLIENT_ID</key>
+	<string>REPLACE_ME.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.REPLACE_ME</string>
+	<key>PROJECT_ID</key>
+	<string>REPLACE_ME</string>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:000000000000:ios:0000000000000000</string>
+</dict>
+</plist>

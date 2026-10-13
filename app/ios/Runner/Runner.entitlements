@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Universal links for onboarding deep links (https://<ASSOCIATED_DOMAIN>/onboarding/resume).
+	     PLACEHOLDER domain comes from ios/Flutter/flavors/<flavor>.xcconfig. Not applied until
+	     CODE_SIGN_ENTITLEMENTS is set there (needs the Associated Domains capability on the App ID). -->
+	<key>com.apple.developer.associated-domains</key>
+	<array>
+		<string>applinks:$(ASSOCIATED_DOMAIN)</string>
+	</array>
+</dict>
+</plist>

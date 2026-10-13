@@ -1,0 +1,4 @@
+/* Generated from lib/l10n/app_en.arb by tool/gen_ios_strings.py. Do not edit. */
+"NSCameraUsageDescription" = "Stylist uses the camera so you can photograph the clothes you own.";
+"NSPhotoLibraryUsageDescription" = "Stylist reads photos you choose so you can add clothes you already have pictures of.";
+"NSLocationWhenInUseUsageDescription" = "Stylist uses your approximate location to suggest weather-appropriate outfits. We never store your exact position.";

@@ -335,5 +335,17 @@
   "deleteDone": "Your account is scheduled for deletion. It will be fully removed within 30 days.",
   "restoreTitle": "Your account is scheduled for deletion",
   "restoreBody": "Restore it now to keep your data, or sign out and let the deletion go ahead.",
-  "restoreButton": "Restore my account"
+  "restoreButton": "Restore my account",
+  "iosCameraUsage": "Stylist uses the camera so you can photograph the clothes you own.",
+  "@iosCameraUsage": {
+    "description": "iOS NSCameraUsageDescription (generated into InfoPlist.strings by tool/gen_ios_strings.py)"
+  },
+  "iosPhotoLibraryUsage": "Stylist reads photos you choose so you can add clothes you already have pictures of.",
+  "@iosPhotoLibraryUsage": {
+    "description": "iOS NSPhotoLibraryUsageDescription"
+  },
+  "iosLocationUsage": "Stylist uses your approximate location to suggest weather-appropriate outfits. We never store your exact position.",
+  "@iosLocationUsage": {
+    "description": "iOS NSLocationWhenInUseUsageDescription"
+  }
 }

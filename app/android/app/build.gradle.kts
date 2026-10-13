@@ -32,19 +32,20 @@ android {
 
     flavorDimensions += "env"
     productFlavors {
-        create("dev") {
-            dimension = "env"
-            applicationIdSuffix = ".dev"
-            resValue("string", "app_name", "Stylist Dev")
-        }
-        create("staging") {
-            dimension = "env"
-            applicationIdSuffix = ".staging"
-            resValue("string", "app_name", "Stylist Staging")
-        }
-        create("prod") {
-            dimension = "env"
-            resValue("string", "app_name", "Stylist")
+        // THE place to change the Android app name, application ID suffix and deep-link scheme.
+        // The base application ID is `applicationId` above. See docs/rename-app.md.
+        data class Flavor(val suffix: String, val appName: String, val scheme: String)
+        mapOf(
+            "dev" to Flavor(".dev", "Stylist Dev", "stylist-dev"),
+            "staging" to Flavor(".staging", "Stylist Staging", "stylist-staging"),
+            "prod" to Flavor("", "Stylist", "stylist"),
+        ).forEach { (name, f) ->
+            create(name) {
+                dimension = "env"
+                if (f.suffix.isNotEmpty()) applicationIdSuffix = f.suffix
+                resValue("string", "app_name", f.appName)
+                manifestPlaceholders["deepLinkScheme"] = f.scheme
+            }
         }
     }
 

@@ -700,4 +700,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get restoreButton => 'Restore my account';
+
+  @override
+  String get iosCameraUsage =>
+      'Stylist uses the camera so you can photograph the clothes you own.';
+
+  @override
+  String get iosPhotoLibraryUsage =>
+      'Stylist reads photos you choose so you can add clothes you already have pictures of.';
+
+  @override
+  String get iosLocationUsage =>
+      'Stylist uses your approximate location to suggest weather-appropriate outfits. We never store your exact position.';
 }

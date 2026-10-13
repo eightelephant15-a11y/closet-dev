@@ -1341,6 +1341,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Restore my account'**
   String get restoreButton;
+
+  /// iOS NSCameraUsageDescription (generated into InfoPlist.strings by tool/gen_ios_strings.py)
+  ///
+  /// In en, this message translates to:
+  /// **'Stylist uses the camera so you can photograph the clothes you own.'**
+  String get iosCameraUsage;
+
+  /// iOS NSPhotoLibraryUsageDescription
+  ///
+  /// In en, this message translates to:
+  /// **'Stylist reads photos you choose so you can add clothes you already have pictures of.'**
+  String get iosPhotoLibraryUsage;
+
+  /// iOS NSLocationWhenInUseUsageDescription
+  ///
+  /// In en, this message translates to:
+  /// **'Stylist uses your approximate location to suggest weather-appropriate outfits. We never store your exact position.'**
+  String get iosLocationUsage;
 }
 
 class _AppLocalizationsDelegate

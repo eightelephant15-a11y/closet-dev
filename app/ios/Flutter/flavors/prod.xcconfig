@@ -1,0 +1,24 @@
+// ---------------------------------------------------------------------------------------------
+// iOS settings for the "prod" flavor. This is the ONE place to change the app name, bundle ID,
+// icon, deep-link scheme and Google/Firebase identifiers for iOS. See docs/rename-app.md.
+// ---------------------------------------------------------------------------------------------
+FLAVOR_NAME = prod
+APP_DISPLAY_NAME = Stylist
+APP_BUNDLE_ID = com.example.stylist
+PRODUCT_BUNDLE_IDENTIFIER = $(APP_BUNDLE_ID)
+ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon
+
+// Custom URL scheme for onboarding deep links: stylist://onboarding/resume
+DEEP_LINK_SCHEME = stylist
+
+// PLACEHOLDER: replace with REVERSED_CLIENT_ID from the real GoogleService-Info.plist once the
+// Firebase project exists (Google sign-in redirects back to this scheme).
+GOOGLE_REVERSED_CLIENT_ID = com.googleusercontent.apps.REPLACE_WITH_REVERSED_CLIENT_ID_PROD
+
+// PLACEHOLDER: domain that hosts /.well-known/apple-app-site-association for universal links.
+ASSOCIATED_DOMAIN = stylist.example.com
+
+// Universal links are OFF by default so unsigned and first-time builds work. To enable them:
+// 1) add the Associated Domains capability to the App ID, 2) host the AASA file,
+// 3) replace the empty line below with:  CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements
+CODE_SIGN_ENTITLEMENTS =
