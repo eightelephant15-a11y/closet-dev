@@ -61,3 +61,10 @@ android {
 flutter {
     source = "../.."
 }
+
+// Firebase (Google sign-in). Real files are git-ignored: put google-services.json in
+// app/src/<flavor>/ (dev, staging, prod). Until at least one exists the plugin is skipped so mock-mode
+// builds keep working. Once you add one, add one for EVERY flavor you build. See docs/rename-app.md.
+if (listOf("dev", "staging", "prod").any { file("src/$it/google-services.json").exists() }) {
+    apply(plugin = "com.google.gms.google-services")
+}

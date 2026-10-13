@@ -203,3 +203,13 @@ def test_local_server_refuses_to_run_with_prod_env(monkeypatch: pytest.MonkeyPat
             local_server.main()
     finally:
         get_settings.cache_clear()
+
+
+def test_local_server_can_target_real_firebase(monkeypatch: pytest.MonkeyPatch) -> None:
+    from app import local_server
+
+    monkeypatch.setenv("AUTH_MODE", "firebase")
+    local_server.prepare_environment()
+    import os
+
+    assert os.environ["AUTH_MODE"] == "firebase"

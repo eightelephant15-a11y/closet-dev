@@ -17,7 +17,9 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def prepare_environment() -> None:
     os.environ.setdefault("APP_ENV", "dev")
-    os.environ["AUTH_MODE"] = "dev"
+    # Default is dev auth. `AUTH_MODE=firebase make api-local` runs the same local stack against
+    # real Firebase (needs GOOGLE_APPLICATION_CREDENTIALS or the Auth emulator) for go-live tests.
+    os.environ.setdefault("AUTH_MODE", "dev")
     os.environ.setdefault("DEV_AUTH_SECRET", "local-dev-secret-not-for-production")
     os.environ.setdefault("DATABASE_URL", f"sqlite+aiosqlite:///{ROOT / 'local.db'}")
     os.environ.setdefault("EXPORT_DIR", str(ROOT / ".exports"))
@@ -72,11 +74,17 @@ def main() -> int:
     else:
         redis_note = settings.redis_url
 
+    auth_note = (
+        " (mint tokens: POST /dev/token)"
+        if settings.auth_mode == "dev"
+        else " (real Firebase tokens)"
+    )
     host, port = os.environ.get("HOST", "127.0.0.1"), int(os.environ.get("PORT", "8000"))
     print(
         f"\nLocal API on http://{host}:{port}  (docs: /docs)\n"
         f"  database : {settings.database_url}\n  redis    : {redis_note}\n"
-        f"  auth     : AUTH_MODE=dev (mint tokens: POST /dev/token)\n"
+        f"  auth     : AUTH_MODE={settings.auth_mode}"
+        f"{auth_note}\n"
         f"  flags    : seeded {seeded or 'nothing new'}\n"
         f"  smoke    : python -m app.smoke http://{host}:{port}\n",
         file=sys.stderr,

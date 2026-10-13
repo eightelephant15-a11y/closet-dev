@@ -1,0 +1,5 @@
+{
+  "_comment": "PLACEHOLDER (prod). Download the real google-services.json from Firebase console (Project settings > Android app with this flavor's applicationId) and save it next to this file as google-services.json (git-ignored).",
+  "project_info": { "project_number": "000000000000", "project_id": "REPLACE_ME" },
+  "client": [ { "client_info": { "mobilesdk_app_id": "1:000000000000:android:0000000000000000", "android_client_info": { "package_name": "com.example.stylist" } } } ]
+}
