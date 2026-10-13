@@ -19,7 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: mkdir -p "$TF_PLUGIN_CACHE_DIR"
-      - uses: actions/cache@v4
+      - uses: actions/cache@v6
         with:
           path: .terraform-plugin-cache
           key: tf-plugins-${{ runner.os }}-${{ hashFiles('infra/envs/*/.terraform.lock.hcl') }}
