@@ -19,6 +19,7 @@ abstract class AppUser with _$AppUser {
     String? city,
     ClothingDepartment? clothingDepartment,
     DateTime? ageConfirmedAt,
+    String? dailyOutfitTime,
   }) = _AppUser;
 
   factory AppUser.fromJson(Map<String, dynamic> json) =>
@@ -32,12 +33,14 @@ class UserPatch {
     this.units,
     this.city,
     this.clothingDepartment,
+    this.dailyOutfitTime,
   });
 
   final String? displayName;
   final Units? units;
   final String? city;
   final ClothingDepartment? clothingDepartment;
+  final String? dailyOutfitTime;
 
   Map<String, dynamic> toJson() => {
     if (displayName != null) 'display_name': displayName,
@@ -45,5 +48,6 @@ class UserPatch {
     if (city != null) 'city': city,
     if (clothingDepartment != null)
       'clothing_department': clothingDepartment!.name,
+    if (dailyOutfitTime != null) 'daily_outfit_time': dailyOutfitTime,
   };
 }

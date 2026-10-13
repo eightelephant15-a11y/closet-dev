@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:stylist/core/providers.dart';
 import 'package:stylist/core/sync/outbox.dart';
+import 'package:stylist/features/auth/application/session_controller.dart';
 import 'package:stylist/features/auth/domain/app_user.dart';
 
 /// Op types understood by the outbox. Extend here when adding synced features.
@@ -22,7 +23,7 @@ Future<void> executeOutboxOp(Ref ref, OutboxOp op) async {
       await onboarding.putPreferences(op.payload);
     case OutboxOps.userPatch:
       final p = op.payload;
-      await ref
+      final updated = await ref
           .read(accountRepositoryProvider)
           .patchMe(
             UserPatch(
@@ -31,6 +32,7 @@ Future<void> executeOutboxOp(Ref ref, OutboxOp op) async {
                   ? null
                   : Units.values.byName(p['units'] as String),
               city: p['city'] as String?,
+              dailyOutfitTime: p['daily_outfit_time'] as String?,
               clothingDepartment: p['clothing_department'] == null
                   ? null
                   : ClothingDepartment.values.byName(
@@ -38,6 +40,7 @@ Future<void> executeOutboxOp(Ref ref, OutboxOp op) async {
                     ),
             ),
           );
+      ref.read(sessionControllerProvider.notifier).updateUser(updated);
     default:
       throw StateError('Unknown outbox op ${op.type}');
   }

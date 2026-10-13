@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:stylist/app.dart';
 import 'package:stylist/core/analytics/analytics_service.dart';
 import 'package:stylist/core/app_config.dart';
+import 'package:stylist/core/permissions/permissions_service.dart';
 import 'package:stylist/core/providers.dart';
 import 'package:stylist/core/storage/key_value_store.dart';
 import 'package:stylist/features/auth/data/account_repositories.dart';
@@ -39,6 +40,7 @@ class Harness {
   late final MockAccountRepository accounts;
   late final MockConfigRepository configRepo;
   late final MockOnboardingRepository onboarding;
+  final FakePermissionsService permissions = FakePermissionsService();
 
   List<Override> get overrides => [
     appConfigProvider.overrideWithValue(AppConfig.forFlavor(Flavor.dev)),
@@ -50,6 +52,7 @@ class Harness {
       onboarding as OnboardingRepository,
     ),
     analyticsServiceProvider.overrideWithValue(analytics),
+    permissionsServiceProvider.overrideWithValue(permissions),
   ];
 
   ProviderContainer container() => ProviderContainer(overrides: overrides);

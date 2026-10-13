@@ -5,16 +5,20 @@ import 'package:stylist/core/providers.dart';
 import 'package:stylist/features/auth/application/boot.dart';
 import 'package:stylist/features/auth/application/session_controller.dart';
 import 'package:stylist/features/auth/presentation/sign_in_screen.dart';
+import 'package:stylist/features/first_items/first_items_screen.dart';
+import 'package:stylist/features/first_outfit/first_outfit_screen.dart';
 import 'package:stylist/features/home/home_screen.dart';
 import 'package:stylist/features/onboarding/application/onboarding_controller.dart';
 import 'package:stylist/features/onboarding/domain/onboarding_state.dart';
 import 'package:stylist/features/onboarding/domain/onboarding_step.dart';
 import 'package:stylist/features/onboarding/presentation/age_gate_screen.dart';
+import 'package:stylist/features/onboarding/presentation/basics_screen.dart';
 import 'package:stylist/features/onboarding/presentation/blocked_screen.dart';
 import 'package:stylist/features/onboarding/presentation/quiz_screen.dart';
 import 'package:stylist/features/onboarding/presentation/splash_screen.dart';
-import 'package:stylist/features/onboarding/presentation/step_placeholder_screen.dart';
 import 'package:stylist/features/onboarding/presentation/welcome_screen.dart';
+import 'package:stylist/features/optional/optional_screens.dart';
+import 'package:stylist/features/permissions/permissions_screen.dart';
 
 abstract final class Routes {
   static const splash = '/splash';
@@ -48,6 +52,7 @@ String? decideRedirect({
   // Signed in from here.
   if (onboarding == null) return result(go(Routes.splash));
   if (onboarding.isDone) {
+    if (location.startsWith('/optional/')) return null;
     final inFlow =
         location.startsWith('/onboarding') ||
         const {
@@ -60,6 +65,14 @@ String? decideRedirect({
   }
   final target = onboarding.current.path;
   if (location == Routes.resume) return target;
+  if (location.startsWith('/optional/') &&
+      onboarding.current == OnboardingStep.optional) {
+    return null;
+  }
+  if (location.startsWith('/optional/') &&
+      onboarding.current == OnboardingStep.optional) {
+    return null;
+  }
   if (location.startsWith('/onboarding/')) {
     final step = OnboardingStep.tryParse(
       location.substring('/onboarding/'.length),
@@ -127,17 +140,34 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: OnboardingStep.quiz.path,
         builder: (_, _) => const QuizScreen(),
       ),
-      for (final s in const [
-        OnboardingStep.basics,
-        OnboardingStep.permissions,
-        OnboardingStep.firstItems,
-        OnboardingStep.firstOutfit,
-        OnboardingStep.optional,
-      ])
-        GoRoute(
-          path: s.path,
-          builder: (_, _) => StepPlaceholderScreen(step: s),
-        ),
+      GoRoute(
+        path: OnboardingStep.basics.path,
+        builder: (_, _) => const BasicsScreen(),
+      ),
+      GoRoute(
+        path: OnboardingStep.permissions.path,
+        builder: (_, _) => const PermissionsScreen(),
+      ),
+      GoRoute(
+        path: OnboardingStep.firstItems.path,
+        builder: (_, _) => const FirstItemsScreen(),
+      ),
+      GoRoute(
+        path: OnboardingStep.firstOutfit.path,
+        builder: (_, _) => const FirstOutfitScreen(),
+      ),
+      GoRoute(
+        path: OnboardingStep.optional.path,
+        builder: (_, _) => const OptionalStepsScreen(),
+      ),
+      GoRoute(
+        path: OptionalRoutes.partner,
+        builder: (_, _) => const PartnerPlaceholderScreen(),
+      ),
+      GoRoute(
+        path: OptionalRoutes.notifications,
+        builder: (_, _) => const NotificationTimeScreen(),
+      ),
     ],
   );
   return router;

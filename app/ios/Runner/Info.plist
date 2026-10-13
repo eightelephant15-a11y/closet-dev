@@ -66,5 +66,22 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>Stylist uses the camera so you can photograph the clothes you own.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Stylist reads photos you choose so you can add clothes you already have pictures of.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Stylist uses your approximate location to suggest weather-appropriate outfits. We never store your exact position.</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.example.stylist.deeplink</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>stylist</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

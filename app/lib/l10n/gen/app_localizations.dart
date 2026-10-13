@@ -627,6 +627,456 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Pick the closest match'**
   String get quizDressCodeHint;
+
+  /// No description provided for @basicsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A few basics'**
+  String get basicsTitle;
+
+  /// No description provided for @basicsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This helps tailor your outfits. Everything here is optional.'**
+  String get basicsBody;
+
+  /// No description provided for @basicsNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Your name'**
+  String get basicsNameLabel;
+
+  /// No description provided for @basicsUnitsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Units'**
+  String get basicsUnitsLabel;
+
+  /// No description provided for @unitsImperial.
+  ///
+  /// In en, this message translates to:
+  /// **'Imperial (in, lb, °F)'**
+  String get unitsImperial;
+
+  /// No description provided for @unitsMetric.
+  ///
+  /// In en, this message translates to:
+  /// **'Metric (cm, kg, °C)'**
+  String get unitsMetric;
+
+  /// No description provided for @basicsCityLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'City'**
+  String get basicsCityLabel;
+
+  /// No description provided for @basicsCityHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Start typing your city'**
+  String get basicsCityHint;
+
+  /// No description provided for @basicsCityPrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'We only store the city you type, never your exact location.'**
+  String get basicsCityPrivacy;
+
+  /// No description provided for @cityNoMatches.
+  ///
+  /// In en, this message translates to:
+  /// **'No matches. You can keep what you typed.'**
+  String get cityNoMatches;
+
+  /// No description provided for @permCameraTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Photograph your clothes'**
+  String get permCameraTitle;
+
+  /// No description provided for @permCameraBody.
+  ///
+  /// In en, this message translates to:
+  /// **'We use the camera so you can add clothes you own. Your photos stay private to you.'**
+  String get permCameraBody;
+
+  /// No description provided for @permPhotosTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick photos from your library'**
+  String get permPhotosTitle;
+
+  /// No description provided for @permPhotosBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose pictures of your clothes. We only read the ones you select.'**
+  String get permPhotosBody;
+
+  /// No description provided for @permLocationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Weather-aware outfits'**
+  String get permLocationTitle;
+
+  /// No description provided for @permLocationBody.
+  ///
+  /// In en, this message translates to:
+  /// **'We use your approximate location to check the weather. We never store your exact position.'**
+  String get permLocationBody;
+
+  /// No description provided for @permNotificationsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your daily outfit'**
+  String get permNotificationsTitle;
+
+  /// No description provided for @permNotificationsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Get one outfit idea each morning, at the time you choose.'**
+  String get permNotificationsBody;
+
+  /// No description provided for @permAllow.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow'**
+  String get permAllow;
+
+  /// No description provided for @permNotNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get permNotNow;
+
+  /// No description provided for @permOpenSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open settings'**
+  String get permOpenSettings;
+
+  /// No description provided for @permDeniedCamera.
+  ///
+  /// In en, this message translates to:
+  /// **'No problem. You can use the sample closet or add photos from your library instead.'**
+  String get permDeniedCamera;
+
+  /// No description provided for @permDeniedPhotos.
+  ///
+  /// In en, this message translates to:
+  /// **'No problem. You can use the sample closet for now.'**
+  String get permDeniedPhotos;
+
+  /// No description provided for @permDeniedLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'No problem. Type your city and we\'ll use that for the weather.'**
+  String get permDeniedLocation;
+
+  /// No description provided for @permDeniedNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'No problem. You\'ll see your daily outfit when you open the app.'**
+  String get permDeniedNotifications;
+
+  /// No description provided for @permGranted.
+  ///
+  /// In en, this message translates to:
+  /// **'Allowed. Thanks!'**
+  String get permGranted;
+
+  /// No description provided for @firstItemsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add your first 10 items'**
+  String get firstItemsTitle;
+
+  /// No description provided for @firstItemsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'A few pieces are enough to style your first outfit. You don\'t need your whole closet.'**
+  String get firstItemsBody;
+
+  /// No description provided for @firstItemsProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} of {total} items'**
+  String firstItemsProgress(int count, int total);
+
+  /// No description provided for @unlockRuleTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'To unlock your first outfit'**
+  String get unlockRuleTitle;
+
+  /// No description provided for @unlockRuleOr.
+  ///
+  /// In en, this message translates to:
+  /// **'or'**
+  String get unlockRuleOr;
+
+  /// No description provided for @ruleTops.
+  ///
+  /// In en, this message translates to:
+  /// **'Tops: {have} of 2'**
+  String ruleTops(int have);
+
+  /// No description provided for @ruleBottoms.
+  ///
+  /// In en, this message translates to:
+  /// **'Bottoms: {have} of 2'**
+  String ruleBottoms(int have);
+
+  /// No description provided for @ruleShoes.
+  ///
+  /// In en, this message translates to:
+  /// **'Shoes: {have} of 1'**
+  String ruleShoes(int have);
+
+  /// No description provided for @ruleDress.
+  ///
+  /// In en, this message translates to:
+  /// **'A dress: {have} of 1'**
+  String ruleDress(int have);
+
+  /// No description provided for @firstItemsUnlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready! Your first outfit is unlocked.'**
+  String get firstItemsUnlocked;
+
+  /// No description provided for @useSampleCloset.
+  ///
+  /// In en, this message translates to:
+  /// **'Use sample closet'**
+  String get useSampleCloset;
+
+  /// No description provided for @addWithCamera.
+  ///
+  /// In en, this message translates to:
+  /// **'Add with camera (coming soon)'**
+  String get addWithCamera;
+
+  /// No description provided for @seeFirstOutfit.
+  ///
+  /// In en, this message translates to:
+  /// **'See my first outfit'**
+  String get seeFirstOutfit;
+
+  /// No description provided for @firstItemsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Add items or use the sample closet to continue.'**
+  String get firstItemsHint;
+
+  /// No description provided for @firstOutfitTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your first outfit'**
+  String get firstOutfitTitle;
+
+  /// No description provided for @firstOutfitAlternatives.
+  ///
+  /// In en, this message translates to:
+  /// **'Two more ideas'**
+  String get firstOutfitAlternatives;
+
+  /// No description provided for @whyFavouriteColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Built around {color}, one of your favourite colours.'**
+  String whyFavouriteColor(String color);
+
+  /// No description provided for @whyDressCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Fits your {level} dress code.'**
+  String whyDressCode(String level);
+
+  /// No description provided for @whyGoal.
+  ///
+  /// In en, this message translates to:
+  /// **'A good pick for {goal}.'**
+  String whyGoal(String goal);
+
+  /// No description provided for @whyVersatile.
+  ///
+  /// In en, this message translates to:
+  /// **'A versatile pick from your closet.'**
+  String get whyVersatile;
+
+  /// No description provided for @outfitLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Outfit {n}'**
+  String outfitLabel(int n);
+
+  /// No description provided for @saveOutfit.
+  ///
+  /// In en, this message translates to:
+  /// **'Save outfit'**
+  String get saveOutfit;
+
+  /// No description provided for @outfitSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Outfit saved'**
+  String get outfitSaved;
+
+  /// No description provided for @saveSignInTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to save'**
+  String get saveSignInTitle;
+
+  /// No description provided for @saveSignInBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Create your account to keep this outfit and your closet on every device. Nothing you\'ve done so far is lost.'**
+  String get saveSignInBody;
+
+  /// No description provided for @saveSignInButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Google'**
+  String get saveSignInButton;
+
+  /// No description provided for @saveSignInLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Maybe later'**
+  String get saveSignInLater;
+
+  /// No description provided for @firstOutfitEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'We need a bit more'**
+  String get firstOutfitEmptyTitle;
+
+  /// No description provided for @firstOutfitEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a few more items and we\'ll build your outfit.'**
+  String get firstOutfitEmptyBody;
+
+  /// No description provided for @backToItems.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to items'**
+  String get backToItems;
+
+  /// No description provided for @optionalTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Two optional extras'**
+  String get optionalTitle;
+
+  /// No description provided for @optionalBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Both can wait. You can find them on Home any time.'**
+  String get optionalBody;
+
+  /// No description provided for @optionalPartnerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite a partner'**
+  String get optionalPartnerTitle;
+
+  /// No description provided for @optionalPartnerBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Style together. Coming soon.'**
+  String get optionalPartnerBody;
+
+  /// No description provided for @optionalNotifTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily outfit time'**
+  String get optionalNotifTitle;
+
+  /// No description provided for @optionalNotifBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick when you\'d like your outfit idea.'**
+  String get optionalNotifBody;
+
+  /// No description provided for @optionalFinish.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish setup'**
+  String get optionalFinish;
+
+  /// No description provided for @optionalSetFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Set for {time}'**
+  String optionalSetFor(String time);
+
+  /// No description provided for @partnerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite a partner'**
+  String get partnerTitle;
+
+  /// No description provided for @partnerBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Couples styling is coming soon. We\'ll let you know when you can invite someone.'**
+  String get partnerBody;
+
+  /// No description provided for @gotIt.
+  ///
+  /// In en, this message translates to:
+  /// **'Got it'**
+  String get gotIt;
+
+  /// No description provided for @notifTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'When should we send your outfit?'**
+  String get notifTitle;
+
+  /// No description provided for @notifBody.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ll suggest one outfit a day at this time.'**
+  String get notifBody;
+
+  /// No description provided for @notifSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save time'**
+  String get notifSave;
+
+  /// No description provided for @notifChooseTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose time'**
+  String get notifChooseTime;
+
+  /// No description provided for @homeGreeting.
+  ///
+  /// In en, this message translates to:
+  /// **'Hi, {name}'**
+  String homeGreeting(String name);
+
+  /// No description provided for @homeGreetingNoName.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome'**
+  String get homeGreetingNoName;
+
+  /// No description provided for @homeFinishSetup.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish setting up'**
+  String get homeFinishSetup;
+
+  /// No description provided for @homeSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get homeSettings;
 }
 
 class _AppLocalizationsDelegate

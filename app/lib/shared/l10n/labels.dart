@@ -1,5 +1,7 @@
 import 'package:stylist/features/auth/domain/app_user.dart';
+import 'package:stylist/features/onboarding/domain/onboarding_state.dart';
 import 'package:stylist/features/onboarding/domain/quiz.dart';
+import 'package:stylist/features/recommendation/domain/recommendation.dart';
 import 'package:stylist/l10n/gen/app_localizations.dart';
 
 extension QuizLabels on AppLocalizations {
@@ -68,5 +70,37 @@ extension QuizLabels on AppLocalizations {
     NeverWear.skirts => neverSkirts,
     NeverWear.dresses => neverDresses,
     NeverWear.cropTops => neverCropTops,
+  };
+}
+
+extension WhyLabel on AppLocalizations {
+  String why(Why w) => switch (w.kind) {
+    WhyKind.favouriteColor => whyFavouriteColor(color(w.color!).toLowerCase()),
+    WhyKind.dressCode => whyDressCode(dressCode(w.level!).toLowerCase()),
+    WhyKind.goal => whyGoal(goal(w.goal!).toLowerCase()),
+    WhyKind.versatile => whyVersatile,
+  };
+}
+
+extension PermissionLabels on AppLocalizations {
+  String permTitle(PermissionKind k) => switch (k) {
+    PermissionKind.camera => permCameraTitle,
+    PermissionKind.photos => permPhotosTitle,
+    PermissionKind.location => permLocationTitle,
+    PermissionKind.notifications => permNotificationsTitle,
+  };
+
+  String permBody(PermissionKind k) => switch (k) {
+    PermissionKind.camera => permCameraBody,
+    PermissionKind.photos => permPhotosBody,
+    PermissionKind.location => permLocationBody,
+    PermissionKind.notifications => permNotificationsBody,
+  };
+
+  String permDenied(PermissionKind k) => switch (k) {
+    PermissionKind.camera => permDeniedCamera,
+    PermissionKind.photos => permDeniedPhotos,
+    PermissionKind.location => permDeniedLocation,
+    PermissionKind.notifications => permDeniedNotifications,
   };
 }

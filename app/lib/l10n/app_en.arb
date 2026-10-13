@@ -122,5 +122,160 @@
   },
   "startingUp": "Getting things ready",
   "quizNoneOfThese": "Nothing, I'll wear anything",
-  "quizDressCodeHint": "Pick the closest match"
+  "quizDressCodeHint": "Pick the closest match",
+  "basicsTitle": "A few basics",
+  "basicsBody": "This helps tailor your outfits. Everything here is optional.",
+  "basicsNameLabel": "Your name",
+  "basicsUnitsLabel": "Units",
+  "unitsImperial": "Imperial (in, lb, \u00b0F)",
+  "unitsMetric": "Metric (cm, kg, \u00b0C)",
+  "basicsCityLabel": "City",
+  "basicsCityHint": "Start typing your city",
+  "basicsCityPrivacy": "We only store the city you type, never your exact location.",
+  "cityNoMatches": "No matches. You can keep what you typed.",
+  "permCameraTitle": "Photograph your clothes",
+  "permCameraBody": "We use the camera so you can add clothes you own. Your photos stay private to you.",
+  "permPhotosTitle": "Pick photos from your library",
+  "permPhotosBody": "Choose pictures of your clothes. We only read the ones you select.",
+  "permLocationTitle": "Weather-aware outfits",
+  "permLocationBody": "We use your approximate location to check the weather. We never store your exact position.",
+  "permNotificationsTitle": "Your daily outfit",
+  "permNotificationsBody": "Get one outfit idea each morning, at the time you choose.",
+  "permAllow": "Allow",
+  "permNotNow": "Not now",
+  "permOpenSettings": "Open settings",
+  "permDeniedCamera": "No problem. You can use the sample closet or add photos from your library instead.",
+  "permDeniedPhotos": "No problem. You can use the sample closet for now.",
+  "permDeniedLocation": "No problem. Type your city and we'll use that for the weather.",
+  "permDeniedNotifications": "No problem. You'll see your daily outfit when you open the app.",
+  "permGranted": "Allowed. Thanks!",
+  "firstItemsTitle": "Add your first 10 items",
+  "firstItemsBody": "A few pieces are enough to style your first outfit. You don't need your whole closet.",
+  "firstItemsProgress": "{count} of {total} items",
+  "@firstItemsProgress": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "unlockRuleTitle": "To unlock your first outfit",
+  "unlockRuleOr": "or",
+  "ruleTops": "Tops: {have} of 2",
+  "@ruleTops": {
+    "placeholders": {
+      "have": {
+        "type": "int"
+      }
+    }
+  },
+  "ruleBottoms": "Bottoms: {have} of 2",
+  "@ruleBottoms": {
+    "placeholders": {
+      "have": {
+        "type": "int"
+      }
+    }
+  },
+  "ruleShoes": "Shoes: {have} of 1",
+  "@ruleShoes": {
+    "placeholders": {
+      "have": {
+        "type": "int"
+      }
+    }
+  },
+  "ruleDress": "A dress: {have} of 1",
+  "@ruleDress": {
+    "placeholders": {
+      "have": {
+        "type": "int"
+      }
+    }
+  },
+  "firstItemsUnlocked": "Ready! Your first outfit is unlocked.",
+  "useSampleCloset": "Use sample closet",
+  "addWithCamera": "Add with camera (coming soon)",
+  "seeFirstOutfit": "See my first outfit",
+  "firstItemsHint": "Add items or use the sample closet to continue.",
+  "firstOutfitTitle": "Your first outfit",
+  "firstOutfitAlternatives": "Two more ideas",
+  "whyFavouriteColor": "Built around {color}, one of your favourite colours.",
+  "@whyFavouriteColor": {
+    "placeholders": {
+      "color": {
+        "type": "String"
+      }
+    }
+  },
+  "whyDressCode": "Fits your {level} dress code.",
+  "@whyDressCode": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "whyGoal": "A good pick for {goal}.",
+  "@whyGoal": {
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "whyVersatile": "A versatile pick from your closet.",
+  "outfitLabel": "Outfit {n}",
+  "@outfitLabel": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "saveOutfit": "Save outfit",
+  "outfitSaved": "Outfit saved",
+  "saveSignInTitle": "Sign in to save",
+  "saveSignInBody": "Create your account to keep this outfit and your closet on every device. Nothing you've done so far is lost.",
+  "saveSignInButton": "Continue with Google",
+  "saveSignInLater": "Maybe later",
+  "firstOutfitEmptyTitle": "We need a bit more",
+  "firstOutfitEmptyBody": "Add a few more items and we'll build your outfit.",
+  "backToItems": "Back to items",
+  "optionalTitle": "Two optional extras",
+  "optionalBody": "Both can wait. You can find them on Home any time.",
+  "optionalPartnerTitle": "Invite a partner",
+  "optionalPartnerBody": "Style together. Coming soon.",
+  "optionalNotifTitle": "Daily outfit time",
+  "optionalNotifBody": "Pick when you'd like your outfit idea.",
+  "optionalFinish": "Finish setup",
+  "optionalSetFor": "Set for {time}",
+  "@optionalSetFor": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "partnerTitle": "Invite a partner",
+  "partnerBody": "Couples styling is coming soon. We'll let you know when you can invite someone.",
+  "gotIt": "Got it",
+  "notifTitle": "When should we send your outfit?",
+  "notifBody": "We'll suggest one outfit a day at this time.",
+  "notifSave": "Save time",
+  "notifChooseTime": "Choose time",
+  "homeGreeting": "Hi, {name}",
+  "@homeGreeting": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "homeGreetingNoName": "Welcome",
+  "homeFinishSetup": "Finish setting up",
+  "homeSettings": "Settings"
 }

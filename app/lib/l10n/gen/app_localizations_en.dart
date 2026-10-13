@@ -290,4 +290,267 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get quizDressCodeHint => 'Pick the closest match';
+
+  @override
+  String get basicsTitle => 'A few basics';
+
+  @override
+  String get basicsBody =>
+      'This helps tailor your outfits. Everything here is optional.';
+
+  @override
+  String get basicsNameLabel => 'Your name';
+
+  @override
+  String get basicsUnitsLabel => 'Units';
+
+  @override
+  String get unitsImperial => 'Imperial (in, lb, °F)';
+
+  @override
+  String get unitsMetric => 'Metric (cm, kg, °C)';
+
+  @override
+  String get basicsCityLabel => 'City';
+
+  @override
+  String get basicsCityHint => 'Start typing your city';
+
+  @override
+  String get basicsCityPrivacy =>
+      'We only store the city you type, never your exact location.';
+
+  @override
+  String get cityNoMatches => 'No matches. You can keep what you typed.';
+
+  @override
+  String get permCameraTitle => 'Photograph your clothes';
+
+  @override
+  String get permCameraBody =>
+      'We use the camera so you can add clothes you own. Your photos stay private to you.';
+
+  @override
+  String get permPhotosTitle => 'Pick photos from your library';
+
+  @override
+  String get permPhotosBody =>
+      'Choose pictures of your clothes. We only read the ones you select.';
+
+  @override
+  String get permLocationTitle => 'Weather-aware outfits';
+
+  @override
+  String get permLocationBody =>
+      'We use your approximate location to check the weather. We never store your exact position.';
+
+  @override
+  String get permNotificationsTitle => 'Your daily outfit';
+
+  @override
+  String get permNotificationsBody =>
+      'Get one outfit idea each morning, at the time you choose.';
+
+  @override
+  String get permAllow => 'Allow';
+
+  @override
+  String get permNotNow => 'Not now';
+
+  @override
+  String get permOpenSettings => 'Open settings';
+
+  @override
+  String get permDeniedCamera =>
+      'No problem. You can use the sample closet or add photos from your library instead.';
+
+  @override
+  String get permDeniedPhotos =>
+      'No problem. You can use the sample closet for now.';
+
+  @override
+  String get permDeniedLocation =>
+      'No problem. Type your city and we\'ll use that for the weather.';
+
+  @override
+  String get permDeniedNotifications =>
+      'No problem. You\'ll see your daily outfit when you open the app.';
+
+  @override
+  String get permGranted => 'Allowed. Thanks!';
+
+  @override
+  String get firstItemsTitle => 'Add your first 10 items';
+
+  @override
+  String get firstItemsBody =>
+      'A few pieces are enough to style your first outfit. You don\'t need your whole closet.';
+
+  @override
+  String firstItemsProgress(int count, int total) {
+    return '$count of $total items';
+  }
+
+  @override
+  String get unlockRuleTitle => 'To unlock your first outfit';
+
+  @override
+  String get unlockRuleOr => 'or';
+
+  @override
+  String ruleTops(int have) {
+    return 'Tops: $have of 2';
+  }
+
+  @override
+  String ruleBottoms(int have) {
+    return 'Bottoms: $have of 2';
+  }
+
+  @override
+  String ruleShoes(int have) {
+    return 'Shoes: $have of 1';
+  }
+
+  @override
+  String ruleDress(int have) {
+    return 'A dress: $have of 1';
+  }
+
+  @override
+  String get firstItemsUnlocked => 'Ready! Your first outfit is unlocked.';
+
+  @override
+  String get useSampleCloset => 'Use sample closet';
+
+  @override
+  String get addWithCamera => 'Add with camera (coming soon)';
+
+  @override
+  String get seeFirstOutfit => 'See my first outfit';
+
+  @override
+  String get firstItemsHint =>
+      'Add items or use the sample closet to continue.';
+
+  @override
+  String get firstOutfitTitle => 'Your first outfit';
+
+  @override
+  String get firstOutfitAlternatives => 'Two more ideas';
+
+  @override
+  String whyFavouriteColor(String color) {
+    return 'Built around $color, one of your favourite colours.';
+  }
+
+  @override
+  String whyDressCode(String level) {
+    return 'Fits your $level dress code.';
+  }
+
+  @override
+  String whyGoal(String goal) {
+    return 'A good pick for $goal.';
+  }
+
+  @override
+  String get whyVersatile => 'A versatile pick from your closet.';
+
+  @override
+  String outfitLabel(int n) {
+    return 'Outfit $n';
+  }
+
+  @override
+  String get saveOutfit => 'Save outfit';
+
+  @override
+  String get outfitSaved => 'Outfit saved';
+
+  @override
+  String get saveSignInTitle => 'Sign in to save';
+
+  @override
+  String get saveSignInBody =>
+      'Create your account to keep this outfit and your closet on every device. Nothing you\'ve done so far is lost.';
+
+  @override
+  String get saveSignInButton => 'Continue with Google';
+
+  @override
+  String get saveSignInLater => 'Maybe later';
+
+  @override
+  String get firstOutfitEmptyTitle => 'We need a bit more';
+
+  @override
+  String get firstOutfitEmptyBody =>
+      'Add a few more items and we\'ll build your outfit.';
+
+  @override
+  String get backToItems => 'Back to items';
+
+  @override
+  String get optionalTitle => 'Two optional extras';
+
+  @override
+  String get optionalBody =>
+      'Both can wait. You can find them on Home any time.';
+
+  @override
+  String get optionalPartnerTitle => 'Invite a partner';
+
+  @override
+  String get optionalPartnerBody => 'Style together. Coming soon.';
+
+  @override
+  String get optionalNotifTitle => 'Daily outfit time';
+
+  @override
+  String get optionalNotifBody => 'Pick when you\'d like your outfit idea.';
+
+  @override
+  String get optionalFinish => 'Finish setup';
+
+  @override
+  String optionalSetFor(String time) {
+    return 'Set for $time';
+  }
+
+  @override
+  String get partnerTitle => 'Invite a partner';
+
+  @override
+  String get partnerBody =>
+      'Couples styling is coming soon. We\'ll let you know when you can invite someone.';
+
+  @override
+  String get gotIt => 'Got it';
+
+  @override
+  String get notifTitle => 'When should we send your outfit?';
+
+  @override
+  String get notifBody => 'We\'ll suggest one outfit a day at this time.';
+
+  @override
+  String get notifSave => 'Save time';
+
+  @override
+  String get notifChooseTime => 'Choose time';
+
+  @override
+  String homeGreeting(String name) {
+    return 'Hi, $name';
+  }
+
+  @override
+  String get homeGreetingNoName => 'Welcome';
+
+  @override
+  String get homeFinishSetup => 'Finish setting up';
+
+  @override
+  String get homeSettings => 'Settings';
 }

@@ -6,6 +6,8 @@ import 'package:stylist/core/analytics/analytics_event.dart';
 import 'package:stylist/core/network/api_exception.dart';
 import 'package:stylist/core/providers.dart';
 import 'package:stylist/features/auth/application/session_controller.dart';
+import 'package:stylist/features/auth/domain/app_user.dart';
+import 'package:stylist/features/closet/domain/unlock_rule.dart';
 import 'package:stylist/features/onboarding/application/outbox_executor.dart';
 import 'package:stylist/features/onboarding/domain/onboarding_state.dart';
 import 'package:stylist/features/onboarding/domain/onboarding_step.dart';
@@ -266,4 +268,123 @@ class OnboardingController extends Notifier<OnboardingState?> {
     });
     completeStep(OnboardingStep.quiz);
   }
+
+  // ---- basics ---------------------------------------------------------------
+
+  void saveBasics({
+    String? displayName,
+    Units units = Units.imperial,
+    String? city,
+  }) {
+    final name = displayName?.trim();
+    final cityTrim = city?.trim();
+    final hasName = name != null && name.isNotEmpty;
+    final hasCity = cityTrim != null && cityTrim.isNotEmpty;
+    ref.read(analyticsServiceProvider).track(AnalyticsEvent.basicsCompleted, {
+      'has_name': hasName,
+      'units': units.name,
+      'has_city': hasCity,
+    });
+    unawaited(
+      _enqueue(OutboxOps.userPatch, {
+        if (hasName) 'display_name': name,
+        'units': units.name,
+        if (hasCity) 'city': cityTrim,
+      }, merge: true),
+    );
+    completeStep(
+      OnboardingStep.basics,
+      update: (s) => s.copyWith(
+        displayName: hasName ? name : s.displayName,
+        units: units,
+        city: hasCity ? cityTrim : s.city,
+      ),
+    );
+  }
+
+  // ---- permissions ----------------------------------------------------------
+
+  void permissionPromptShown(PermissionKind kind) => ref
+      .read(analyticsServiceProvider)
+      .track(AnalyticsEvent.permissionPromptShown, {
+        'permission': kind.name,
+      });
+
+  void recordPermission(PermissionKind kind, PermissionOutcome outcome) {
+    final analytics = ref.read(analyticsServiceProvider);
+    if (outcome == PermissionOutcome.granted) {
+      analytics.track(AnalyticsEvent.permissionGranted, {
+        'permission': kind.name,
+      });
+    } else if (outcome == PermissionOutcome.denied) {
+      analytics.track(AnalyticsEvent.permissionDenied, {
+        'permission': kind.name,
+      });
+    }
+    _set(state!.copyWith(permissions: {...state!.permissions, kind: outcome}));
+  }
+
+  void completePermissions() => completeStep(OnboardingStep.permissions);
+
+  // ---- first items ----------------------------------------------------------
+
+  /// Counts items that are actually usable for this user (department, never-wear).
+  Future<UnlockProgress> refreshFirstItems() async {
+    final items = await ref.read(closetRepositoryProvider).items();
+    final answers = state!.quiz;
+    final blocked = answers.neverWear ?? const <NeverWear>{};
+    final usable = items.where(
+      (i) => i.fitsDepartment(answers.department) && !i.isBlockedBy(blocked),
+    );
+    final progress = UnlockProgress.of(usable);
+    if (progress.total != state!.firstItemsCount) {
+      _set(state!.copyWith(firstItemsCount: progress.total));
+      ref.read(analyticsServiceProvider).track(
+        AnalyticsEvent.firstItemsProgress,
+        {
+          'count': progress.total,
+          'unlocked': progress.isUnlocked,
+        },
+      );
+    }
+    return progress;
+  }
+
+  Future<UnlockProgress> useSampleCloset() async {
+    await ref.read(closetRepositoryProvider).addSampleCloset();
+    _set(state!.copyWith(usedSampleCloset: true));
+    ref.invalidate(closetItemsProvider);
+    return refreshFirstItems();
+  }
+
+  void completeFirstItems() => completeStep(OnboardingStep.firstItems);
+
+  // ---- first outfit ---------------------------------------------------------
+
+  /// Records time-to-first-outfit once (first view wins).
+  void firstOutfitViewed() {
+    final s = state!;
+    if (s.timeToFirstOutfitMs != null) return;
+    final ms = clock().difference(s.startedAt).inMilliseconds;
+    _set(s.copyWith(timeToFirstOutfitMs: ms));
+    ref.read(analyticsServiceProvider).track(AnalyticsEvent.firstOutfitViewed, {
+      'time_to_first_outfit_ms': ms,
+      'variant': s.variant.name,
+      'used_sample_closet': s.usedSampleCloset,
+    });
+    _syncState();
+  }
+
+  void completeFirstOutfit() => completeStep(OnboardingStep.firstOutfit);
+
+  // ---- optional steps -------------------------------------------------------
+
+  void setNotificationTime(String hhmm) {
+    _set(state!.copyWith(notificationTime: hhmm));
+    unawaited(
+      _enqueue(OutboxOps.userPatch, {'daily_outfit_time': hhmm}, merge: true),
+    );
+  }
+
+  void completeOptional() => completeStep(OnboardingStep.optional);
 }
