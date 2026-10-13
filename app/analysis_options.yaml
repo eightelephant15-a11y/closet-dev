@@ -14,4 +14,5 @@ linter:
     lines_longer_than_80_chars: false
     avoid_dynamic_calls: false
     sort_pub_dependencies: false
+    one_member_abstracts: false
     always_use_package_imports: true
