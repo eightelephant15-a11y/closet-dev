@@ -1,0 +1,11 @@
+{
+  "@@locale": "en",
+  "appTitle": "Stylist",
+  "homeTitle": "Home",
+  "homePlaceholder": "Your stylist is getting ready.",
+  "loading": "Loading",
+  "errorGeneric": "Something went wrong.",
+  "retry": "Try again",
+  "offlineBanner": "You're offline. Changes will sync when you reconnect.",
+  "emptyState": "Nothing here yet."
+}

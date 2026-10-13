@@ -1,0 +1,16 @@
+# DISABLED until enabled by the owner: remove `if: false` and configure AWS OIDC role secrets.
+name: deploy-staging
+on:
+  workflow_dispatch:
+jobs:
+  deploy-api:
+    if: false
+    runs-on: ubuntu-latest
+    permissions: { id-token: write, contents: read }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_STAGING_DEPLOY_ROLE }}
+          aws-region: us-east-1
+      - run: echo "build + push image to ECR, update ECS service (placeholder)"

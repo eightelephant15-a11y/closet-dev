@@ -1,0 +1,22 @@
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.5.7
+    hooks:
+      - id: ruff
+        files: ^api/
+      - id: ruff-format
+        files: ^api/
+  - repo: local
+    hooks:
+      - id: dart-format
+        name: dart format
+        entry: sh -c 'cd app && dart format --set-exit-if-changed lib test'
+        language: system
+        pass_filenames: false
+        files: ^app/.*\.dart$
+      - id: flutter-analyze
+        name: flutter analyze
+        entry: sh -c 'cd app && flutter analyze'
+        language: system
+        pass_filenames: false
+        files: ^app/.*\.dart$

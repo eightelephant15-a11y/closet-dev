@@ -1,0 +1,51 @@
+[project]
+name = "stylist-api"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+  "fastapi>=0.115",
+  "uvicorn[standard]>=0.30",
+  "sqlalchemy[asyncio]>=2.0",
+  "asyncpg>=0.29",
+  "alembic>=1.13",
+  "pydantic>=2.7",
+  "pydantic-settings>=2.3",
+  "redis>=5.0",
+  "sentry-sdk[fastapi]>=2.0",
+  "structlog>=24.1",
+  "firebase-admin>=6.5",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8", "pytest-asyncio>=0.23", "httpx>=0.27", "aiosqlite>=0.20",
+  "fakeredis>=2.23", "ruff>=0.5", "mypy>=1.10", "psycopg2-binary>=2.9", "greenlet",
+]
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "S", "ASYNC", "SIM", "RUF"]
+ignore = ["B008"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101", "S105", "S106"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+plugins = ["pydantic.mypy"]
+exclude = ["alembic/versions"]
+
+[[tool.mypy.overrides]]
+module = ["firebase_admin.*", "fakeredis.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
