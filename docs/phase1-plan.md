@@ -1,6 +1,6 @@
 # Phase 1 Plan: Account and Onboarding
 
-Status: **awaiting approval. No code written yet.**
+Status: **approved and implemented.** This is the original plan; where the build deviated, see `docs/decisions.md`. Requirement-to-code mapping: `docs/checklist.md`.
 
 ## 1. Architecture
 
@@ -80,8 +80,8 @@ Conventions: errors `{code, message, details}`; `X-Request-ID` echoed; mutating 
 | DELETE | /v1/me | start deletion (soft delete, revoke sessions, purge in 30d) |
 | POST | /v1/me/restore | cancel deletion within window |
 | GET | /v1/places/autocomplete | stub, canned US cities (behind `PlacesService`) |
-| GET | /v1/sample/closet, /v1/sample/outfits | sample data for guests and first-outfit stub (fake recommender) |
-| PUT | /v1/me/notification-preference | daily outfit time (optional step) |
+| GET | /v1/sample/closet | sample items for guests and the first-outfit stub (the fake recommender runs on-device) |
+| PATCH | /v1/me (`daily_outfit_time`) | daily outfit time (optional step); replaces a separate endpoint |
 
 Under-16: client calls nothing; if age gate fails after sign-in, `POST /v1/me/age-confirmation` returns `age_under_minimum` and the server hard-deletes the user immediately.
 

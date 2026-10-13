@@ -10,6 +10,7 @@ import 'package:stylist/core/app_config.dart';
 import 'package:stylist/core/permissions/permissions_service.dart';
 import 'package:stylist/core/providers.dart';
 import 'package:stylist/core/storage/key_value_store.dart';
+import 'package:stylist/core/sync/sync_triggers.dart';
 import 'package:stylist/features/auth/data/account_repositories.dart';
 import 'package:stylist/features/auth/data/fake_auth_provider.dart';
 import 'package:stylist/features/auth/domain/app_user.dart';
@@ -77,6 +78,10 @@ class Harness {
   final FakeFileSharer sharer = FakeFileSharer();
   final FakeUrlOpener urls = FakeUrlOpener();
 
+  /// Fire to simulate the network coming back.
+  final StreamController<void> connectivity =
+      StreamController<void>.broadcast();
+
   List<Override> get overrides => [
     appConfigProvider.overrideWithValue(AppConfig.forFlavor(Flavor.dev)),
     keyValueStoreProvider.overrideWithValue(store),
@@ -92,6 +97,7 @@ class Harness {
     permissionsServiceProvider.overrideWithValue(permissions),
     fileSharerProvider.overrideWithValue(sharer),
     urlOpenerProvider.overrideWithValue(urls),
+    connectivityChangesProvider.overrideWithValue(connectivity.stream),
   ];
 
   /// Puts the device in the "finished onboarding" state without driving the UI.

@@ -13,6 +13,7 @@ from app.core.auth import (
     verified_token,
 )
 from app.core.errors import ApiError
+from app.core.pagination import Page, PageParams, decode_cursor, encode_cursor, page_params
 from app.models import DeviceSession
 from app.schemas.user import (
     AuthSessionResponse,
@@ -56,14 +57,31 @@ async def upgrade(
     return UserOut.model_validate(user)
 
 
-@router.get("/sessions", response_model=list[SessionOut])
-async def list_sessions(user: CurrentUser, session: DbSession) -> list[DeviceSession]:
-    rows = await session.execute(
-        select(DeviceSession)
-        .where(DeviceSession.user_id == user.id)
-        .order_by(DeviceSession.last_seen_at.desc())
+@router.get("/sessions", response_model=Page[SessionOut])
+async def list_sessions(
+    user: CurrentUser,
+    session: DbSession,
+    params: Annotated[PageParams, Depends(page_params)],
+) -> Page[SessionOut]:
+    offset = decode_cursor(params.cursor)
+    rows = (
+        (
+            await session.execute(
+                select(DeviceSession)
+                .where(DeviceSession.user_id == user.id)
+                .order_by(DeviceSession.last_seen_at.desc(), DeviceSession.id)
+                .offset(offset)
+                .limit(params.limit + 1)
+            )
+        )
+        .scalars()
+        .all()
     )
-    return list(rows.scalars())
+    has_more = len(rows) > params.limit
+    items = [SessionOut.model_validate(r) for r in rows[: params.limit]]
+    return Page[SessionOut](
+        items=items, next_cursor=encode_cursor(offset + params.limit) if has_more else None
+    )
 
 
 @router.delete("/sessions/{session_id}", status_code=204)

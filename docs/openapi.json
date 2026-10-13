@@ -448,6 +448,33 @@
         "title": "OnboardingPut",
         "type": "object"
       },
+      "Page_SessionOut_": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/SessionOut"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "title": "Page[SessionOut]",
+        "type": "object"
+      },
       "PreferencesOut": {
         "properties": {
           "answers": {
@@ -937,6 +964,34 @@
         "operationId": "list_sessions_v1_auth_sessions_get",
         "parameters": [
           {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 25,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          },
+          {
             "in": "header",
             "name": "x-device-id",
             "required": false,
@@ -974,11 +1029,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "items": {
-                    "$ref": "#/components/schemas/SessionOut"
-                  },
-                  "title": "Response List Sessions V1 Auth Sessions Get",
-                  "type": "array"
+                  "$ref": "#/components/schemas/Page_SessionOut_"
                 }
               }
             },

@@ -1,0 +1,5 @@
+firebase_project_id = "your-firebase-project-prod"
+certificate_arn     = "arn:aws:acm:us-east-1:123456789012:certificate/..."
+alert_email         = "oncall@example.com"
+privacy_policy_url  = "https://yourdomain.com/privacy"
+terms_url           = "https://yourdomain.com/terms"

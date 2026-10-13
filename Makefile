@@ -2,7 +2,7 @@
 
 setup:
 	cd api && python3.12 -m venv .venv && . .venv/bin/activate && pip install -e ".[dev]"
-	cd app && flutter pub get && flutter gen-l10n && dart run build_runner build -d
+	cd app && flutter pub get && flutter gen-l10n && dart format lib/l10n/gen && dart run build_runner build -d
 	pre-commit install || true
 
 up:
@@ -19,7 +19,7 @@ app-gen:
 app-test:
 	cd app && flutter test
 app-lint:
-	cd app && dart format --set-exit-if-changed lib test && flutter analyze
+	cd app && dart format --set-exit-if-changed lib test integration_test && flutter analyze
 
 run-mock:  ## app in mock mode, no cloud needed
 	cd app && flutter run --flavor dev -t lib/main_dev.dart --dart-define=USE_MOCK=true

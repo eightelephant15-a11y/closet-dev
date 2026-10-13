@@ -1,16 +1,43 @@
-# DISABLED until enabled by the owner: remove `if: false` and configure AWS OIDC role secrets.
+# DISABLED until you enable it: remove `if: false` from the jobs below, create an AWS OIDC role for
+# GitHub Actions and set the repository secret AWS_STAGING_DEPLOY_ROLE. Nothing is deployed by default.
 name: deploy-staging
 on:
   workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type "staging" to deploy'
+        required: true
+concurrency: deploy-staging
 jobs:
   deploy-api:
-    if: false
+    if: false # <- enable deliberately
     runs-on: ubuntu-latest
     permissions: { id-token: write, contents: read }
+    env:
+      AWS_REGION: us-east-1
     steps:
       - uses: actions/checkout@v4
       - uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_STAGING_DEPLOY_ROLE }}
-          aws-region: us-east-1
-      - run: echo "build + push image to ECR, update ECS service (placeholder)"
+          aws-region: ${{ env.AWS_REGION }}
+      - id: ecr
+        uses: aws-actions/amazon-ecr-login@v2
+      - name: Build and push (immutable tag = git sha)
+        working-directory: api
+        run: |
+          IMAGE=${{ steps.ecr.outputs.registry }}/stylist-staging-api:${{ github.sha }}
+          docker build -t "$IMAGE" .
+          docker push "$IMAGE"
+      - name: Run migrations as a one-off task
+        run: |
+          echo "aws ecs run-task --cluster stylist-staging-cluster --task-definition stylist-staging-api \
+            --launch-type FARGATE --overrides '{\"containerOverrides\":[{\"name\":\"api\",\"command\":[\"alembic\",\"upgrade\",\"head\"]}]}' \
+            --network-configuration ... (fill in subnets/security group from terraform outputs)"
+      - name: Roll out
+        run: echo "terraform -chdir=infra/envs/staging apply -var image_tag=${{ github.sha }}"
+  deploy-app:
+    if: false # <- enable deliberately
+    runs-on: macos-latest
+    steps:
+      - run: echo "flutter build appbundle/ipa --flavor staging -t lib/main_staging.dart (signing not configured)"

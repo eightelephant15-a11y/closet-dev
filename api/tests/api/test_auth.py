@@ -138,7 +138,7 @@ async def test_multi_device_sessions_and_revocation(env: Env) -> None:
         json={**DEVICE, "device_id": "tablet", "platform": "android"},
         headers=h2,
     )
-    sessions = (await env.client.get("/v1/auth/sessions", headers=h1)).json()
+    sessions = (await env.client.get("/v1/auth/sessions", headers=h1)).json()["items"]
     assert {s["device_id"] for s in sessions} == {"phone", "tablet"}
 
     tablet = next(s for s in sessions if s["device_id"] == "tablet")
@@ -168,6 +168,29 @@ async def test_cannot_revoke_other_users_session(env: Env) -> None:
     a, b = auth("a", "a@x.com"), auth("b", "b@x.com")
     await env.client.post("/v1/auth/session", json=DEVICE, headers=a)
     await env.client.post("/v1/auth/session", json=DEVICE, headers=b)
-    sid = (await env.client.get("/v1/auth/sessions", headers=a)).json()[0]["id"]
+    sid = (await env.client.get("/v1/auth/sessions", headers=a)).json()["items"][0]["id"]
     r = await env.client.delete(f"/v1/auth/sessions/{sid}", headers=b)
     assert r.status_code == 404
+
+
+async def test_sessions_are_paginated(env: Env) -> None:
+    h = auth("u", "u@example.com", device="d0")
+    for i in range(5):
+        await env.client.post(
+            "/v1/auth/session",
+            json={**DEVICE, "device_id": f"d{i}"},
+            headers=auth("u", "u@example.com", device=f"d{i}"),
+        )
+    first = (await env.client.get("/v1/auth/sessions?limit=2", headers=h)).json()
+    assert len(first["items"]) == 2 and first["next_cursor"]
+    second = (
+        await env.client.get(f"/v1/auth/sessions?limit=2&cursor={first['next_cursor']}", headers=h)
+    ).json()
+    last = (
+        await env.client.get(f"/v1/auth/sessions?limit=2&cursor={second['next_cursor']}", headers=h)
+    ).json()
+    ids = [s["id"] for page in (first, second, last) for s in page["items"]]
+    assert len(ids) == len(set(ids)) == 5 and last["next_cursor"] is None
+    bad = await env.client.get("/v1/auth/sessions?cursor=%25%25", headers=h)
+    assert bad.status_code == 422 and bad.json()["error"]["code"] == "invalid_cursor"
+    assert (await env.client.get("/v1/auth/sessions?limit=1000", headers=h)).status_code == 422

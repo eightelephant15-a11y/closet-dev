@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     redis_url: str = "redis://localhost:6379/0"
     sentry_dsn: str = ""
     firebase_project_id: str = "stylist-dev"
+    firebase_credentials_json: str = ""  # service-account JSON from Secrets Manager (never in git)
     privacy_policy_url: str = "https://example.com/privacy"
     terms_url: str = "https://example.com/terms"
     policy_version: str = "2026-01"

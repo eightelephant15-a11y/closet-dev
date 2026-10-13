@@ -33,10 +33,20 @@ class FirebaseTokenVerifier:
     """Verifies Firebase ID tokens with the Admin SDK (checks revocation)."""
 
     def __init__(self) -> None:
-        import firebase_admin
+        import json
 
+        import firebase_admin
+        from firebase_admin import credentials
+
+        from app.core.config import get_settings
+
+        settings = get_settings()
         if not firebase_admin._apps:
-            firebase_admin.initialize_app()
+            if settings.firebase_credentials_json:
+                cred = credentials.Certificate(json.loads(settings.firebase_credentials_json))
+                firebase_admin.initialize_app(cred, {"projectId": settings.firebase_project_id})
+            else:  # local: GOOGLE_APPLICATION_CREDENTIALS or the Auth emulator
+                firebase_admin.initialize_app(options={"projectId": settings.firebase_project_id})
 
     async def verify(self, token: str) -> VerifiedToken:
         import asyncio

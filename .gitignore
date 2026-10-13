@@ -5,3 +5,8 @@
 *.tfvars
 google-services.json
 GoogleService-Info.plist
+
+# build output
+app/android/build/
+app/android/.gradle/
+app/android/app/build/

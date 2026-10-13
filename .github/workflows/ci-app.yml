@@ -14,8 +14,11 @@ jobs:
         with: { channel: stable, cache: true }
       - run: flutter pub get
       - run: flutter gen-l10n
+      - run: dart format lib/l10n/gen
+      - name: Generated l10n is committed and up to date
+        run: git diff --exit-code lib/l10n/gen
       - run: dart run build_runner build -d
-      - run: dart format --set-exit-if-changed lib test
+      - run: dart format --set-exit-if-changed lib test integration_test
       - run: flutter analyze
       - run: flutter test
   build-android:
@@ -28,5 +31,5 @@ jobs:
         with: { distribution: temurin, java-version: "17" }
       - uses: subosito/flutter-action@v2
         with: { channel: stable, cache: true }
-      - run: flutter pub get && flutter gen-l10n && dart run build_runner build -d
+      - run: flutter pub get && dart run build_runner build -d
       - run: flutter build apk --flavor dev -t lib/main_dev.dart --dart-define=USE_MOCK=true

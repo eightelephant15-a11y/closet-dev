@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:stylist/app.dart';
 import 'package:stylist/core/app_config.dart';
@@ -9,7 +10,14 @@ import 'package:stylist/core/providers.dart';
 Future<void> bootstrap(Flavor flavor) async {
   WidgetsFlutterBinding.ensureInitialized();
   final config = AppConfig.forFlavor(flavor);
-  if (!config.useMock) await Firebase.initializeApp();
+  if (!config.useMock) {
+    await Firebase.initializeApp();
+    await GoogleSignIn.instance.initialize(
+      serverClientId: config.googleServerClientId.isEmpty
+          ? null
+          : config.googleServerClientId,
+    );
+  }
   final store = await openPrefsStore();
   final app = ProviderScope(
     overrides: [

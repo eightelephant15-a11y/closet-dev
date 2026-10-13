@@ -7,8 +7,11 @@ class AppConfig {
     required this.appName,
     required this.apiBaseUrl,
     required this.useMock,
-    this.sentryDsn = '',
-    this.posthogKey = '',
+    this.sentryDsn = const String.fromEnvironment('SENTRY_DSN'),
+    this.posthogKey = const String.fromEnvironment('POSTHOG_KEY'),
+    this.googleServerClientId = const String.fromEnvironment(
+      'GOOGLE_SERVER_CLIENT_ID',
+    ),
     this.privacyUrl = 'https://example.com/privacy',
     this.termsUrl = 'https://example.com/terms',
   });
@@ -48,6 +51,9 @@ class AppConfig {
   final bool useMock;
   final String sentryDsn;
   final String posthogKey;
+
+  /// OAuth *web* client ID from the Firebase project (Google sign-in).
+  final String googleServerClientId;
   final String privacyUrl;
   final String termsUrl;
 }
