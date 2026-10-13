@@ -10,6 +10,7 @@ from sqlalchemy.ext.asyncio import (
     create_async_engine,
 )
 from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.types import TypeDecorator
 
 from app.core.config import get_settings
 
@@ -21,7 +22,24 @@ def utcnow() -> datetime:
     return datetime.now(UTC)
 
 
-UtcDateTime = DateTime(timezone=True)
+class UtcDateTimeType(TypeDecorator[datetime]):
+    """Timezone-aware UTC datetimes on every backend (SQLite drops tzinfo)."""
+
+    impl = DateTime(timezone=True)
+    cache_ok = True
+
+    def process_bind_param(self, value: datetime | None, dialect: object) -> datetime | None:
+        if value is not None and value.tzinfo is not None:
+            return value.astimezone(UTC)
+        return value
+
+    def process_result_value(self, value: datetime | None, dialect: object) -> datetime | None:
+        if value is not None and value.tzinfo is None:
+            return value.replace(tzinfo=UTC)
+        return value
+
+
+UtcDateTime = UtcDateTimeType()
 
 
 class Base(DeclarativeBase):
@@ -48,6 +66,14 @@ def init_engine(url: str | None = None) -> AsyncEngine:
     _engine = create_async_engine(url or get_settings().database_url, pool_pre_ping=True)
     _sessionmaker = async_sessionmaker(_engine, expire_on_commit=False)
     return _engine
+
+
+def get_sessionmaker() -> async_sessionmaker[AsyncSession]:
+    if _sessionmaker is None:
+        init_engine()
+    if _sessionmaker is None:  # pragma: no cover
+        raise RuntimeError("engine not initialised")
+    return _sessionmaker
 
 
 async def get_session() -> AsyncIterator[AsyncSession]:

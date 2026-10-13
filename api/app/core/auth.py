@@ -120,15 +120,13 @@ async def verified_token(
     return await verifier.verify(token)
 
 
-async def current_user(
-    vt: Annotated[VerifiedToken, Depends(verified_token)],
-    session: Annotated[AsyncSession, Depends(get_session)],
-    x_device_id: Annotated[str | None, Header()] = None,
+async def _load_user(
+    vt: VerifiedToken, session: AsyncSession, x_device_id: str | None, *, allow_pending: bool
 ) -> User:
     user = (await session.execute(select(User).where(User.auth_uid == vt.uid))).scalar_one_or_none()
     if user is None:
         raise ApiError(401, "no_session", "Call POST /v1/auth/session first")
-    if user.status != UserStatus.active:
+    if user.status != UserStatus.active and not allow_pending:
         raise ApiError(403, "account_inactive", "This account is scheduled for deletion")
     if x_device_id:
         ds = (
@@ -146,7 +144,24 @@ async def current_user(
     return user
 
 
+async def current_user(
+    vt: Annotated[VerifiedToken, Depends(verified_token)],
+    session: Annotated[AsyncSession, Depends(get_session)],
+    x_device_id: Annotated[str | None, Header()] = None,
+) -> User:
+    return await _load_user(vt, session, x_device_id, allow_pending=False)
+
+
+async def user_allowing_pending_deletion(
+    vt: Annotated[VerifiedToken, Depends(verified_token)],
+    session: Annotated[AsyncSession, Depends(get_session)],
+    x_device_id: Annotated[str | None, Header()] = None,
+) -> User:
+    return await _load_user(vt, session, x_device_id, allow_pending=True)
+
+
 CurrentUser = Annotated[User, Depends(current_user)]
+PendingOkUser = Annotated[User, Depends(user_allowing_pending_deletion)]
 DbSession = Annotated[AsyncSession, Depends(get_session)]
 
-__all__ = ["CurrentUser", "DbSession"]
+__all__ = ["CurrentUser", "DbSession", "PendingOkUser"]

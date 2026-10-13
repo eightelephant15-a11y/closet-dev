@@ -9,8 +9,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.auth import VerifiedToken
 from app.core.db import MERGEABLE, register_mergeable
 from app.core.errors import ApiError
-from app.models import DeviceSession, User, UserStatus
+from app.models import DeviceSession, User
 from app.schemas.user import SessionRequest
+from app.services.privacy import default_consents
 
 __all__ = ["MERGEABLE", "register_mergeable"]
 
@@ -30,8 +31,7 @@ async def provision_user(
         )
         session.add(user)
         await session.flush()
-    elif user.status != UserStatus.active:
-        raise ApiError(403, "account_inactive", "This account is scheduled for deletion")
+        await default_consents(session, user)
 
     ds = (
         await session.execute(

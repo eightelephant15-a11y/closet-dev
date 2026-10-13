@@ -1,6 +1,7 @@
 import uuid
 from collections.abc import AsyncIterator
 from dataclasses import dataclass
+from pathlib import Path
 
 import fakeredis
 import pytest
@@ -12,8 +13,9 @@ from sqlalchemy.pool import StaticPool
 import app.models  # noqa: F401  (register tables)
 from app.core import redis as redis_mod
 from app.core.auth import FakeTokenVerifier, set_verifier
-from app.core.db import Base, get_session
+from app.core.db import Base, get_session, get_sessionmaker
 from app.main import create_app
+from app.services.storage import LocalStorage, set_storage
 
 
 @dataclass
@@ -22,6 +24,7 @@ class Env:
     client: AsyncClient
     maker: async_sessionmaker[AsyncSession]
     verifier: FakeTokenVerifier
+    storage: LocalStorage
 
 
 @pytest.fixture(autouse=True)
@@ -30,7 +33,7 @@ def _fake_redis() -> None:
 
 
 @pytest.fixture
-async def env() -> AsyncIterator[Env]:
+async def env(tmp_path: Path) -> AsyncIterator[Env]:
     engine = create_async_engine(
         "sqlite+aiosqlite://", poolclass=StaticPool, connect_args={"check_same_thread": False}
     )
@@ -44,10 +47,13 @@ async def env() -> AsyncIterator[Env]:
 
     app = create_app()
     app.dependency_overrides[get_session] = _session
+    app.dependency_overrides[get_sessionmaker] = lambda: maker
+    storage = LocalStorage(tmp_path / "exports")
+    set_storage(storage)
     verifier = FakeTokenVerifier()
     set_verifier(verifier)
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as c:
-        yield Env(app, c, maker, verifier)
+        yield Env(app, c, maker, verifier, storage)
     await engine.dispose()
 
 

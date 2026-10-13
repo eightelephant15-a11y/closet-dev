@@ -15,6 +15,9 @@ class Settings(BaseSettings):
     terms_url: str = "https://example.com/terms"
     policy_version: str = "2026-01"
     purge_after_days: int = 30
+    export_bucket: str = ""  # empty => local disk (dev/tests)
+    export_dir: str = ".exports"
+    export_ttl_hours: int = 24
     idempotency_ttl_seconds: int = 86400
 
 

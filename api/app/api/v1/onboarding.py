@@ -19,6 +19,7 @@ from app.schemas.onboarding import (
 )
 from app.services.flags import get_flags
 from app.services.privacy import hard_delete_user
+from app.services.storage import get_storage
 
 router = APIRouter(tags=["onboarding"])
 
@@ -76,7 +77,7 @@ async def confirm_age(
 ) -> None:
     if not body.confirmed_16_plus:
         uid = user.auth_uid
-        await hard_delete_user(session, user)  # no account data kept for under-16
+        await hard_delete_user(session, user, get_storage())  # no account data kept for under-16
         await verifier.delete_user(uid)
         raise ApiError(403, "age_under_minimum", "You must be 16 or older to use this app")
     if user.age_confirmed_at is None:
