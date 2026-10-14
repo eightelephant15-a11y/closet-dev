@@ -1,7 +1,6 @@
 name: ci-api
 on:
-  pull_request:
-    paths: ["api/**", "docs/openapi.json", ".github/workflows/ci-api.yml"]
+  pull_request:  # no path filter: these are required checks, a skipped workflow would block the PR
   push:
     branches: [main]
 concurrency:

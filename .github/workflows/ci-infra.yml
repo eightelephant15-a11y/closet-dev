@@ -1,7 +1,6 @@
 name: ci-infra
 on:
-  pull_request:
-    paths: ["infra/**", ".github/workflows/ci-infra.yml"]
+  pull_request:  # no path filter: these are required checks, a skipped workflow would block the PR
   push:
     branches: [main]
 concurrency:
