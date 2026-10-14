@@ -60,7 +60,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
         with: { flutter-version: "${{ env.FLUTTER_VERSION }}", channel: stable, cache: true }
-      - uses: actions/cache@v4
+      - uses: actions/cache@v6
         with:
           path: app/ios/Pods
           key: pods-${{ runner.os }}-${{ hashFiles('app/pubspec.lock', 'app/ios/Podfile') }}
