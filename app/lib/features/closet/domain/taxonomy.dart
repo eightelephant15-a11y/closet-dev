@@ -52,6 +52,7 @@ class Taxonomy {
     required this.brandMax,
     required this.notesMax,
     required Map<String, Map<String, Set<String>>> avoidGroups,
+    required this.labels,
   }) : _avoid = avoidGroups,
        _subToCategory = {
          for (final c in categories)
@@ -81,7 +82,24 @@ class Taxonomy {
         'bright': {if (m['bright_palette'] == true) 'yes'},
       };
     });
+    final labels = <String, String>{};
+    void collect(List<dynamic> items) {
+      for (final e in items) {
+        final m = e as Map<String, dynamic>;
+        labels[m['id'] as String] = m['label'] as String;
+      }
+    }
+
+    for (final c in j['categories'] as List) {
+      final m = c as Map<String, dynamic>;
+      labels[m['id'] as String] = m['label'] as String;
+      collect(m['subcategories'] as List);
+    }
+    for (final k in ['palette', 'patterns', 'seasons', 'fits', 'materials']) {
+      collect(j[k] as List);
+    }
     return Taxonomy._(
+      labels: labels,
       version: j['version'] as int,
       categories: [
         for (final c in j['categories'] as List)
@@ -126,6 +144,9 @@ class Taxonomy {
   static final Taxonomy instance = Taxonomy.parse(taxonomyJson);
 
   final int version;
+
+  /// English source labels by id (the UI uses localised ones; search in mock mode uses these).
+  final Map<String, String> labels;
   final List<TaxonomyCategory> categories;
   final List<PaletteColor> palette;
   final List<String> patterns;

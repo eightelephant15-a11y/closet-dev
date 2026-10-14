@@ -5,7 +5,9 @@ import 'package:stylist/core/providers.dart';
 import 'package:stylist/features/auth/application/auth_flow.dart';
 import 'package:stylist/features/auth/application/session_controller.dart';
 import 'package:stylist/features/auth/domain/auth_provider.dart';
+import 'package:stylist/features/closet/application/closet_providers.dart';
 import 'package:stylist/features/closet/domain/closet_item.dart';
+import 'package:stylist/features/closet/domain/taxonomy_labels.dart';
 import 'package:stylist/features/onboarding/application/onboarding_controller.dart';
 import 'package:stylist/features/onboarding/domain/onboarding_step.dart';
 import 'package:stylist/features/onboarding/domain/preference_model.dart';
@@ -205,7 +207,10 @@ class OutfitCard extends StatelessWidget {
                       ),
                       const SizedBox(width: Spacing.sm),
                       Expanded(
-                        child: Text(item.name, style: textTheme.bodyLarge),
+                        child: Text(
+                          _itemName(l10n, item),
+                          style: textTheme.bodyLarge,
+                        ),
                       ),
                     ],
                   ),
@@ -307,4 +312,11 @@ class _SaveSignInSheetState extends ConsumerState<SaveSignInSheet> {
       ),
     );
   }
+}
+
+String _itemName(AppLocalizations l10n, ClosetItem item) {
+  final sub = item.subcategory;
+  final color = item.colorId;
+  if (sub == null || color == null) return item.name;
+  return l10n.garmentName(l10n.taxColor(color), l10n.taxSubcategory(sub));
 }

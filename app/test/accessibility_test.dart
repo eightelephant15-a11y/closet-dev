@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:stylist/features/closet/application/closet_providers.dart';
 import 'package:stylist/features/config/domain/remote_config.dart';
 
+import 'helpers/closet_helpers.dart';
 import 'helpers/harness.dart';
 
 /// Walks the whole onboarding (and the account screens) on a phone-sized surface at several text
@@ -180,7 +182,73 @@ Future<void> tour(WidgetTester tester) async {
   handle.dispose();
 }
 
+/// Every closet screen, at the same text sizes and themes as the onboarding tour.
+Future<void> closetTour(WidgetTester tester) async {
+  final handle = tester.ensureSemantics();
+  final h = Harness();
+  h.imageSource.library.add(photoNamed('white_shirt_f3.jpg'));
+  h.imageProcessor = const InlineImageProcessor();
+  await h.seedFinishedOnboarding();
+  await h.pumpApp(tester);
+  await tapLabel(tester, 'My closet');
+  await audit(tester, 'closet (empty)');
+
+  final c = appContainer(tester);
+  await c.read(garmentRepositoryProvider).seedSample();
+  c
+    ..invalidate(closetListProvider)
+    ..invalidate(closetSummaryProvider);
+  await tester.pumpAndSettle();
+  await audit(tester, 'closet grid');
+
+  await tapVisible(tester, find.byTooltip('Filters'));
+  await audit(tester, 'filter sheet');
+  tester.state<NavigatorState>(find.byType(Navigator).first).pop();
+  await tester.pumpAndSettle();
+
+  await tapVisible(tester, find.byTooltip('Search your closet'));
+  await audit(tester, 'closet search');
+  await tapVisible(tester, find.byTooltip('Clear search'));
+
+  await tapLabel(tester, 'Navy Jeans');
+  await audit(tester, 'item detail');
+  await tapVisible(tester, find.byTooltip('Add to favourites'));
+  await tester.pageBack();
+  await tester.pumpAndSettle();
+
+  await tapVisible(tester, find.byTooltip('Add several'));
+  await audit(tester, 'bulk add (pick)');
+  await tapLabel(tester, 'Choose photos');
+  await settleCloset(tester, seconds: 6);
+  await audit(tester, 'bulk add (review queue)');
+  await tapVisible(tester, find.byTooltip('Close'));
+
+  await tapLabel(tester, 'Add item');
+  await audit(tester, 'capture (camera)');
+  await tapVisible(tester, find.bySemanticsLabel('Take photo'));
+  await audit(tester, 'capture (preview)');
+  await tapLabel(tester, 'Use this photo');
+  await audit(tester, 'review (analysing)');
+  await settleCloset(tester);
+  await audit(tester, 'review (analysed)');
+  await unmount(tester);
+  handle.dispose();
+}
+
 void main() {
+  for (final scale in [1.0, 1.5, 2.0]) {
+    for (final brightness in [Brightness.light, Brightness.dark]) {
+      if (scale == 1.5 && brightness == Brightness.dark) continue;
+      testWidgets(
+        'closet accessibility tour at ${(scale * 100).round()}% text, ${brightness.name}',
+        (tester) async {
+          phone(tester, textScale: scale, brightness: brightness);
+          await closetTour(tester);
+        },
+      );
+    }
+  }
+
   for (final scale in [1.0, 1.5, 2.0]) {
     for (final brightness in [Brightness.light, Brightness.dark]) {
       // 1.5x only in light mode keeps the suite quick; 1x and 2x run in both themes.

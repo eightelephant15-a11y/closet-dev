@@ -424,7 +424,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get useSampleCloset => 'Use sample closet';
 
   @override
-  String get addWithCamera => 'Add with camera (coming soon)';
+  String get addWithCamera => 'Add with camera';
 
   @override
   String get seeFirstOutfit => 'See my first outfit';
@@ -712,6 +712,576 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get iosLocationUsage =>
       'Stylist uses your approximate location to suggest weather-appropriate outfits. We never store your exact position.';
+
+  @override
+  String garmentName(String color, String type) {
+    return '$color $type';
+  }
+
+  @override
+  String get closetTitle => 'My closet';
+
+  @override
+  String closetCount(int count, int limit) {
+    return '$count of $limit items';
+  }
+
+  @override
+  String get closetAdd => 'Add item';
+
+  @override
+  String get closetAddMany => 'Add several';
+
+  @override
+  String get closetSearch => 'Search your closet';
+
+  @override
+  String get closetSearchClear => 'Clear search';
+
+  @override
+  String get closetSort => 'Sort';
+
+  @override
+  String get sortNewest => 'Newest first';
+
+  @override
+  String get sortOldest => 'Oldest first';
+
+  @override
+  String get sortRecentlyEdited => 'Recently edited';
+
+  @override
+  String get sortFormalityLow => 'Most casual first';
+
+  @override
+  String get sortFormalityHigh => 'Most formal first';
+
+  @override
+  String get closetFilters => 'Filters';
+
+  @override
+  String closetFiltersActive(int count) {
+    return 'Filters, $count active';
+  }
+
+  @override
+  String get filterAll => 'All';
+
+  @override
+  String get filterCategory => 'Category';
+
+  @override
+  String get filterColour => 'Colour';
+
+  @override
+  String get filterSeason => 'Season';
+
+  @override
+  String get filterFormality => 'Formality';
+
+  @override
+  String get filterAvailability => 'Availability';
+
+  @override
+  String get filterFavourites => 'Favourites only';
+
+  @override
+  String get filterArchived => 'Show archived items';
+
+  @override
+  String get filterArchivedOnly => 'Archived only';
+
+  @override
+  String get filterClear => 'Clear filters';
+
+  @override
+  String filterApply(int count) {
+    return 'Show $count items';
+  }
+
+  @override
+  String get closetEmptyTitle => 'Your closet is empty';
+
+  @override
+  String get closetEmptyBody =>
+      'Add your first item: one quick photo and we fill in the details.';
+
+  @override
+  String get closetNoMatches => 'Nothing matches these filters.';
+
+  @override
+  String get closetLoadError => 'We could not load your closet.';
+
+  @override
+  String get closetLoadingMore => 'Loading more';
+
+  @override
+  String get closetItemAnalysing => 'Analysing';
+
+  @override
+  String get closetItemNeedsReview => 'Check details';
+
+  @override
+  String get closetItemNeedsManual => 'Add details';
+
+  @override
+  String get closetItemFavourite => 'Favourite';
+
+  @override
+  String get closetItemArchived => 'Archived';
+
+  @override
+  String get closetItemSample => 'Sample';
+
+  @override
+  String closetItemLabel(String name, String status) {
+    return '$name, $status';
+  }
+
+  @override
+  String closetResultCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count items',
+      one: '1 item',
+      zero: 'No items',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get availabilityAvailable => 'Available';
+
+  @override
+  String get availabilityLaundry => 'In the laundry';
+
+  @override
+  String get availabilityLent => 'Lent out';
+
+  @override
+  String get availabilityRepair => 'At repair';
+
+  @override
+  String availabilityBack(String date) {
+    return 'Back on $date';
+  }
+
+  @override
+  String get availabilitySetReturn => 'Set a return date';
+
+  @override
+  String get availabilityClearReturn => 'Remove return date';
+
+  @override
+  String get availabilityNote =>
+      'Not used for outfits while it is unavailable or archived.';
+
+  @override
+  String get captureTitle => 'Add an item';
+
+  @override
+  String get captureHint =>
+      'Lay it flat or hang it up on a plain background, in good light.';
+
+  @override
+  String get lightTooDark => 'Too dark. Move somewhere brighter.';
+
+  @override
+  String get lightTooBright => 'Too bright. Step out of direct sun.';
+
+  @override
+  String get lightOk => 'Lighting looks good.';
+
+  @override
+  String get captureTake => 'Take photo';
+
+  @override
+  String get captureLibrary => 'Choose from photos';
+
+  @override
+  String get captureFlip => 'Photo guide outline';
+
+  @override
+  String get captureRetake => 'Retake';
+
+  @override
+  String get captureUse => 'Use this photo';
+
+  @override
+  String get captureCrop => 'Crop to the item';
+
+  @override
+  String get captureCropOn => 'Cropped to the item';
+
+  @override
+  String get captureProcessing => 'Preparing your photo';
+
+  @override
+  String get captureUnavailable =>
+      'The camera is not available. Choose a photo instead.';
+
+  @override
+  String get capturePermission =>
+      'Camera access is off. Allow it in Settings, or choose a photo instead.';
+
+  @override
+  String get captureBad => 'That photo could not be read. Try another one.';
+
+  @override
+  String get captureReview => 'Review the photo';
+
+  @override
+  String get reviewTitle => 'Check the details';
+
+  @override
+  String get reviewAnalysing =>
+      'Looking at your photo. You can start filling things in now.';
+
+  @override
+  String get reviewAnalysed =>
+      'We filled in the details. Fix anything that is off.';
+
+  @override
+  String get reviewManual =>
+      'We could not read this photo. Please fill in the details.';
+
+  @override
+  String get reviewUploading => 'Uploading your photo. You can keep going.';
+
+  @override
+  String get reviewWaiting =>
+      'Waiting for a connection. Your photo is saved and will upload automatically.';
+
+  @override
+  String get reviewFailed => 'The upload did not work. Tap retry.';
+
+  @override
+  String get reviewCheck => 'Please check';
+
+  @override
+  String get reviewDone => 'Looks good';
+
+  @override
+  String get reviewSkipForNow => 'Review later';
+
+  @override
+  String get reviewFieldNone => 'None';
+
+  @override
+  String reviewLowConfidence(String field) {
+    return '$field: please check';
+  }
+
+  @override
+  String get reviewSaved => 'Saved';
+
+  @override
+  String get reviewSaveFailed => 'Could not save that change. Try again.';
+
+  @override
+  String get reviewPhoto => 'Photo of the item';
+
+  @override
+  String get fieldCategory => 'Category';
+
+  @override
+  String get fieldSubcategory => 'Type';
+
+  @override
+  String get fieldPrimaryColor => 'Main colour';
+
+  @override
+  String get fieldSecondaryColor => 'Second colour';
+
+  @override
+  String get fieldPattern => 'Pattern';
+
+  @override
+  String get fieldFormality => 'Formality';
+
+  @override
+  String get fieldSeasons => 'Seasons';
+
+  @override
+  String get fieldFit => 'Fit';
+
+  @override
+  String get fieldMaterial => 'Material';
+
+  @override
+  String get fieldBrand => 'Brand';
+
+  @override
+  String get fieldNotes => 'Notes';
+
+  @override
+  String get detailTitle => 'Item';
+
+  @override
+  String get detailFavourite => 'Add to favourites';
+
+  @override
+  String get detailUnfavourite => 'Remove from favourites';
+
+  @override
+  String get detailArchive => 'Archive';
+
+  @override
+  String get detailUnarchive => 'Restore from archive';
+
+  @override
+  String get detailArchiveNote =>
+      'Archived items stay in your closet but are left out of outfits.';
+
+  @override
+  String get detailDelete => 'Delete item';
+
+  @override
+  String get detailDeleteTitle => 'Delete this item?';
+
+  @override
+  String get detailDeleteBody =>
+      'This permanently deletes the item and its photos. It cannot be undone.';
+
+  @override
+  String get detailDeleteConfirm => 'Delete';
+
+  @override
+  String get detailReanalyse => 'Analyse photo again';
+
+  @override
+  String get detailMore => 'More options';
+
+  @override
+  String get detailSavedChanges => 'Changes saved';
+
+  @override
+  String get detailSaveFailed => 'Could not save your changes.';
+
+  @override
+  String get detailLoadFailed => 'We could not load this item.';
+
+  @override
+  String get bulkTitle => 'Add several items';
+
+  @override
+  String bulkBody(int max) {
+    return 'Choose up to $max photos. We upload them in the background and fill in the details.';
+  }
+
+  @override
+  String bulkRoom(int count) {
+    return 'You have room for $count more items.';
+  }
+
+  @override
+  String get bulkPick => 'Choose photos';
+
+  @override
+  String bulkProgress(int done, int total) {
+    return '$done of $total uploaded';
+  }
+
+  @override
+  String get bulkReviewTitle => 'Ready to review';
+
+  @override
+  String get bulkReviewBody => 'Look them over, or accept everything as is.';
+
+  @override
+  String get bulkAcceptAll => 'Accept all';
+
+  @override
+  String bulkAccepted(int count) {
+    return '$count items accepted';
+  }
+
+  @override
+  String bulkWorking(int count) {
+    return 'Still analysing $count';
+  }
+
+  @override
+  String get bulkFinished => 'All done';
+
+  @override
+  String get bulkDisabled =>
+      'Adding several items at once is not available right now.';
+
+  @override
+  String bulkTooMany(int max) {
+    return 'You picked more than $max. We kept the first $max.';
+  }
+
+  @override
+  String get bulkView => 'Open my closet';
+
+  @override
+  String uploadBannerUploading(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Uploading $count photos',
+      one: 'Uploading 1 photo',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get uploadBannerWaiting =>
+      'Waiting for a connection. Your photos are saved.';
+
+  @override
+  String uploadBannerFailed(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count photos need attention',
+      one: '1 photo needs attention',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get uploadSheetTitle => 'Photo uploads';
+
+  @override
+  String get uploadStateQueued => 'Waiting';
+
+  @override
+  String get uploadStateWorking => 'Uploading';
+
+  @override
+  String get uploadStateDone => 'Uploaded';
+
+  @override
+  String get uploadStateFailed => 'Did not upload';
+
+  @override
+  String get uploadStateRejected => 'Not accepted';
+
+  @override
+  String get uploadRetry => 'Retry';
+
+  @override
+  String get uploadRemove => 'Remove';
+
+  @override
+  String uploadItemLabel(int index, String state) {
+    return 'Photo $index: $state';
+  }
+
+  @override
+  String get uploadErrFileTooLarge => 'This photo is too large.';
+
+  @override
+  String get uploadErrUnsupported => 'This kind of photo is not supported.';
+
+  @override
+  String get uploadErrLimit => 'Your closet is full.';
+
+  @override
+  String get uploadErrGeneric => 'Something went wrong. Try again.';
+
+  @override
+  String uploadProgressLabel(int percent) {
+    return '$percent percent';
+  }
+
+  @override
+  String get upgradeTitle => 'Your free closet is full';
+
+  @override
+  String upgradeBody(int limit) {
+    return 'The free plan holds $limit items. Paid plans are coming soon. For now you can archive or delete items to make room.';
+  }
+
+  @override
+  String get upgradeCta => 'Manage my closet';
+
+  @override
+  String limitReachedSnack(int limit) {
+    return 'Your closet is full ($limit items).';
+  }
+
+  @override
+  String get meterTitle => 'Outfit potential';
+
+  @override
+  String meterOutfits(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count possible outfits',
+      one: '1 possible outfit',
+      zero: 'No outfits yet',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get meterLevelEmpty => 'Add a top, a bottom and shoes to get started.';
+
+  @override
+  String get meterLevelStarting => 'A good start.';
+
+  @override
+  String get meterLevelGrowing => 'Your closet is filling out.';
+
+  @override
+  String get meterLevelRich => 'Plenty to work with.';
+
+  @override
+  String meterNudge(String item, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count more outfits',
+      one: '1 more outfit',
+    );
+    return 'Add $item to unlock $_temp0.';
+  }
+
+  @override
+  String get meterNudgeFootwear => 'a pair of shoes';
+
+  @override
+  String get meterNudgeTop => 'a top';
+
+  @override
+  String get meterNudgeBottom => 'a bottom';
+
+  @override
+  String get meterNudgeDress => 'a dress';
+
+  @override
+  String meterProgressLabel(int percent) {
+    return 'Closet progress, $percent percent';
+  }
+
+  @override
+  String get homeClosetCard => 'My closet';
+
+  @override
+  String get homeClosetCardBody => 'Browse, add and edit your clothes.';
+
+  @override
+  String get firstItemsAddPhotos => 'Add from photos';
+
+  @override
+  String firstItemsPending(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count photos are still being added',
+      one: '1 photo is still being added',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get firstItemsOpenCloset => 'Open my closet';
 
   @override
   String get taxCatTop => 'Top';

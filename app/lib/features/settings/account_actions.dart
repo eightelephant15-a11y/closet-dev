@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:stylist/core/analytics/analytics_event.dart';
 import 'package:stylist/core/providers.dart';
 import 'package:stylist/features/auth/application/session_controller.dart';
+import 'package:stylist/features/closet/application/closet_providers.dart';
 import 'package:stylist/features/consent/application/consent_controller.dart';
 import 'package:stylist/features/onboarding/application/onboarding_controller.dart';
 
@@ -14,12 +15,10 @@ class AccountActions {
   /// Removes everything stored for the signed-in user on this device.
   Future<void> wipeLocal() async {
     await _ref.read(onboardingControllerProvider.notifier).reset();
-    await _ref.read(closetRepositoryProvider).clear();
+    await wipeLocalCloset(_ref);
     await _ref.read(consentControllerProvider.notifier).clearLocal();
     _ref.read(analyticsGateProvider).clearDecision();
-    _ref
-      ..invalidate(closetItemsProvider)
-      ..invalidate(remoteConfigProvider);
+    _ref.invalidate(remoteConfigProvider);
   }
 
   Future<void> signOut() async {

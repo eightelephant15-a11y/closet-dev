@@ -198,7 +198,7 @@
   },
   "firstItemsUnlocked": "Ready! Your first outfit is unlocked.",
   "useSampleCloset": "Use sample closet",
-  "addWithCamera": "Add with camera (coming soon)",
+  "addWithCamera": "Add with camera",
   "seeFirstOutfit": "See my first outfit",
   "firstItemsHint": "Add items or use the sample closet to continue.",
   "firstOutfitTitle": "Your first outfit",
@@ -348,6 +348,349 @@
   "@iosLocationUsage": {
     "description": "iOS NSLocationWhenInUseUsageDescription"
   },
+  "garmentName": "{color} {type}",
+  "@garmentName": {
+    "placeholders": {
+      "color": {
+        "type": "String"
+      },
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "closetTitle": "My closet",
+  "closetCount": "{count} of {limit} items",
+  "@closetCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "limit": {
+        "type": "int"
+      }
+    }
+  },
+  "closetAdd": "Add item",
+  "closetAddMany": "Add several",
+  "closetSearch": "Search your closet",
+  "closetSearchClear": "Clear search",
+  "closetSort": "Sort",
+  "sortNewest": "Newest first",
+  "sortOldest": "Oldest first",
+  "sortRecentlyEdited": "Recently edited",
+  "sortFormalityLow": "Most casual first",
+  "sortFormalityHigh": "Most formal first",
+  "closetFilters": "Filters",
+  "closetFiltersActive": "Filters, {count} active",
+  "@closetFiltersActive": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "filterAll": "All",
+  "filterCategory": "Category",
+  "filterColour": "Colour",
+  "filterSeason": "Season",
+  "filterFormality": "Formality",
+  "filterAvailability": "Availability",
+  "filterFavourites": "Favourites only",
+  "filterArchived": "Show archived items",
+  "filterArchivedOnly": "Archived only",
+  "filterClear": "Clear filters",
+  "filterApply": "Show {count} items",
+  "@filterApply": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "closetEmptyTitle": "Your closet is empty",
+  "closetEmptyBody": "Add your first item: one quick photo and we fill in the details.",
+  "closetNoMatches": "Nothing matches these filters.",
+  "closetLoadError": "We could not load your closet.",
+  "closetLoadingMore": "Loading more",
+  "closetItemAnalysing": "Analysing",
+  "closetItemNeedsReview": "Check details",
+  "closetItemNeedsManual": "Add details",
+  "closetItemFavourite": "Favourite",
+  "closetItemArchived": "Archived",
+  "closetItemSample": "Sample",
+  "closetItemLabel": "{name}, {status}",
+  "@closetItemLabel": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "closetResultCount": "{count, plural, =0{No items} =1{1 item} other{{count} items}}",
+  "@closetResultCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "availabilityAvailable": "Available",
+  "availabilityLaundry": "In the laundry",
+  "availabilityLent": "Lent out",
+  "availabilityRepair": "At repair",
+  "availabilityBack": "Back on {date}",
+  "@availabilityBack": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "availabilitySetReturn": "Set a return date",
+  "availabilityClearReturn": "Remove return date",
+  "availabilityNote": "Not used for outfits while it is unavailable or archived.",
+  "captureTitle": "Add an item",
+  "captureHint": "Lay it flat or hang it up on a plain background, in good light.",
+  "lightTooDark": "Too dark. Move somewhere brighter.",
+  "lightTooBright": "Too bright. Step out of direct sun.",
+  "lightOk": "Lighting looks good.",
+  "captureTake": "Take photo",
+  "captureLibrary": "Choose from photos",
+  "captureFlip": "Photo guide outline",
+  "captureRetake": "Retake",
+  "captureUse": "Use this photo",
+  "captureCrop": "Crop to the item",
+  "captureCropOn": "Cropped to the item",
+  "captureProcessing": "Preparing your photo",
+  "captureUnavailable": "The camera is not available. Choose a photo instead.",
+  "capturePermission": "Camera access is off. Allow it in Settings, or choose a photo instead.",
+  "captureBad": "That photo could not be read. Try another one.",
+  "captureReview": "Review the photo",
+  "reviewTitle": "Check the details",
+  "reviewAnalysing": "Looking at your photo. You can start filling things in now.",
+  "reviewAnalysed": "We filled in the details. Fix anything that is off.",
+  "reviewManual": "We could not read this photo. Please fill in the details.",
+  "reviewUploading": "Uploading your photo. You can keep going.",
+  "reviewWaiting": "Waiting for a connection. Your photo is saved and will upload automatically.",
+  "reviewFailed": "The upload did not work. Tap retry.",
+  "reviewCheck": "Please check",
+  "reviewDone": "Looks good",
+  "reviewSkipForNow": "Review later",
+  "reviewFieldNone": "None",
+  "reviewLowConfidence": "{field}: please check",
+  "@reviewLowConfidence": {
+    "placeholders": {
+      "field": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewSaved": "Saved",
+  "reviewSaveFailed": "Could not save that change. Try again.",
+  "reviewPhoto": "Photo of the item",
+  "fieldCategory": "Category",
+  "fieldSubcategory": "Type",
+  "fieldPrimaryColor": "Main colour",
+  "fieldSecondaryColor": "Second colour",
+  "fieldPattern": "Pattern",
+  "fieldFormality": "Formality",
+  "fieldSeasons": "Seasons",
+  "fieldFit": "Fit",
+  "fieldMaterial": "Material",
+  "fieldBrand": "Brand",
+  "fieldNotes": "Notes",
+  "detailTitle": "Item",
+  "detailFavourite": "Add to favourites",
+  "detailUnfavourite": "Remove from favourites",
+  "detailArchive": "Archive",
+  "detailUnarchive": "Restore from archive",
+  "detailArchiveNote": "Archived items stay in your closet but are left out of outfits.",
+  "detailDelete": "Delete item",
+  "detailDeleteTitle": "Delete this item?",
+  "detailDeleteBody": "This permanently deletes the item and its photos. It cannot be undone.",
+  "detailDeleteConfirm": "Delete",
+  "detailReanalyse": "Analyse photo again",
+  "detailMore": "More options",
+  "detailSavedChanges": "Changes saved",
+  "detailSaveFailed": "Could not save your changes.",
+  "detailLoadFailed": "We could not load this item.",
+  "bulkTitle": "Add several items",
+  "bulkBody": "Choose up to {max} photos. We upload them in the background and fill in the details.",
+  "@bulkBody": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "bulkRoom": "You have room for {count} more items.",
+  "@bulkRoom": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bulkPick": "Choose photos",
+  "bulkProgress": "{done} of {total} uploaded",
+  "@bulkProgress": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "bulkReviewTitle": "Ready to review",
+  "bulkReviewBody": "Look them over, or accept everything as is.",
+  "bulkAcceptAll": "Accept all",
+  "bulkAccepted": "{count} items accepted",
+  "@bulkAccepted": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bulkWorking": "Still analysing {count}",
+  "@bulkWorking": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bulkFinished": "All done",
+  "bulkDisabled": "Adding several items at once is not available right now.",
+  "bulkTooMany": "You picked more than {max}. We kept the first {max}.",
+  "@bulkTooMany": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "bulkView": "Open my closet",
+  "uploadBannerUploading": "{count, plural, =1{Uploading 1 photo} other{Uploading {count} photos}}",
+  "@uploadBannerUploading": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "uploadBannerWaiting": "Waiting for a connection. Your photos are saved.",
+  "uploadBannerFailed": "{count, plural, =1{1 photo needs attention} other{{count} photos need attention}}",
+  "@uploadBannerFailed": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "uploadSheetTitle": "Photo uploads",
+  "uploadStateQueued": "Waiting",
+  "uploadStateWorking": "Uploading",
+  "uploadStateDone": "Uploaded",
+  "uploadStateFailed": "Did not upload",
+  "uploadStateRejected": "Not accepted",
+  "uploadRetry": "Retry",
+  "uploadRemove": "Remove",
+  "uploadItemLabel": "Photo {index}: {state}",
+  "@uploadItemLabel": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      },
+      "state": {
+        "type": "String"
+      }
+    }
+  },
+  "uploadErrFileTooLarge": "This photo is too large.",
+  "uploadErrUnsupported": "This kind of photo is not supported.",
+  "uploadErrLimit": "Your closet is full.",
+  "uploadErrGeneric": "Something went wrong. Try again.",
+  "uploadProgressLabel": "{percent} percent",
+  "@uploadProgressLabel": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "upgradeTitle": "Your free closet is full",
+  "upgradeBody": "The free plan holds {limit} items. Paid plans are coming soon. For now you can archive or delete items to make room.",
+  "@upgradeBody": {
+    "placeholders": {
+      "limit": {
+        "type": "int"
+      }
+    }
+  },
+  "upgradeCta": "Manage my closet",
+  "limitReachedSnack": "Your closet is full ({limit} items).",
+  "@limitReachedSnack": {
+    "placeholders": {
+      "limit": {
+        "type": "int"
+      }
+    }
+  },
+  "meterTitle": "Outfit potential",
+  "meterOutfits": "{count, plural, =0{No outfits yet} =1{1 possible outfit} other{{count} possible outfits}}",
+  "@meterOutfits": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "meterLevelEmpty": "Add a top, a bottom and shoes to get started.",
+  "meterLevelStarting": "A good start.",
+  "meterLevelGrowing": "Your closet is filling out.",
+  "meterLevelRich": "Plenty to work with.",
+  "meterNudge": "Add {item} to unlock {count, plural, =1{1 more outfit} other{{count} more outfits}}.",
+  "@meterNudge": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "meterNudgeFootwear": "a pair of shoes",
+  "meterNudgeTop": "a top",
+  "meterNudgeBottom": "a bottom",
+  "meterNudgeDress": "a dress",
+  "meterProgressLabel": "Closet progress, {percent} percent",
+  "@meterProgressLabel": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "homeClosetCard": "My closet",
+  "homeClosetCardBody": "Browse, add and edit your clothes.",
+  "firstItemsAddPhotos": "Add from photos",
+  "firstItemsPending": "{count, plural, =1{1 photo is still being added} other{{count} photos are still being added}}",
+  "@firstItemsPending": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "firstItemsOpenCloset": "Open my closet",
   "taxCatTop": "Top",
   "taxSubTShirt": "T-shirt",
   "taxSubLongSleeveTee": "Long-sleeve tee",

@@ -200,10 +200,8 @@ void main() {
         find.widgetWithText(FilledButton, 'See my first outfit'),
       );
       expect(see.onPressed, isNull);
-      final camera = tester.widget<OutlinedButton>(
-        find.widgetWithText(OutlinedButton, 'Add with camera (coming soon)'),
-      );
-      expect(camera.onPressed, isNull);
+      expect(find.text('Add with camera'), findsOneWidget);
+      expect(find.text('Add from photos'), findsOneWidget);
     });
 
     testWidgets('sample closet fills the ring and unlocks; respects never-wear', (

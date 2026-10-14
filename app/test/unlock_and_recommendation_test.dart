@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:stylist/features/auth/domain/app_user.dart';
-import 'package:stylist/features/closet/data/sample_closet_data.dart';
 import 'package:stylist/features/closet/domain/closet_item.dart';
+import 'package:stylist/features/closet/domain/closet_item_adapter.dart';
 import 'package:stylist/features/closet/domain/unlock_rule.dart';
 import 'package:stylist/features/onboarding/domain/preference_model.dart';
 import 'package:stylist/features/onboarding/domain/quiz.dart';
@@ -83,7 +83,7 @@ void main() {
     Future<FirstOutfits?> run(QuizAnswers a) => service.firstOutfits(
       prefs: PreferenceModel.fromAnswers(a),
       answers: a,
-      closet: sampleClosetItems,
+      closet: closetItemsFromSample(),
     );
 
     test(

@@ -7,6 +7,7 @@ import 'package:stylist/core/analytics/analytics_service.dart';
 import 'package:stylist/core/startup/startup_timer.dart';
 import 'package:stylist/features/onboarding/domain/onboarding_state.dart';
 
+import 'flows/closet_journey.dart';
 import 'flows/flows.dart';
 import 'flows/steps.dart';
 import 'helpers/harness.dart';
@@ -97,6 +98,11 @@ void main() {
     await tapButton(tester, 'Delete my account');
     collect(done.analytics);
 
+    // 4) The closet: capture, analysis, corrections, bulk add, filters, limit, delete.
+    final closet = await closetJourney(tester);
+    expectClosetEvents(closet);
+    collect(closet.analytics);
+
     expect(
       AnalyticsEvent.values.toSet().difference(seen),
       isEmpty,
@@ -128,6 +134,21 @@ void main() {
       containsAll(['duration_ms', 'time_to_first_outfit_ms']),
     );
     expect(props[AnalyticsEvent.onboardingAbandoned], contains('last_step'));
+    expect(props[AnalyticsEvent.closetItemCaptureStarted], contains('source'));
+    expect(
+      props[AnalyticsEvent.closetItemAnalysed],
+      containsAll(['status', 'latency_ms', 'confidence_avg']),
+    );
+    expect(props[AnalyticsEvent.closetItemCorrected], contains('field'));
+    expect(props[AnalyticsEvent.closetFilterUsed], contains('kind'));
+    expect(
+      props[AnalyticsEvent.closetLimitReached],
+      containsAll(['limit', 'used']),
+    );
+    expect(
+      props[AnalyticsEvent.closetMeterNudgeShown],
+      containsAll(['category', 'outfits_before', 'outfits_after']),
+    );
   });
 
   testWidgets(

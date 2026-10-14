@@ -2,14 +2,18 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:stylist/features/closet/application/closet_providers.dart';
 import 'package:stylist/features/closet/domain/unlock_rule.dart';
+import 'package:stylist/features/closet/presentation/closet_routes.dart';
+import 'package:stylist/features/closet/presentation/closet_widgets.dart';
 import 'package:stylist/features/onboarding/application/onboarding_controller.dart';
 import 'package:stylist/l10n/gen/app_localizations.dart';
 import 'package:stylist/shared/widgets/state_views.dart';
 import 'package:stylist/theme/tokens.dart';
 
-/// "Add your first 10 items" shell. Real capture/upload is Phase 2: the sample
-/// closet shortcut stands in for it.
+/// "Add your first 10 items": drives the real closet flow (camera, library, upload queue, AI review).
+/// "Use sample closet" seeds the bundled sample garments instead of uploading anything.
 class FirstItemsScreen extends ConsumerStatefulWidget {
   const FirstItemsScreen({super.key});
 
@@ -44,6 +48,12 @@ class _FirstItemsScreenState extends ConsumerState<FirstItemsScreen> {
     } finally {
       if (mounted) setState(() => _busy = false);
     }
+  }
+
+  /// Opens the real capture flow, then re-counts what the closet now holds.
+  Future<void> _open(String route) async {
+    await context.push<void>(route);
+    if (mounted) await _load();
   }
 
   @override
@@ -111,10 +121,26 @@ class _FirstItemsScreenState extends ConsumerState<FirstItemsScreen> {
                       child: Text(l10n.useSampleCloset),
                     ),
                   const SizedBox(height: Spacing.sm),
-                  OutlinedButton(
-                    onPressed: null,
-                    child: Text(l10n.addWithCamera),
+                  OutlinedButton.icon(
+                    onPressed: () => _open(ClosetRoutes.add),
+                    icon: const Icon(Icons.add_a_photo_outlined),
+                    label: Text(l10n.addWithCamera),
                   ),
+                  const SizedBox(height: Spacing.sm),
+                  OutlinedButton.icon(
+                    onPressed: () => _open(ClosetRoutes.addFromLibrary),
+                    icon: const Icon(Icons.photo_library_outlined),
+                    label: Text(l10n.firstItemsAddPhotos),
+                  ),
+                  if (ref
+                          .watch(uploadItemsProvider)
+                          .valueOrNull
+                          ?.any((i) => i.isActive) ??
+                      false)
+                    const Padding(
+                      padding: EdgeInsets.only(top: Spacing.sm),
+                      child: UploadBanner(),
+                    ),
                   const SizedBox(height: Spacing.sm),
                   FilledButton(
                     onPressed: p.isUnlocked

@@ -853,7 +853,7 @@ abstract class AppLocalizations {
   /// No description provided for @addWithCamera.
   ///
   /// In en, this message translates to:
-  /// **'Add with camera (coming soon)'**
+  /// **'Add with camera'**
   String get addWithCamera;
 
   /// No description provided for @seeFirstOutfit.
@@ -1359,6 +1359,948 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Stylist uses your approximate location to suggest weather-appropriate outfits. We never store your exact position.'**
   String get iosLocationUsage;
+
+  /// No description provided for @garmentName.
+  ///
+  /// In en, this message translates to:
+  /// **'{color} {type}'**
+  String garmentName(String color, String type);
+
+  /// No description provided for @closetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'My closet'**
+  String get closetTitle;
+
+  /// No description provided for @closetCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} of {limit} items'**
+  String closetCount(int count, int limit);
+
+  /// No description provided for @closetAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add item'**
+  String get closetAdd;
+
+  /// No description provided for @closetAddMany.
+  ///
+  /// In en, this message translates to:
+  /// **'Add several'**
+  String get closetAddMany;
+
+  /// No description provided for @closetSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Search your closet'**
+  String get closetSearch;
+
+  /// No description provided for @closetSearchClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear search'**
+  String get closetSearchClear;
+
+  /// No description provided for @closetSort.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort'**
+  String get closetSort;
+
+  /// No description provided for @sortNewest.
+  ///
+  /// In en, this message translates to:
+  /// **'Newest first'**
+  String get sortNewest;
+
+  /// No description provided for @sortOldest.
+  ///
+  /// In en, this message translates to:
+  /// **'Oldest first'**
+  String get sortOldest;
+
+  /// No description provided for @sortRecentlyEdited.
+  ///
+  /// In en, this message translates to:
+  /// **'Recently edited'**
+  String get sortRecentlyEdited;
+
+  /// No description provided for @sortFormalityLow.
+  ///
+  /// In en, this message translates to:
+  /// **'Most casual first'**
+  String get sortFormalityLow;
+
+  /// No description provided for @sortFormalityHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'Most formal first'**
+  String get sortFormalityHigh;
+
+  /// No description provided for @closetFilters.
+  ///
+  /// In en, this message translates to:
+  /// **'Filters'**
+  String get closetFilters;
+
+  /// No description provided for @closetFiltersActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Filters, {count} active'**
+  String closetFiltersActive(int count);
+
+  /// No description provided for @filterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get filterAll;
+
+  /// No description provided for @filterCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get filterCategory;
+
+  /// No description provided for @filterColour.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour'**
+  String get filterColour;
+
+  /// No description provided for @filterSeason.
+  ///
+  /// In en, this message translates to:
+  /// **'Season'**
+  String get filterSeason;
+
+  /// No description provided for @filterFormality.
+  ///
+  /// In en, this message translates to:
+  /// **'Formality'**
+  String get filterFormality;
+
+  /// No description provided for @filterAvailability.
+  ///
+  /// In en, this message translates to:
+  /// **'Availability'**
+  String get filterAvailability;
+
+  /// No description provided for @filterFavourites.
+  ///
+  /// In en, this message translates to:
+  /// **'Favourites only'**
+  String get filterFavourites;
+
+  /// No description provided for @filterArchived.
+  ///
+  /// In en, this message translates to:
+  /// **'Show archived items'**
+  String get filterArchived;
+
+  /// No description provided for @filterArchivedOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Archived only'**
+  String get filterArchivedOnly;
+
+  /// No description provided for @filterClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear filters'**
+  String get filterClear;
+
+  /// No description provided for @filterApply.
+  ///
+  /// In en, this message translates to:
+  /// **'Show {count} items'**
+  String filterApply(int count);
+
+  /// No description provided for @closetEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your closet is empty'**
+  String get closetEmptyTitle;
+
+  /// No description provided for @closetEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Add your first item: one quick photo and we fill in the details.'**
+  String get closetEmptyBody;
+
+  /// No description provided for @closetNoMatches.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing matches these filters.'**
+  String get closetNoMatches;
+
+  /// No description provided for @closetLoadError.
+  ///
+  /// In en, this message translates to:
+  /// **'We could not load your closet.'**
+  String get closetLoadError;
+
+  /// No description provided for @closetLoadingMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading more'**
+  String get closetLoadingMore;
+
+  /// No description provided for @closetItemAnalysing.
+  ///
+  /// In en, this message translates to:
+  /// **'Analysing'**
+  String get closetItemAnalysing;
+
+  /// No description provided for @closetItemNeedsReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Check details'**
+  String get closetItemNeedsReview;
+
+  /// No description provided for @closetItemNeedsManual.
+  ///
+  /// In en, this message translates to:
+  /// **'Add details'**
+  String get closetItemNeedsManual;
+
+  /// No description provided for @closetItemFavourite.
+  ///
+  /// In en, this message translates to:
+  /// **'Favourite'**
+  String get closetItemFavourite;
+
+  /// No description provided for @closetItemArchived.
+  ///
+  /// In en, this message translates to:
+  /// **'Archived'**
+  String get closetItemArchived;
+
+  /// No description provided for @closetItemSample.
+  ///
+  /// In en, this message translates to:
+  /// **'Sample'**
+  String get closetItemSample;
+
+  /// No description provided for @closetItemLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}, {status}'**
+  String closetItemLabel(String name, String status);
+
+  /// No description provided for @closetResultCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No items} =1{1 item} other{{count} items}}'**
+  String closetResultCount(int count);
+
+  /// No description provided for @availabilityAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Available'**
+  String get availabilityAvailable;
+
+  /// No description provided for @availabilityLaundry.
+  ///
+  /// In en, this message translates to:
+  /// **'In the laundry'**
+  String get availabilityLaundry;
+
+  /// No description provided for @availabilityLent.
+  ///
+  /// In en, this message translates to:
+  /// **'Lent out'**
+  String get availabilityLent;
+
+  /// No description provided for @availabilityRepair.
+  ///
+  /// In en, this message translates to:
+  /// **'At repair'**
+  String get availabilityRepair;
+
+  /// No description provided for @availabilityBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Back on {date}'**
+  String availabilityBack(String date);
+
+  /// No description provided for @availabilitySetReturn.
+  ///
+  /// In en, this message translates to:
+  /// **'Set a return date'**
+  String get availabilitySetReturn;
+
+  /// No description provided for @availabilityClearReturn.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove return date'**
+  String get availabilityClearReturn;
+
+  /// No description provided for @availabilityNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Not used for outfits while it is unavailable or archived.'**
+  String get availabilityNote;
+
+  /// No description provided for @captureTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add an item'**
+  String get captureTitle;
+
+  /// No description provided for @captureHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Lay it flat or hang it up on a plain background, in good light.'**
+  String get captureHint;
+
+  /// No description provided for @lightTooDark.
+  ///
+  /// In en, this message translates to:
+  /// **'Too dark. Move somewhere brighter.'**
+  String get lightTooDark;
+
+  /// No description provided for @lightTooBright.
+  ///
+  /// In en, this message translates to:
+  /// **'Too bright. Step out of direct sun.'**
+  String get lightTooBright;
+
+  /// No description provided for @lightOk.
+  ///
+  /// In en, this message translates to:
+  /// **'Lighting looks good.'**
+  String get lightOk;
+
+  /// No description provided for @captureTake.
+  ///
+  /// In en, this message translates to:
+  /// **'Take photo'**
+  String get captureTake;
+
+  /// No description provided for @captureLibrary.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from photos'**
+  String get captureLibrary;
+
+  /// No description provided for @captureFlip.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo guide outline'**
+  String get captureFlip;
+
+  /// No description provided for @captureRetake.
+  ///
+  /// In en, this message translates to:
+  /// **'Retake'**
+  String get captureRetake;
+
+  /// No description provided for @captureUse.
+  ///
+  /// In en, this message translates to:
+  /// **'Use this photo'**
+  String get captureUse;
+
+  /// No description provided for @captureCrop.
+  ///
+  /// In en, this message translates to:
+  /// **'Crop to the item'**
+  String get captureCrop;
+
+  /// No description provided for @captureCropOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Cropped to the item'**
+  String get captureCropOn;
+
+  /// No description provided for @captureProcessing.
+  ///
+  /// In en, this message translates to:
+  /// **'Preparing your photo'**
+  String get captureProcessing;
+
+  /// No description provided for @captureUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'The camera is not available. Choose a photo instead.'**
+  String get captureUnavailable;
+
+  /// No description provided for @capturePermission.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera access is off. Allow it in Settings, or choose a photo instead.'**
+  String get capturePermission;
+
+  /// No description provided for @captureBad.
+  ///
+  /// In en, this message translates to:
+  /// **'That photo could not be read. Try another one.'**
+  String get captureBad;
+
+  /// No description provided for @captureReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Review the photo'**
+  String get captureReview;
+
+  /// No description provided for @reviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Check the details'**
+  String get reviewTitle;
+
+  /// No description provided for @reviewAnalysing.
+  ///
+  /// In en, this message translates to:
+  /// **'Looking at your photo. You can start filling things in now.'**
+  String get reviewAnalysing;
+
+  /// No description provided for @reviewAnalysed.
+  ///
+  /// In en, this message translates to:
+  /// **'We filled in the details. Fix anything that is off.'**
+  String get reviewAnalysed;
+
+  /// No description provided for @reviewManual.
+  ///
+  /// In en, this message translates to:
+  /// **'We could not read this photo. Please fill in the details.'**
+  String get reviewManual;
+
+  /// No description provided for @reviewUploading.
+  ///
+  /// In en, this message translates to:
+  /// **'Uploading your photo. You can keep going.'**
+  String get reviewUploading;
+
+  /// No description provided for @reviewWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for a connection. Your photo is saved and will upload automatically.'**
+  String get reviewWaiting;
+
+  /// No description provided for @reviewFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The upload did not work. Tap retry.'**
+  String get reviewFailed;
+
+  /// No description provided for @reviewCheck.
+  ///
+  /// In en, this message translates to:
+  /// **'Please check'**
+  String get reviewCheck;
+
+  /// No description provided for @reviewDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Looks good'**
+  String get reviewDone;
+
+  /// No description provided for @reviewSkipForNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Review later'**
+  String get reviewSkipForNow;
+
+  /// No description provided for @reviewFieldNone.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get reviewFieldNone;
+
+  /// No description provided for @reviewLowConfidence.
+  ///
+  /// In en, this message translates to:
+  /// **'{field}: please check'**
+  String reviewLowConfidence(String field);
+
+  /// No description provided for @reviewSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved'**
+  String get reviewSaved;
+
+  /// No description provided for @reviewSaveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not save that change. Try again.'**
+  String get reviewSaveFailed;
+
+  /// No description provided for @reviewPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo of the item'**
+  String get reviewPhoto;
+
+  /// No description provided for @fieldCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get fieldCategory;
+
+  /// No description provided for @fieldSubcategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get fieldSubcategory;
+
+  /// No description provided for @fieldPrimaryColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Main colour'**
+  String get fieldPrimaryColor;
+
+  /// No description provided for @fieldSecondaryColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Second colour'**
+  String get fieldSecondaryColor;
+
+  /// No description provided for @fieldPattern.
+  ///
+  /// In en, this message translates to:
+  /// **'Pattern'**
+  String get fieldPattern;
+
+  /// No description provided for @fieldFormality.
+  ///
+  /// In en, this message translates to:
+  /// **'Formality'**
+  String get fieldFormality;
+
+  /// No description provided for @fieldSeasons.
+  ///
+  /// In en, this message translates to:
+  /// **'Seasons'**
+  String get fieldSeasons;
+
+  /// No description provided for @fieldFit.
+  ///
+  /// In en, this message translates to:
+  /// **'Fit'**
+  String get fieldFit;
+
+  /// No description provided for @fieldMaterial.
+  ///
+  /// In en, this message translates to:
+  /// **'Material'**
+  String get fieldMaterial;
+
+  /// No description provided for @fieldBrand.
+  ///
+  /// In en, this message translates to:
+  /// **'Brand'**
+  String get fieldBrand;
+
+  /// No description provided for @fieldNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get fieldNotes;
+
+  /// No description provided for @detailTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Item'**
+  String get detailTitle;
+
+  /// No description provided for @detailFavourite.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to favourites'**
+  String get detailFavourite;
+
+  /// No description provided for @detailUnfavourite.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from favourites'**
+  String get detailUnfavourite;
+
+  /// No description provided for @detailArchive.
+  ///
+  /// In en, this message translates to:
+  /// **'Archive'**
+  String get detailArchive;
+
+  /// No description provided for @detailUnarchive.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore from archive'**
+  String get detailUnarchive;
+
+  /// No description provided for @detailArchiveNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Archived items stay in your closet but are left out of outfits.'**
+  String get detailArchiveNote;
+
+  /// No description provided for @detailDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete item'**
+  String get detailDelete;
+
+  /// No description provided for @detailDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this item?'**
+  String get detailDeleteTitle;
+
+  /// No description provided for @detailDeleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This permanently deletes the item and its photos. It cannot be undone.'**
+  String get detailDeleteBody;
+
+  /// No description provided for @detailDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get detailDeleteConfirm;
+
+  /// No description provided for @detailReanalyse.
+  ///
+  /// In en, this message translates to:
+  /// **'Analyse photo again'**
+  String get detailReanalyse;
+
+  /// No description provided for @detailMore.
+  ///
+  /// In en, this message translates to:
+  /// **'More options'**
+  String get detailMore;
+
+  /// No description provided for @detailSavedChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'Changes saved'**
+  String get detailSavedChanges;
+
+  /// No description provided for @detailSaveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not save your changes.'**
+  String get detailSaveFailed;
+
+  /// No description provided for @detailLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'We could not load this item.'**
+  String get detailLoadFailed;
+
+  /// No description provided for @bulkTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add several items'**
+  String get bulkTitle;
+
+  /// No description provided for @bulkBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose up to {max} photos. We upload them in the background and fill in the details.'**
+  String bulkBody(int max);
+
+  /// No description provided for @bulkRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'You have room for {count} more items.'**
+  String bulkRoom(int count);
+
+  /// No description provided for @bulkPick.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose photos'**
+  String get bulkPick;
+
+  /// No description provided for @bulkProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total} uploaded'**
+  String bulkProgress(int done, int total);
+
+  /// No description provided for @bulkReviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to review'**
+  String get bulkReviewTitle;
+
+  /// No description provided for @bulkReviewBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Look them over, or accept everything as is.'**
+  String get bulkReviewBody;
+
+  /// No description provided for @bulkAcceptAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept all'**
+  String get bulkAcceptAll;
+
+  /// No description provided for @bulkAccepted.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} items accepted'**
+  String bulkAccepted(int count);
+
+  /// No description provided for @bulkWorking.
+  ///
+  /// In en, this message translates to:
+  /// **'Still analysing {count}'**
+  String bulkWorking(int count);
+
+  /// No description provided for @bulkFinished.
+  ///
+  /// In en, this message translates to:
+  /// **'All done'**
+  String get bulkFinished;
+
+  /// No description provided for @bulkDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Adding several items at once is not available right now.'**
+  String get bulkDisabled;
+
+  /// No description provided for @bulkTooMany.
+  ///
+  /// In en, this message translates to:
+  /// **'You picked more than {max}. We kept the first {max}.'**
+  String bulkTooMany(int max);
+
+  /// No description provided for @bulkView.
+  ///
+  /// In en, this message translates to:
+  /// **'Open my closet'**
+  String get bulkView;
+
+  /// No description provided for @uploadBannerUploading.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Uploading 1 photo} other{Uploading {count} photos}}'**
+  String uploadBannerUploading(int count);
+
+  /// No description provided for @uploadBannerWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for a connection. Your photos are saved.'**
+  String get uploadBannerWaiting;
+
+  /// No description provided for @uploadBannerFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 photo needs attention} other{{count} photos need attention}}'**
+  String uploadBannerFailed(int count);
+
+  /// No description provided for @uploadSheetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo uploads'**
+  String get uploadSheetTitle;
+
+  /// No description provided for @uploadStateQueued.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting'**
+  String get uploadStateQueued;
+
+  /// No description provided for @uploadStateWorking.
+  ///
+  /// In en, this message translates to:
+  /// **'Uploading'**
+  String get uploadStateWorking;
+
+  /// No description provided for @uploadStateDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Uploaded'**
+  String get uploadStateDone;
+
+  /// No description provided for @uploadStateFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Did not upload'**
+  String get uploadStateFailed;
+
+  /// No description provided for @uploadStateRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Not accepted'**
+  String get uploadStateRejected;
+
+  /// No description provided for @uploadRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get uploadRetry;
+
+  /// No description provided for @uploadRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get uploadRemove;
+
+  /// No description provided for @uploadItemLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo {index}: {state}'**
+  String uploadItemLabel(int index, String state);
+
+  /// No description provided for @uploadErrFileTooLarge.
+  ///
+  /// In en, this message translates to:
+  /// **'This photo is too large.'**
+  String get uploadErrFileTooLarge;
+
+  /// No description provided for @uploadErrUnsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'This kind of photo is not supported.'**
+  String get uploadErrUnsupported;
+
+  /// No description provided for @uploadErrLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Your closet is full.'**
+  String get uploadErrLimit;
+
+  /// No description provided for @uploadErrGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Try again.'**
+  String get uploadErrGeneric;
+
+  /// No description provided for @uploadProgressLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{percent} percent'**
+  String uploadProgressLabel(int percent);
+
+  /// No description provided for @upgradeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your free closet is full'**
+  String get upgradeTitle;
+
+  /// No description provided for @upgradeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The free plan holds {limit} items. Paid plans are coming soon. For now you can archive or delete items to make room.'**
+  String upgradeBody(int limit);
+
+  /// No description provided for @upgradeCta.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage my closet'**
+  String get upgradeCta;
+
+  /// No description provided for @limitReachedSnack.
+  ///
+  /// In en, this message translates to:
+  /// **'Your closet is full ({limit} items).'**
+  String limitReachedSnack(int limit);
+
+  /// No description provided for @meterTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Outfit potential'**
+  String get meterTitle;
+
+  /// No description provided for @meterOutfits.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No outfits yet} =1{1 possible outfit} other{{count} possible outfits}}'**
+  String meterOutfits(int count);
+
+  /// No description provided for @meterLevelEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a top, a bottom and shoes to get started.'**
+  String get meterLevelEmpty;
+
+  /// No description provided for @meterLevelStarting.
+  ///
+  /// In en, this message translates to:
+  /// **'A good start.'**
+  String get meterLevelStarting;
+
+  /// No description provided for @meterLevelGrowing.
+  ///
+  /// In en, this message translates to:
+  /// **'Your closet is filling out.'**
+  String get meterLevelGrowing;
+
+  /// No description provided for @meterLevelRich.
+  ///
+  /// In en, this message translates to:
+  /// **'Plenty to work with.'**
+  String get meterLevelRich;
+
+  /// No description provided for @meterNudge.
+  ///
+  /// In en, this message translates to:
+  /// **'Add {item} to unlock {count, plural, =1{1 more outfit} other{{count} more outfits}}.'**
+  String meterNudge(String item, int count);
+
+  /// No description provided for @meterNudgeFootwear.
+  ///
+  /// In en, this message translates to:
+  /// **'a pair of shoes'**
+  String get meterNudgeFootwear;
+
+  /// No description provided for @meterNudgeTop.
+  ///
+  /// In en, this message translates to:
+  /// **'a top'**
+  String get meterNudgeTop;
+
+  /// No description provided for @meterNudgeBottom.
+  ///
+  /// In en, this message translates to:
+  /// **'a bottom'**
+  String get meterNudgeBottom;
+
+  /// No description provided for @meterNudgeDress.
+  ///
+  /// In en, this message translates to:
+  /// **'a dress'**
+  String get meterNudgeDress;
+
+  /// No description provided for @meterProgressLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Closet progress, {percent} percent'**
+  String meterProgressLabel(int percent);
+
+  /// No description provided for @homeClosetCard.
+  ///
+  /// In en, this message translates to:
+  /// **'My closet'**
+  String get homeClosetCard;
+
+  /// No description provided for @homeClosetCardBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Browse, add and edit your clothes.'**
+  String get homeClosetCardBody;
+
+  /// No description provided for @firstItemsAddPhotos.
+  ///
+  /// In en, this message translates to:
+  /// **'Add from photos'**
+  String get firstItemsAddPhotos;
+
+  /// No description provided for @firstItemsPending.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 photo is still being added} other{{count} photos are still being added}}'**
+  String firstItemsPending(int count);
+
+  /// No description provided for @firstItemsOpenCloset.
+  ///
+  /// In en, this message translates to:
+  /// **'Open my closet'**
+  String get firstItemsOpenCloset;
 
   /// No description provided for @taxCatTop.
   ///

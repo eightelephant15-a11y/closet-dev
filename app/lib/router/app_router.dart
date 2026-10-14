@@ -5,6 +5,13 @@ import 'package:stylist/core/providers.dart';
 import 'package:stylist/features/auth/application/boot.dart';
 import 'package:stylist/features/auth/application/session_controller.dart';
 import 'package:stylist/features/auth/presentation/sign_in_screen.dart';
+import 'package:stylist/features/closet/presentation/bulk_add_screen.dart';
+import 'package:stylist/features/closet/presentation/capture_screen.dart';
+import 'package:stylist/features/closet/presentation/closet_routes.dart';
+import 'package:stylist/features/closet/presentation/closet_screen.dart';
+import 'package:stylist/features/closet/presentation/item_detail_screen.dart';
+import 'package:stylist/features/closet/presentation/review_screen.dart';
+import 'package:stylist/features/closet/presentation/upgrade_screen.dart';
 import 'package:stylist/features/consent/presentation/consent_centre_screen.dart';
 import 'package:stylist/features/data_rights/delete_account_screen.dart';
 import 'package:stylist/features/data_rights/export_screen.dart';
@@ -60,7 +67,10 @@ String? decideRedirect({
   }
   // Signed in from here.
   if (onboarding == null) return result(go(Routes.splash));
-  if (location.startsWith('/settings')) return null;
+  if (location.startsWith('/settings') ||
+      location.startsWith(ClosetRoutes.root)) {
+    return null;
+  }
   if (onboarding.isDone) {
     if (location.startsWith('/optional/')) return null;
     final inFlow =
@@ -142,6 +152,34 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: Routes.blocked, builder: (_, _) => const BlockedScreen()),
       GoRoute(path: Routes.home, builder: (_, _) => const HomeScreen()),
       GoRoute(path: Routes.restore, builder: (_, _) => const RestoreScreen()),
+      GoRoute(
+        path: ClosetRoutes.root,
+        builder: (_, _) => const ClosetScreen(),
+      ),
+      GoRoute(
+        path: ClosetRoutes.add,
+        builder: (_, state) => CaptureScreen(
+          startInLibrary: state.uri.queryParameters['library'] == '1',
+        ),
+      ),
+      GoRoute(
+        path: ClosetRoutes.bulk,
+        builder: (_, _) => const BulkAddScreen(),
+      ),
+      GoRoute(
+        path: ClosetRoutes.upgrade,
+        builder: (_, _) => const UpgradeScreen(),
+      ),
+      GoRoute(
+        path: '${ClosetRoutes.root}/review/:clientId',
+        builder: (_, state) =>
+            ReviewScreen(clientId: state.pathParameters['clientId']!),
+      ),
+      GoRoute(
+        path: '${ClosetRoutes.root}/item/:id',
+        builder: (_, state) =>
+            ItemDetailScreen(garmentId: state.pathParameters['id']!),
+      ),
       GoRoute(
         path: SettingsRoutes.root,
         builder: (_, _) => const SettingsScreen(),

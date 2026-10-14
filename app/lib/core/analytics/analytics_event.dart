@@ -18,7 +18,17 @@ enum AnalyticsEvent {
   onboardingCompleted('onboarding_completed'),
   onboardingAbandoned('onboarding_abandoned'),
   accountDeleted('account_deleted'),
-  dataExported('data_exported')
+  dataExported('data_exported'),
+  closetItemCaptureStarted('closet_item_capture_started'),
+  closetItemUploaded('closet_item_uploaded'),
+  closetItemAnalysed('closet_item_analysed'),
+  closetItemCorrected('closet_item_corrected'),
+  closetItemDeleted('closet_item_deleted'),
+  closetBulkAddStarted('closet_bulk_add_started'),
+  closetBulkAddCompleted('closet_bulk_add_completed'),
+  closetFilterUsed('closet_filter_used'),
+  closetLimitReached('closet_limit_reached'),
+  closetMeterNudgeShown('closet_meter_nudge_shown')
   ;
 
   const AnalyticsEvent(this.wireName);

@@ -18,9 +18,6 @@ import 'package:stylist/features/auth/data/fake_auth_provider.dart';
 import 'package:stylist/features/auth/data/firebase_auth_provider.dart';
 import 'package:stylist/features/auth/domain/account_repository.dart';
 import 'package:stylist/features/auth/domain/auth_provider.dart';
-import 'package:stylist/features/closet/data/closet_repositories.dart';
-import 'package:stylist/features/closet/data/sample_closet_data.dart';
-import 'package:stylist/features/closet/domain/closet_item.dart';
 import 'package:stylist/features/config/data/config_repositories.dart';
 import 'package:stylist/features/config/domain/remote_config.dart';
 import 'package:stylist/features/consent/data/consent_repositories.dart';
@@ -180,22 +177,8 @@ final placesServiceProvider = Provider<PlacesService>((ref) {
       : HttpPlacesService(ref.watch(dioProvider));
 });
 
-final closetRepositoryProvider = Provider<ClosetRepository>((ref) {
-  final useMock = ref.watch(appConfigProvider).useMock;
-  final dio = useMock ? null : ref.watch(dioProvider);
-  return StubClosetRepository(
-    ref.watch(keyValueStoreProvider),
-    () async => dio == null ? sampleClosetItems : loadSampleFromApi(dio),
-  );
-});
-
 final recommendationServiceProvider = Provider<RecommendationService>(
   (ref) => FakeRecommendationService(),
-);
-
-/// The user's closet items (Phase 1: only the sample closet shortcut adds any).
-final closetItemsProvider = FutureProvider<List<ClosetItem>>(
-  (ref) => ref.watch(closetRepositoryProvider).items(),
 );
 
 final exportRepositoryProvider = Provider<ExportRepository>((ref) {

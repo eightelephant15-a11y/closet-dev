@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:image/image.dart' as img;
 import 'package:stylist/app.dart';
 import 'package:stylist/core/analytics/analytics_service.dart';
 import 'package:stylist/core/app_config.dart';
@@ -14,6 +16,10 @@ import 'package:stylist/core/sync/sync_triggers.dart';
 import 'package:stylist/features/auth/data/account_repositories.dart';
 import 'package:stylist/features/auth/data/fake_auth_provider.dart';
 import 'package:stylist/features/auth/domain/app_user.dart';
+import 'package:stylist/features/closet/application/closet_providers.dart';
+import 'package:stylist/features/closet/application/image_pipeline.dart';
+import 'package:stylist/features/closet/application/image_source.dart';
+import 'package:stylist/features/closet/data/blob_store.dart';
 import 'package:stylist/features/config/data/config_repositories.dart';
 import 'package:stylist/features/config/domain/remote_config.dart';
 import 'package:stylist/features/consent/application/consent_controller.dart';
@@ -75,6 +81,17 @@ class Harness {
   late final MockConsentRepository consents;
   late final MockExportRepository exports;
   final FakePermissionsService permissions = FakePermissionsService();
+
+  /// Closet: pictures, the camera and the library are fakes; the upload queue, mock server and image
+  /// cache live in memory (use [closetServerBlobs] to share "server storage" between harnesses).
+  final MemoryBlobStore queueBlobs = MemoryBlobStore();
+  final MemoryBlobStore closetServerBlobs = MemoryBlobStore();
+  final MemoryBlobStore imageCache = MemoryBlobStore();
+  late final FakeImageSource imageSource = FakeImageSource();
+  FakeCameraService camera = FakeCameraService(
+    photos: [PickedImage(name: 'navy_jeans_f2.jpg', bytes: _defaultJpeg())],
+  );
+  ImageProcessor imageProcessor = const DartImageProcessor();
   final FakeFileSharer sharer = FakeFileSharer();
   final FakeUrlOpener urls = FakeUrlOpener();
 
@@ -98,6 +115,12 @@ class Harness {
     fileSharerProvider.overrideWithValue(sharer),
     urlOpenerProvider.overrideWithValue(urls),
     connectivityChangesProvider.overrideWithValue(connectivity.stream),
+    queueBlobStoreProvider.overrideWithValue(queueBlobs),
+    mockServerBlobStoreProvider.overrideWithValue(closetServerBlobs),
+    imageCacheStoreProvider.overrideWithValue(imageCache),
+    imageSourceServiceProvider.overrideWithValue(imageSource),
+    cameraFactoryProvider.overrideWithValue(() => camera),
+    imageProcessorProvider.overrideWithValue(imageProcessor),
   ];
 
   /// Puts the device in the "finished onboarding" state without driving the UI.
@@ -133,6 +156,12 @@ class Harness {
     );
     await tester.pumpAndSettle();
   }
+}
+
+Uint8List _defaultJpeg() {
+  final im = img.Image(width: 48, height: 64);
+  img.fill(im, color: img.ColorRgb8(30, 70, 140));
+  return Uint8List.fromList(img.encodeJpg(im));
 }
 
 /// Larger surface so screens don't need scrolling in tests.

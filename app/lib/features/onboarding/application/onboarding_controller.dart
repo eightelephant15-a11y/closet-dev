@@ -7,6 +7,7 @@ import 'package:stylist/core/network/api_exception.dart';
 import 'package:stylist/core/providers.dart';
 import 'package:stylist/features/auth/application/session_controller.dart';
 import 'package:stylist/features/auth/domain/app_user.dart';
+import 'package:stylist/features/closet/application/closet_providers.dart';
 import 'package:stylist/features/closet/domain/unlock_rule.dart';
 import 'package:stylist/features/onboarding/application/outbox_executor.dart';
 import 'package:stylist/features/onboarding/domain/onboarding_state.dart';
@@ -330,7 +331,8 @@ class OnboardingController extends Notifier<OnboardingState?> {
 
   /// Counts items that are actually usable for this user (department, never-wear).
   Future<UnlockProgress> refreshFirstItems() async {
-    final items = await ref.read(closetRepositoryProvider).items();
+    ref.invalidate(closetItemsProvider);
+    final items = await ref.read(closetItemsProvider.future);
     final answers = state!.quiz;
     final blocked = answers.neverWear ?? const <NeverWear>{};
     final usable = items.where(
@@ -351,9 +353,8 @@ class OnboardingController extends Notifier<OnboardingState?> {
   }
 
   Future<UnlockProgress> useSampleCloset() async {
-    await ref.read(closetRepositoryProvider).addSampleCloset();
+    await ref.read(garmentRepositoryProvider).seedSample();
     _set(state!.copyWith(usedSampleCloset: true));
-    ref.invalidate(closetItemsProvider);
     return refreshFirstItems();
   }
 

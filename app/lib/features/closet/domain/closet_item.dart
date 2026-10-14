@@ -14,6 +14,8 @@ class ClosetItem {
     required this.formality,
     required this.department,
     this.tags = const [],
+    this.subcategory,
+    this.colorId,
   });
 
   factory ClosetItem.fromJson(Map<String, dynamic> j) => ClosetItem(
@@ -24,6 +26,8 @@ class ClosetItem {
     formality: (j['formality'] as num).toDouble(),
     department: ItemDepartment.values.byName(j['dept'] as String),
     tags: ((j['tags'] as List?) ?? const []).cast<String>(),
+    subcategory: j['subcategory'] as String?,
+    colorId: j['color_id'] as String?,
   );
 
   final String id;
@@ -38,6 +42,10 @@ class ClosetItem {
   /// Matches never-wear wire names (e.g. `heels`, `skirts`).
   final List<String> tags;
 
+  /// Taxonomy ids, for showing a localised name ("Navy jeans").
+  final String? subcategory;
+  final String? colorId;
+
   Map<String, dynamic> toJson() => {
     'id': id,
     'name': name,
@@ -46,6 +54,8 @@ class ClosetItem {
     'formality': formality,
     'dept': department.name,
     'tags': tags,
+    'subcategory': subcategory,
+    'color_id': colorId,
   };
 
   /// Whether this item belongs in the user's chosen department.

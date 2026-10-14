@@ -40,6 +40,16 @@ event is never emitted by the app flows.
 | `onboarding_abandoned` | App backgrounded/closed mid-onboarding (once per background trip) | `last_step`, `variant`, `elapsed_ms` |
 | `account_deleted` | Deletion confirmed | none |
 | `data_exported` | Export file shared | none |
+| `closet_item_capture_started` | The user starts adding a garment | `source` (`camera`, `library`, `bulk`) |
+| `closet_item_uploaded` | A photo reached storage and was handed to the server | `source`, `attempts`, `bytes` |
+| `closet_item_analysed` | The AI analysis result arrives in the app (first time per garment) | `status` (`done`, `needs_manual`), `latency_ms` (upload to result), `confidence_avg`, `confidence_min`, `low_confidence_count` |
+| `closet_item_corrected` | A field is changed on a garment the AI had filled | `field` (taxonomy field name, never the value) |
+| `closet_item_deleted` | A garment is deleted for good | none |
+| `closet_bulk_add_started` | Bulk add: photos picked | `count` (1-20) |
+| `closet_bulk_add_completed` | Bulk add: all photos uploaded or failed | `count`, `uploaded`, `failed` |
+| `closet_filter_used` | A closet filter or sort is applied | `kind` (`category`, `color`, `season`, `formality`, `search`, `sort`, `availability`, `favorite`) |
+| `closet_limit_reached` | The free item limit blocked an add (server `item_limit_reached`) | `limit`, `used` |
+| `closet_meter_nudge_shown` | The completeness meter suggests an item type | `category`, `outfits_before`, `outfits_after` |
 
 ### Time to first outfit
 

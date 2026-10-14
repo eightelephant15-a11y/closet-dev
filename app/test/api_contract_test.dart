@@ -2,7 +2,13 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:stylist/core/storage/key_value_store.dart';
 import 'package:stylist/features/auth/domain/app_user.dart';
+import 'package:stylist/features/closet/data/blob_store.dart';
+import 'package:stylist/features/closet/data/mock_closet.dart';
+import 'package:stylist/features/closet/domain/closet_query.dart';
+import 'package:stylist/features/closet/domain/garment.dart';
+import 'package:stylist/features/closet/domain/garment_repository.dart';
 import 'package:stylist/features/config/domain/remote_config.dart';
 import 'package:stylist/features/onboarding/domain/onboarding_step.dart';
 
@@ -42,7 +48,18 @@ void main() {
       'GET /v1/me/export/{job_id}',
       'GET /v1/me/export/{job_id}/download',
       'GET /v1/places/autocomplete',
-      'GET /v1/sample/closet',
+      'GET /v1/entitlements',
+      'GET /v1/garments',
+      'POST /v1/garments',
+      'POST /v1/garments/bulk',
+      'GET /v1/garments/summary',
+      'POST /v1/garments/sample',
+      'GET /v1/garments/{garment_id}',
+      'PATCH /v1/garments/{garment_id}',
+      'DELETE /v1/garments/{garment_id}',
+      'POST /v1/garments/{garment_id}/reanalyse',
+      'POST /v1/garments/{garment_id}/images/{image_id}/upload-url',
+      'POST /v1/garments/{garment_id}/images/{image_id}/complete',
     };
     for (final call in used) {
       final parts = call.split(' ');
@@ -129,5 +146,135 @@ void main() {
     ]) {
       expect(text, contains('"$word"'), reason: word);
     }
+  });
+
+  group('closet', () {
+    Set<String> required(String schema) =>
+        ((schemas[schema] as Map)['required'] as List).cast<String>().toSet();
+
+    test('the mock closet returns the same fields as the API', () async {
+      final backend = MockClosetBackend(
+        store: MemoryKeyValueStore(),
+        blobs: MemoryBlobStore(),
+        userKey: 'u',
+        itemLimit: () => 30,
+        processingDelay: Duration.zero,
+        analysisDelay: Duration.zero,
+      );
+      final created = await backend.create(
+        const NewGarment(clientId: 'c1', contentType: 'image/jpeg'),
+      );
+      final json = backend.rawJson(created.garment.id);
+      expect(json.keys.toSet(), containsAll(required('GarmentOut')));
+      expect(
+        props('GarmentOut'),
+        containsAll(json.keys),
+        reason:
+            'mock-only fields: ${json.keys.toSet().difference(props('GarmentOut'))}',
+      );
+      final analysis = (json['analysis'] as Map).keys.toSet();
+      expect(props('AnalysisOut'), containsAll(analysis));
+      final ticket = created.ticket!;
+      expect(ticket.imageId, isNotEmpty);
+      // The same document parses back into the app model without loss.
+      expect(Garment.fromApi(json).id, created.garment.id);
+    });
+
+    test(
+      'summary, entitlements, ticket and list item fields exist server side',
+      () {
+        final summary = props('ClosetSummary');
+        expect(
+          summary,
+          containsAll([
+            'total',
+            'archived',
+            'favorites',
+            'needs_review',
+            'counts',
+            'available_counts',
+            'closet_item_limit',
+            'closet_items_used',
+          ]),
+        );
+        expect(
+          props('EntitlementsOut'),
+          containsAll(['closet_item_limit', 'closet_items_used', 'plan']),
+        );
+        expect(
+          props('UploadTicketOut'),
+          containsAll([
+            'image_id',
+            'url',
+            'method',
+            'headers',
+            'fields',
+            'expires_at',
+            'max_bytes',
+          ]),
+        );
+        expect(
+          props('GarmentListItem'),
+          containsAll([
+            'analysis_status',
+            'thumb_url',
+            'image_version',
+            'low_confidence_fields',
+          ]),
+        );
+        expect(
+          props('GarmentPage'),
+          containsAll(['items', 'total', 'next_cursor']),
+        );
+      },
+    );
+
+    test('query parameters are ones GET /v1/garments accepts', () {
+      final accepted =
+          ((paths['/v1/garments'] as Map)['get'] as Map)['parameters'] as List;
+      final names = {for (final p in accepted) (p as Map)['name'] as String};
+      const query = ClosetQuery(
+        category: 'top',
+        subcategory: 'shirt',
+        color: 'navy',
+        season: 'winter',
+        formalityMin: 2,
+        formalityMax: 4,
+        text: 'x',
+        favorite: true,
+        availability: 'laundry',
+        reviewed: false,
+      );
+      expect(names, containsAll(query.toParams(cursor: 'c').keys));
+    });
+
+    test('patch fields are ones PATCH /v1/garments/{id} accepts', () {
+      const sent = [
+        'category',
+        'subcategory',
+        'primary_color',
+        'secondary_color',
+        'pattern',
+        'formality',
+        'seasons',
+        'fit',
+        'material',
+        'brand',
+        'notes',
+        'favorite',
+        'availability',
+        'unavailable_until',
+        'archived',
+        'reviewed',
+      ];
+      expect(props('GarmentPatch'), containsAll(sent));
+    });
+
+    test('taxonomy version matches the server', () {
+      final text = File(
+        '../taxonomy/garment_taxonomy.v1.json',
+      ).readAsStringSync();
+      expect((jsonDecode(text) as Map)['version'], 1);
+    });
   });
 }
