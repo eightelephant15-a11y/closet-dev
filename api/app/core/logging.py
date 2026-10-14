@@ -7,6 +7,7 @@ def configure_logging(env: str) -> None:
     logging.basicConfig(
         level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s", force=False
     )
+    logging.getLogger("httpx").setLevel(logging.WARNING)
     renderer = (
         structlog.dev.ConsoleRenderer() if env == "dev" else structlog.processors.JSONRenderer()
     )

@@ -11,11 +11,19 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import Settings
 from app.core.errors import ApiError
-from app.domain.taxonomy import AI_FIELDS, TAXONOMY_VERSION
+from app.domain.taxonomy import (
+    AI_FIELDS,
+    EDITABLE_FIELDS,
+    SUBCATEGORY_TO_CATEGORY,
+    TAXONOMY_VERSION,
+    FieldError,
+    validate_fields,
+)
 from app.models import (
     AnalysisStatus,
     Availability,
     Garment,
+    GarmentCorrection,
     GarmentImage,
     ImageStatus,
     User,
@@ -24,6 +32,7 @@ from app.schemas.closet import (
     AnalysisOut,
     CreateGarmentIn,
     FieldValue,
+    GarmentListItem,
     GarmentOut,
     ImageOut,
     ImageUrls,
@@ -233,3 +242,149 @@ def new_garment(
         content_type=body.content_type,
     )
     return garment, image
+
+
+CORE_FIELDS = ("category", "subcategory", "primary_color", "pattern", "formality", "seasons")
+
+
+def invalid(errors: list[Any]) -> ApiError:
+    return ApiError(
+        422,
+        "invalid_garment",
+        "Some details are not valid.",
+        {"errors": [{"field": e.field, "message": e.message} for e in errors]},
+    )
+
+
+def apply_patch(
+    session: AsyncSession, g: Garment, changes: dict[str, Any], *, allow_unarchive: bool = True
+) -> list[str]:
+    """Applies a validated patch to ``g`` and records corrections. Returns the changed field names.
+
+    * taxonomy fields are validated against the taxonomy (and each other: subcategory in category);
+    * every time a user moves a field away from what the AI said, a ``GarmentCorrection`` is stored
+      (field, ai_value, user_value): ground truth for evaluating the model later.
+    """
+    taxo = {k: v for k, v in changes.items() if k in EDITABLE_FIELDS}
+    to_check = dict(taxo)
+    if "subcategory" in taxo and "category" not in taxo and g.category:
+        to_check["category"] = g.category  # so the pair is cross-checked
+    clean, errors = validate_fields(to_check)
+    if (
+        "category" in taxo
+        and "subcategory" not in taxo
+        and g.subcategory
+        and SUBCATEGORY_TO_CATEGORY.get(g.subcategory) != taxo["category"]
+    ):
+        errors.append(FieldError("subcategory", "does not belong to the new category; send both"))
+    secondary = clean.get("secondary_color")
+    if secondary is not None and secondary == clean.get("primary_color", g.primary_color):
+        errors.append(FieldError("secondary_color", "must differ from primary_color"))
+    if errors:
+        raise invalid(errors)
+
+    changed: list[str] = []
+    ai = g.ai_fields or {}
+    for field, new in clean.items():
+        old = getattr(g, field)
+        if new == old:
+            continue
+        if field in AI_FIELDS and field in ai and new != ai[field]["value"]:
+            session.add(
+                GarmentCorrection(
+                    garment_id=g.id,
+                    user_id=g.user_id,
+                    field=field,
+                    ai_value=ai[field]["value"],
+                    user_value=new,
+                    taxonomy_version=g.taxonomy_version,
+                )
+            )
+        setattr(g, field, new)
+        changed.append(field)
+
+    now = datetime.now(UTC)
+    if (
+        "favorite" in changes
+        and changes["favorite"] is not None
+        and changes["favorite"] != g.favorite
+    ):
+        g.favorite = changes["favorite"]
+        changed.append("favorite")
+    if changes.get("availability") is not None:
+        g.availability = changes["availability"]
+        changed.append("availability")
+        if g.availability == Availability.available:
+            g.unavailable_until = None
+    if "unavailable_until" in changes and g.availability != Availability.available:
+        until = changes["unavailable_until"]
+        if until is not None and until < now.date():
+            raise invalid([FieldError("unavailable_until", "must not be in the past")])
+        g.unavailable_until = until
+        changed.append("unavailable_until")
+    if changes.get("archived") is not None:
+        if changes["archived"] and g.archived_at is None:
+            g.archived_at = now
+            changed.append("archived")
+        elif not changes["archived"] and g.archived_at is not None:
+            if not allow_unarchive:
+                raise ApiError(403, "item_limit_reached", "Your closet is full on the free plan.")
+            g.archived_at = None
+            changed.append("archived")
+    if changes.get("reviewed") is not None:
+        g.reviewed_at = now if changes["reviewed"] else None
+        changed.append("reviewed")
+
+    if g.analysis_status == AnalysisStatus.needs_manual and all(getattr(g, f) for f in CORE_FIELDS):
+        g.analysis_status = AnalysisStatus.done  # the user filled in what the AI could not
+    return changed
+
+
+def list_item(
+    g: Garment,
+    cover: GarmentImage | None,
+    storage: ObjectStorage,
+    base_url: str,
+    settings: Settings,
+    thumb: str,
+) -> GarmentListItem:
+    key = None
+    if cover is not None and cover.status == ImageStatus.ready:
+        key = {"s": cover.thumb_s_key, "m": cover.thumb_m_key, "l": cover.thumb_l_key}[thumb]
+    version = str(int(cover.processed_at.timestamp())) if cover and cover.processed_at else None
+    return GarmentListItem(
+        id=g.id,
+        category=g.category,
+        subcategory=g.subcategory,
+        primary_color=g.primary_color,
+        secondary_color=g.secondary_color,
+        pattern=g.pattern,
+        formality=g.formality,
+        seasons=g.seasons,
+        favorite=g.favorite,
+        availability=g.availability,
+        archived=g.archived_at is not None,
+        reviewed=g.reviewed_at is not None,
+        excluded_from_outfits=is_excluded(g),
+        analysis_status=g.analysis_status,
+        low_confidence_fields=low_confidence_fields(g.ai_fields),
+        is_sample=g.is_sample,
+        sample_asset=g.sample_asset,
+        thumb_url=storage.create_read_url(
+            key, expires_in=settings.read_url_ttl_seconds, base_url=base_url
+        )
+        if key
+        else None,
+        image_version=version,
+        updated_at=g.updated_at,
+    )
+
+
+async def covers_of(
+    session: AsyncSession, garments: list[Garment]
+) -> dict[uuid.UUID, GarmentImage]:
+    ids = [g.cover_image_id for g in garments if g.cover_image_id]
+    if not ids:
+        return {}
+    rows = (await session.execute(select(GarmentImage).where(GarmentImage.id.in_(ids)))).scalars()
+    return {r.garment_id: r for r in rows}

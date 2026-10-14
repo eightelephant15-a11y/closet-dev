@@ -167,6 +167,81 @@
         "title": "BulkCreateOut",
         "type": "object"
       },
+      "CategoryCounts": {
+        "properties": {
+          "by_category": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "title": "By Category",
+            "type": "object"
+          },
+          "by_subcategory": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "title": "By Subcategory",
+            "type": "object"
+          }
+        },
+        "required": [
+          "by_category",
+          "by_subcategory"
+        ],
+        "title": "CategoryCounts",
+        "type": "object"
+      },
+      "ClosetSummary": {
+        "properties": {
+          "archived": {
+            "title": "Archived",
+            "type": "integer"
+          },
+          "available_counts": {
+            "$ref": "#/components/schemas/CategoryCounts"
+          },
+          "closet_item_limit": {
+            "title": "Closet Item Limit",
+            "type": "integer"
+          },
+          "closet_items_remaining": {
+            "title": "Closet Items Remaining",
+            "type": "integer"
+          },
+          "closet_items_used": {
+            "title": "Closet Items Used",
+            "type": "integer"
+          },
+          "counts": {
+            "$ref": "#/components/schemas/CategoryCounts"
+          },
+          "favorites": {
+            "title": "Favorites",
+            "type": "integer"
+          },
+          "needs_review": {
+            "title": "Needs Review",
+            "type": "integer"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "total",
+          "archived",
+          "favorites",
+          "needs_review",
+          "counts",
+          "available_counts",
+          "closet_item_limit",
+          "closet_items_used",
+          "closet_items_remaining"
+        ],
+        "title": "ClosetSummary",
+        "type": "object"
+      },
       "ClothingDepartment": {
         "enum": [
           "menswear",
@@ -520,6 +595,191 @@
         "title": "FieldValue",
         "type": "object"
       },
+      "GarmentListItem": {
+        "description": "Slim row for the grid: one thumbnail URL of the requested size, no per-image detail.",
+        "properties": {
+          "analysis_status": {
+            "$ref": "#/components/schemas/AnalysisStatus"
+          },
+          "archived": {
+            "title": "Archived",
+            "type": "boolean"
+          },
+          "availability": {
+            "$ref": "#/components/schemas/Availability"
+          },
+          "category": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category"
+          },
+          "excluded_from_outfits": {
+            "title": "Excluded From Outfits",
+            "type": "boolean"
+          },
+          "favorite": {
+            "title": "Favorite",
+            "type": "boolean"
+          },
+          "formality": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Formality"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "image_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Image Version"
+          },
+          "is_sample": {
+            "title": "Is Sample",
+            "type": "boolean"
+          },
+          "low_confidence_fields": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Low Confidence Fields",
+            "type": "array"
+          },
+          "pattern": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pattern"
+          },
+          "primary_color": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Primary Color"
+          },
+          "reviewed": {
+            "title": "Reviewed",
+            "type": "boolean"
+          },
+          "sample_asset": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sample Asset"
+          },
+          "seasons": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Seasons"
+          },
+          "secondary_color": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Secondary Color"
+          },
+          "subcategory": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Subcategory"
+          },
+          "thumb_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Thumb Url"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "category",
+          "subcategory",
+          "primary_color",
+          "secondary_color",
+          "pattern",
+          "formality",
+          "seasons",
+          "favorite",
+          "availability",
+          "archived",
+          "reviewed",
+          "excluded_from_outfits",
+          "analysis_status",
+          "low_confidence_fields",
+          "is_sample",
+          "sample_asset",
+          "thumb_url",
+          "image_version",
+          "updated_at"
+        ],
+        "title": "GarmentListItem",
+        "type": "object"
+      },
       "GarmentOut": {
         "properties": {
           "analysis": {
@@ -773,6 +1033,224 @@
           "updated_at"
         ],
         "title": "GarmentOut",
+        "type": "object"
+      },
+      "GarmentPage": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/GarmentListItem"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total"
+        ],
+        "title": "GarmentPage",
+        "type": "object"
+      },
+      "GarmentPatch": {
+        "description": "Partial update. Only the fields present in the request are changed (``null`` clears optional ones).",
+        "properties": {
+          "archived": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Archived"
+          },
+          "availability": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Availability"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "brand": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Brand"
+          },
+          "category": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category"
+          },
+          "favorite": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Favorite"
+          },
+          "fit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fit"
+          },
+          "formality": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Formality"
+          },
+          "material": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Material"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "pattern": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pattern"
+          },
+          "primary_color": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Primary Color"
+          },
+          "reviewed": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reviewed"
+          },
+          "seasons": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Seasons"
+          },
+          "secondary_color": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Secondary Color"
+          },
+          "subcategory": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Subcategory"
+          },
+          "unavailable_until": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unavailable Until"
+          }
+        },
+        "title": "GarmentPatch",
         "type": "object"
       },
       "HTTPValidationError": {
@@ -2012,6 +2490,320 @@
       }
     },
     "/v1/garments": {
+      "get": {
+        "description": "The closet grid. Filters combine with AND; ``q`` searches names, colours, brand and notes.\nKeyset pagination: pass ``next_cursor`` back as ``cursor`` (it is tied to the sort order).",
+        "operationId": "list_closet_v1_garments_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "category",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Category"
+            }
+          },
+          {
+            "in": "query",
+            "name": "subcategory",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Subcategory"
+            }
+          },
+          {
+            "in": "query",
+            "name": "color",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Color"
+            }
+          },
+          {
+            "in": "query",
+            "name": "season",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Season"
+            }
+          },
+          {
+            "in": "query",
+            "name": "formality_min",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maximum": 5,
+                  "minimum": 1,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Formality Min"
+            }
+          },
+          {
+            "in": "query",
+            "name": "formality_max",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maximum": 5,
+                  "minimum": 1,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Formality Max"
+            }
+          },
+          {
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 80,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Q"
+            }
+          },
+          {
+            "in": "query",
+            "name": "favorite",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Favorite"
+            }
+          },
+          {
+            "in": "query",
+            "name": "availability",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/Availability"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Availability"
+            }
+          },
+          {
+            "in": "query",
+            "name": "archived",
+            "required": false,
+            "schema": {
+              "default": "exclude",
+              "enum": [
+                "exclude",
+                "only",
+                "include"
+              ],
+              "title": "Archived",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "analysis_status",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/AnalysisStatus"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Analysis Status"
+            }
+          },
+          {
+            "in": "query",
+            "name": "reviewed",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Reviewed"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "required": false,
+            "schema": {
+              "default": "created_desc",
+              "pattern": "^(created_desc|created_asc|updated_desc|formality_asc|formality_desc)$",
+              "title": "Sort",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "thumb",
+            "required": false,
+            "schema": {
+              "default": "m",
+              "enum": [
+                "s",
+                "m",
+                "l"
+              ],
+              "title": "Thumb",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 40,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-device-id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Device-Id"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GarmentPage"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Closet",
+        "tags": [
+          "closet"
+        ]
+      },
       "post": {
         "description": "Creates a garment and hands back the signed URL to upload its photo to.\n\nIdempotent on ``client_id``: a retry after a lost response returns the same garment (and a fresh\nupload URL while the photo has not arrived), never a duplicate.",
         "operationId": "create_garment_v1_garments_post",
@@ -2163,7 +2955,210 @@
         ]
       }
     },
+    "/v1/garments/sample": {
+      "post": {
+        "description": "The guest \"try it\" closet: 16 ready-made garments whose pictures ship inside the app (no upload,\nno AI call, not counted against the item limit). Idempotent.",
+        "operationId": "seed_sample_closet_v1_garments_sample_post",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-device-id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Device-Id"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/GarmentOut"
+                  },
+                  "title": "Response Seed Sample Closet V1 Garments Sample Post",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Seed Sample Closet",
+        "tags": [
+          "closet"
+        ]
+      }
+    },
+    "/v1/garments/summary": {
+      "get": {
+        "description": "Counts for the browse header and the completeness meter (cheap: aggregates only).",
+        "operationId": "closet_summary_v1_garments_summary_get",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-device-id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Device-Id"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClosetSummary"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Closet Summary",
+        "tags": [
+          "closet"
+        ]
+      }
+    },
     "/v1/garments/{garment_id}": {
+      "delete": {
+        "description": "Permanently deletes the garment and every stored image of it (original, full size, thumbnails).",
+        "operationId": "delete_garment_v1_garments__garment_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "garment_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Garment Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-device-id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Device-Id"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Garment",
+        "tags": [
+          "closet"
+        ]
+      },
       "get": {
         "operationId": "get_garment_v1_garments__garment_id__get",
         "parameters": [
@@ -2233,6 +3228,90 @@
           }
         },
         "summary": "Get Garment",
+        "tags": [
+          "closet"
+        ]
+      },
+      "patch": {
+        "description": "Edit any field. Changing a value the AI filled in is stored as a correction (feedback data).",
+        "operationId": "patch_garment_v1_garments__garment_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "garment_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Garment Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-device-id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Device-Id"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GarmentPatch"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GarmentOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Patch Garment",
         "tags": [
           "closet"
         ]
@@ -2405,6 +3484,82 @@
           }
         },
         "summary": "New Upload Url",
+        "tags": [
+          "closet"
+        ]
+      }
+    },
+    "/v1/garments/{garment_id}/reanalyse": {
+      "post": {
+        "description": "Ask the AI to look again (the only way an existing analysis is ever redone).\n\nDetails the user has already edited are kept; only values that still match the previous AI answer\nare replaced. Rate limited per user per day.",
+        "operationId": "reanalyse_v1_garments__garment_id__reanalyse_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "garment_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Garment Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-device-id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Device-Id"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GarmentOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Reanalyse",
         "tags": [
           "closet"
         ]
@@ -3440,77 +4595,6 @@
           }
         },
         "summary": "Autocomplete",
-        "tags": [
-          "sample"
-        ]
-      }
-    },
-    "/v1/sample/closet": {
-      "get": {
-        "description": "Read-only sample items for guests. Phase 2 replaces this with the real closet.",
-        "operationId": "sample_closet_v1_sample_closet_get",
-        "parameters": [
-          {
-            "in": "header",
-            "name": "x-device-id",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "X-Device-Id"
-            }
-          },
-          {
-            "in": "header",
-            "name": "authorization",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Authorization"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "items": {
-                    "additionalProperties": true,
-                    "type": "object"
-                  },
-                  "title": "Response Sample Closet V1 Sample Closet Get",
-                  "type": "array"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Sample Closet",
         "tags": [
           "sample"
         ]

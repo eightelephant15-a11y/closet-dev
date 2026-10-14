@@ -23,9 +23,6 @@ async def test_places_and_sample_endpoints_require_auth_and_work(env: Env) -> No
     assert (await env.client.get("/v1/places/autocomplete?q=sea", headers=h)).json() == [
         "Seattle, WA"
     ]
-    items = (await env.client.get("/v1/sample/closet", headers=h)).json()
-    cats = {i["category"] for i in items}
-    assert {"top", "bottom", "shoes", "dress"} <= cats
 
 
 async def test_daily_outfit_time_validation(env: Env) -> None:

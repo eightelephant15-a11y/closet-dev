@@ -9,7 +9,14 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.auth import VerifiedToken
 from app.core.db import MERGEABLE, register_mergeable
 from app.core.errors import ApiError
-from app.models import DeviceSession, User
+from app.models import (
+    AnalysisJob,
+    DeviceSession,
+    Garment,
+    GarmentCorrection,
+    GarmentImage,
+    User,
+)
 from app.schemas.user import SessionRequest
 from app.services.privacy import default_consents
 
@@ -95,6 +102,7 @@ async def merge_users(session: AsyncSession, source: User, target: User) -> None
     for field in ("city", "clothing_department", "age_confirmed_at", "display_name"):
         if getattr(target, field) is None and getattr(source, field) is not None:
             setattr(target, field, getattr(source, field))
+    await _move_closet(session, source, target)
     await session.execute(delete(DeviceSession).where(DeviceSession.user_id == source.id))
     await session.delete(source)
     await session.flush()
@@ -106,3 +114,23 @@ async def revoke_session(session: AsyncSession, user: User, session_id: uuid.UUI
         raise ApiError(404, "session_not_found", "Session not found")
     ds.revoked_at = datetime.now(UTC)
     await session.commit()
+
+
+async def _move_closet(session: AsyncSession, source: User, target: User) -> None:
+    """A guest's garments follow them into the account they sign in to. Nothing is deleted, so the
+    target may end up above the free limit; that only blocks *adding* more, never loses data."""
+    has_sample = (
+        await session.execute(
+            select(Garment.id)
+            .where(Garment.user_id == target.id, Garment.is_sample.is_(True))
+            .limit(1)
+        )
+    ).first()
+    if has_sample:  # do not end up with two copies of the 16 sample items
+        await session.execute(
+            delete(Garment).where(Garment.user_id == source.id, Garment.is_sample.is_(True))
+        )
+    for model in (GarmentImage, GarmentCorrection, AnalysisJob, Garment):
+        await session.execute(
+            update(model).where(model.user_id == source.id).values(user_id=target.id)
+        )

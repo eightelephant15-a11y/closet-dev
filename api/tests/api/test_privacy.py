@@ -1,5 +1,7 @@
+import io
 import json
 import uuid
+import zipfile
 from datetime import UTC, datetime, timedelta
 
 from sqlalchemy import func, select
@@ -71,7 +73,7 @@ async def test_consents_are_private(env: Env) -> None:
 # ---- export ----------------------------------------------------------------------------
 
 
-async def test_export_job_produces_downloadable_json(env: Env) -> None:
+async def test_export_job_produces_a_downloadable_zip(env: Env) -> None:
     h, uid = await _signin(env)
     await _populate(env, h)
     r = await env.client.post("/v1/me/export", headers=h)
@@ -82,7 +84,8 @@ async def test_export_job_produces_downloadable_json(env: Env) -> None:
     dl = await env.client.get(status["download_url"], headers=h)
     assert dl.status_code == 200
     assert "attachment" in dl.headers["content-disposition"]
-    data = json.loads(dl.content)
+    assert dl.headers["content-type"] == "application/zip"
+    data = json.loads(zipfile.ZipFile(io.BytesIO(dl.content)).read("data.json"))
     assert data["profile"]["id"] == uid and data["profile"]["city"] == "Austin"
     assert data["preferences"]["answers"] == {"fit": "slim"}
     assert data["onboarding"]["current_step"] == "quiz"
@@ -163,7 +166,7 @@ async def test_purge_removes_all_user_data_after_30_days(env: Env) -> None:
     job = (await env.client.post("/v1/me/export", headers=h)).json()
     file_key = (await env.client.get(f"/v1/me/export/{job['id']}", headers=h)).json()["id"]
     assert file_key
-    assert list(env.storage.root.rglob("*.json"))
+    assert list(env.storage.root.rglob("*.zip"))
 
     purged_images: list[uuid.UUID] = []
 
@@ -197,7 +200,7 @@ async def test_purge_removes_all_user_data_after_30_days(env: Env) -> None:
         # the other user is untouched
         assert await s.get(User, uuid.UUID(other_id)) is not None
         assert await s.get(Preferences, uuid.UUID(other_id)) is not None
-    assert not list(env.storage.root.rglob("*.json")), "export files must be deleted"
+    assert not list(env.storage.root.rglob("*.zip")), "export files must be deleted"
     assert purged_images == [uuid.UUID(uid)]
     assert "u1" in env.verifier.deleted
 
@@ -240,3 +243,126 @@ async def test_worker_processes_pending_exports(env: Env) -> None:
         assert job.status.value == "completed"
         assert await privacy.run_pending_exports(s, env.storage) == 0
     assert h  # signed in
+
+
+# ---- closet data: export, deletion, account merge --------------------------------------------------------------
+
+
+async def _closet(env: Env, h: dict[str, str]) -> list[dict[str, object]]:
+    from tests.closet_helpers import add_garment
+
+    a = await add_garment(env, h, "closet-aaaa1", "navy_jeans.jpg")
+    b = await add_garment(env, h, "closet-bbbb2", "white_tee.jpg")
+    await env.client.patch(
+        f"/v1/garments/{a['id']}", headers=h, json={"primary_color": "black"}
+    )  # a correction
+    return [a, b]
+
+
+async def test_export_includes_garments_corrections_and_the_photos(env: Env) -> None:
+    h, _ = await _signin(env)
+    a, b = await _closet(env, h)
+    other, _ = await _signin(env, "other", "o@x.com")
+    await _closet_for(env, other)
+
+    job = (await env.client.post("/v1/me/export", headers=h)).json()
+    dl = await env.client.get(f"/v1/me/export/{job['id']}/download", headers=h)
+    z = zipfile.ZipFile(io.BytesIO(dl.content))
+    data = json.loads(z.read("data.json"))
+    ids = {g["id"] for g in data["garments"]}
+    assert ids == {a["id"], b["id"]}, "only my garments"
+    mine = next(g for g in data["garments"] if g["id"] == a["id"])
+    assert mine["primary_color"] == "black" and mine["subcategory"] == "jeans"
+    assert mine["corrections"] == [
+        {"field": "primary_color", "ai_value": "navy", "your_value": "black"}
+    ]
+    assert (
+        mine["ai_analysis"]["provider"] == "fake"
+        and mine["ai_analysis"]["fields"]["primary_color"]["value"] == "navy"
+    )
+    names = set(z.namelist())
+    assert names == {"data.json", *{p for g in data["garments"] for p in g["images"]}}
+    assert len(names) == 3, "data.json + one full-size photo per garment"
+    for name in names - {"data.json"}:
+        assert z.read(name)[:4] == b"RIFF"  # real WebP bytes
+        assert name.split("/")[1] in ids
+
+
+async def _closet_for(env: Env, h: dict[str, str]) -> None:
+    from tests.closet_helpers import add_garment
+
+    await add_garment(env, h, "other-closet-1", "red_dress.jpg")
+
+
+async def test_deleting_the_account_removes_garments_and_every_stored_image(env: Env) -> None:
+    h, uid = await _signin(env)
+    other, other_id = await _signin(env, "keep", "k@x.com")
+    mine = await _closet(env, h)
+    await _closet_for(env, other)
+    await env.client.post("/v1/garments/sample", headers=h)
+    await env.client.delete("/v1/me", headers=h)
+
+    files_before = {p for p in env.storage.root.rglob("*") if p.is_file()}
+    assert any(
+        g["id"] in str(p) for g in mine for p in files_before
+    )  # photos exist before the purge
+
+    async with env.maker() as s:
+        later = datetime.now(UTC) + timedelta(days=31)
+        assert await privacy.purge_due_users(s, env.storage, env.verifier, now=later) == 1
+    remaining = {str(p) for p in env.storage.root.rglob("*") if p.is_file()}
+    assert not any(str(g["id"]) in p for g in mine for p in remaining), (
+        "photos of the deleted user are gone"
+    )
+    assert any("g/" in p or "/g/" in p for p in remaining), "the other user's photos stay"
+    async with env.maker() as s:
+        from app.models import AnalysisJob, Garment, GarmentCorrection, GarmentImage
+
+        for model in (Garment, GarmentImage, GarmentCorrection, AnalysisJob):
+            rows = (await s.execute(select(model))).scalars().all()
+            assert all(r.user_id != uuid.UUID(uid) for r in rows), model
+            assert any(r.user_id == uuid.UUID(other_id) for r in rows) or model is GarmentCorrection
+
+
+async def test_under_16_rejection_also_removes_garments_and_photos(env: Env) -> None:
+    h, _ = await _signin(env)
+    from tests.closet_helpers import add_garment
+
+    g = await add_garment(env, h, "kid-closet-1", "navy_jeans.jpg")
+    assert list(env.storage.root.rglob("*.webp"))
+    r = await env.client.post(
+        "/v1/me/age-confirmation", json={"confirmed_16_plus": False}, headers=h
+    )
+    assert r.status_code == 403
+    assert not list(env.storage.root.rglob("*.webp")), g["id"]
+    async with env.maker() as s:
+        from app.models import Garment
+
+        assert (await s.execute(select(Garment))).scalars().all() == []
+
+
+async def test_guest_closet_follows_the_guest_into_the_account(env: Env) -> None:
+    guest = auth("guest1")
+    await env.client.post("/v1/auth/session", json=DEV, headers=guest)
+    from tests.closet_helpers import add_garment
+
+    g = await add_garment(env, guest, "guest-item-01", "navy_jeans.jpg")
+    await env.client.post("/v1/garments/sample", headers=guest)
+    member = auth("member1", "m@x.com", "M")
+    await env.client.post("/v1/auth/session", json=DEV, headers=member)
+    await env.client.post(
+        "/v1/garments/sample", headers=member
+    )  # the account already has its own sample items
+    r = await env.client.post(
+        "/v1/auth/upgrade", json={"merge_from_token": "fake:guest1:"}, headers=member
+    )
+    assert r.status_code == 200
+    page = (await env.client.get("/v1/garments?limit=100", headers=member)).json()
+    ids = {i["id"] for i in page["items"]}
+    assert g["id"] in ids, "the guest's real garment moved over"
+    assert page["total"] == 1 + 16, "no duplicate sample closet"
+    detail = (await env.client.get(f"/v1/garments/{g['id']}", headers=member)).json()
+    assert detail["images"][0]["status"] == "ready"
+    assert (
+        await env.client.get(detail["images"][0]["urls"]["m"])
+    ).status_code == 200  # photos still resolve

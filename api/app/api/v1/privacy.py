@@ -91,8 +91,8 @@ async def export_download(
         raise ApiError(410, "export_expired", "This export has expired; request a new one")
     return Response(
         data,
-        media_type="application/json",
-        headers={"Content-Disposition": 'attachment; filename="my-data.json"'},
+        media_type="application/zip",
+        headers={"Content-Disposition": 'attachment; filename="my-data.zip"'},
     )
 
 

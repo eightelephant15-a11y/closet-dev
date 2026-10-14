@@ -1,7 +1,9 @@
 """Consents, data export, account deletion and the 30-day purge."""
 
 import hashlib
+import io
 import uuid
+import zipfile
 from collections.abc import Awaitable, Callable
 from datetime import UTC, datetime, timedelta
 from typing import Any
@@ -14,17 +16,21 @@ from app.core.auth import TokenVerifier
 from app.core.config import get_settings
 from app.core.db import MERGEABLE
 from app.models import (
+    AnalysisJob,
     AuditLog,
     Consents,
     DeviceSession,
     ExportJob,
     ExportStatus,
+    Garment,
+    GarmentCorrection,
+    GarmentImage,
     OnboardingState,
     Preferences,
     User,
     UserStatus,
 )
-from app.services.storage import ExportStorage, dumps
+from app.services.storage import ExportStorage, dumps, garment_prefix
 
 log = structlog.get_logger()
 
@@ -97,6 +103,80 @@ def _iso(v: datetime | None) -> str | None:
     return v.isoformat() if v else None
 
 
+async def _garments_export(session: AsyncSession, user: User) -> list[dict[str, Any]]:
+    garments = (
+        (
+            await session.execute(
+                select(Garment).where(Garment.user_id == user.id).order_by(Garment.created_at)
+            )
+        )
+        .scalars()
+        .all()
+    )
+    images = (
+        (await session.execute(select(GarmentImage).where(GarmentImage.user_id == user.id)))
+        .scalars()
+        .all()
+    )
+    corrections = (
+        (
+            await session.execute(
+                select(GarmentCorrection).where(GarmentCorrection.user_id == user.id)
+            )
+        )
+        .scalars()
+        .all()
+    )
+    out: list[dict[str, Any]] = []
+    for g in garments:
+        out.append(
+            {
+                "id": str(g.id),
+                "created_at": _iso(g.created_at),
+                "is_sample": g.is_sample,
+                **{
+                    f: getattr(g, f)
+                    for f in (
+                        "category",
+                        "subcategory",
+                        "primary_color",
+                        "secondary_color",
+                        "pattern",
+                        "formality",
+                        "seasons",
+                        "fit",
+                        "material",
+                        "brand",
+                        "notes",
+                        "favorite",
+                    )
+                },
+                "availability": g.availability.value,
+                "unavailable_until": g.unavailable_until.isoformat()
+                if g.unavailable_until
+                else None,
+                "archived": g.archived_at is not None,
+                "ai_analysis": {
+                    "status": g.analysis_status.value,
+                    "provider": g.analysis_provider,
+                    "model": g.analysis_model,
+                    "fields": g.ai_fields,
+                },
+                "corrections": [
+                    {"field": c.field, "ai_value": c.ai_value, "your_value": c.user_value}
+                    for c in corrections
+                    if c.garment_id == g.id
+                ],
+                "images": [
+                    f"images/{g.id}/{i.id}.webp"
+                    for i in images
+                    if i.garment_id == g.id and i.full_key
+                ],
+            }
+        )
+    return out
+
+
 async def build_export(session: AsyncSession, user: User) -> dict[str, Any]:
     onboarding = await session.get(OnboardingState, user.id)
     prefs = await session.get(Preferences, user.id)
@@ -158,8 +238,30 @@ async def build_export(session: AsyncSession, user: User) -> dict[str, Any]:
             }
             for s in sessions
         ],
-        # Phase 2+: closet items and image references are appended here.
+        "garments": await _garments_export(session, user),
     }
+
+
+async def build_zip(
+    session: AsyncSession, storage: ExportStorage, user: User, data: dict[str, Any]
+) -> bytes:
+    """``data.json`` plus every full-size photo, as one ZIP. Only this user's files go in."""
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as z:
+        z.writestr("data.json", dumps(data))
+        rows = (
+            await session.execute(
+                select(GarmentImage).where(
+                    GarmentImage.user_id == user.id, GarmentImage.full_key.is_not(None)
+                )
+            )
+        ).scalars()
+        for img in rows:
+            assert img.full_key  # noqa: S101
+            blob = await storage.get(img.full_key)
+            if blob is not None:
+                z.writestr(f"images/{img.garment_id}/{img.id}.webp", blob)
+    return buf.getvalue()
 
 
 async def create_export_job(session: AsyncSession, user: User) -> ExportJob:
@@ -177,8 +279,9 @@ async def run_export_job(session: AsyncSession, storage: ExportStorage, job_id: 
         user = await session.get(User, job.user_id)
         if user is None:
             raise LookupError("user gone")
-        key = f"exports/{user.id}/{job.id}.json"
-        await storage.put(key, dumps(await build_export(session, user)))
+        key = f"exports/{user.id}/{job.id}.zip"
+        data = await build_export(session, user)
+        await storage.put(key, await build_zip(session, storage, user, data), "application/zip")
         job.file_key = key
         job.status = ExportStatus.completed
         job.completed_at = datetime.now(UTC)
@@ -193,6 +296,21 @@ async def run_export_job(session: AsyncSession, storage: ExportStorage, job_id: 
 # ---- deletion ------------------------------------------------------------------------------
 
 
+async def delete_closet(session: AsyncSession, user_id: uuid.UUID, storage: ExportStorage) -> int:
+    """Deletes every garment of the user and every stored image (original, full size, thumbnails).
+
+    Storage first: if it fails the rows stay, so a retry can finish the job and nothing is orphaned.
+    """
+    ids = list(
+        (await session.execute(select(Garment.id).where(Garment.user_id == user_id))).scalars()
+    )
+    for gid in ids:
+        await storage.delete_prefix(garment_prefix(gid))
+    for model in (GarmentImage, GarmentCorrection, AnalysisJob, Garment):
+        await session.execute(delete(model).where(model.user_id == user_id))
+    return len(ids)
+
+
 async def hard_delete_user(session: AsyncSession, user: User, storage: ExportStorage) -> None:
     """Removes every row, file and object belonging to the user."""
     jobs = (
@@ -204,6 +322,7 @@ async def hard_delete_user(session: AsyncSession, user: User, storage: ExportSto
         if job.file_key:
             await storage.delete(job.file_key)
     await session.execute(delete(ExportJob).where(ExportJob.user_id == user.id))
+    await delete_closet(session, user.id, storage)
     for hook in PURGE_HOOKS:
         await hook(user.id)
     for model in MERGEABLE:

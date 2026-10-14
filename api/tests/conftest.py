@@ -22,11 +22,10 @@ from app.core.config import get_settings
 from app.core.db import Base, get_session, get_sessionmaker
 from app.main import create_app
 from app.queue.core import JobDeps
-from app.queue.deps import set_queue, set_vision_factory
+from app.queue.deps import set_queue, set_vision_factory, vision_for
 from app.queue.eager import EagerQueue
 from app.services.background import PassThroughRemover
 from app.services.storage import LocalStorage, set_storage
-from app.vision import build_provider
 
 
 @dataclass
@@ -72,7 +71,7 @@ async def make_env(tmp_path: Path, *, fake_auth: bool = True) -> AsyncIterator[E
         redis=redis_mod.get_redis,
         settings=get_settings(),
         remover=PassThroughRemover(),
-        vision=build_provider,
+        vision=vision_for,
     )
     queue.deps = deps
     set_queue(queue)

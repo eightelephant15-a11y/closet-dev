@@ -112,3 +112,74 @@ class EntitlementsOut(BaseModel):
     closet_items_remaining: int
     bulk_add_enabled: bool
     bulk_max: int
+
+
+class GarmentPatch(BaseModel):
+    """Partial update. Only the fields present in the request are changed (``null`` clears optional ones)."""
+
+    category: str | None = None
+    subcategory: str | None = None
+    primary_color: str | None = None
+    secondary_color: str | None = None
+    pattern: str | None = None
+    formality: int | None = None
+    seasons: list[str] | None = None
+    fit: str | None = None
+    material: str | None = None
+    brand: str | None = None
+    notes: str | None = None
+    favorite: bool | None = None
+    availability: Availability | None = None
+    unavailable_until: date | None = None
+    archived: bool | None = None
+    reviewed: bool | None = None
+
+
+class GarmentListItem(BaseModel):
+    """Slim row for the grid: one thumbnail URL of the requested size, no per-image detail."""
+
+    id: uuid.UUID
+    category: str | None
+    subcategory: str | None
+    primary_color: str | None
+    secondary_color: str | None
+    pattern: str | None
+    formality: int | None
+    seasons: list[str] | None
+    favorite: bool
+    availability: Availability
+    archived: bool
+    reviewed: bool
+    excluded_from_outfits: bool
+    analysis_status: AnalysisStatus
+    low_confidence_fields: list[str]
+    is_sample: bool
+    sample_asset: str | None
+    thumb_url: str | None
+    # Changes when the picture changes: use it (not the signed URL) as the image cache key.
+    image_version: str | None
+    updated_at: datetime
+
+
+class GarmentPage(BaseModel):
+    items: list[GarmentListItem]
+    next_cursor: str | None = None
+    total: int
+
+
+class CategoryCounts(BaseModel):
+    by_category: dict[str, int]
+    by_subcategory: dict[str, int]
+
+
+class ClosetSummary(BaseModel):
+    total: int  # not archived
+    archived: int
+    favorites: int
+    needs_review: int
+    # Items that could be worn today (not archived, not in the laundry / lent / in repair).
+    counts: CategoryCounts
+    available_counts: CategoryCounts
+    closet_item_limit: int
+    closet_items_used: int
+    closet_items_remaining: int

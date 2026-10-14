@@ -8,6 +8,7 @@ did not call is reported as UNCOVERED (and fails), so new endpoints cannot skip 
 
 import asyncio
 import io
+import json
 import sys
 import uuid
 from collections.abc import Awaitable, Callable
@@ -125,10 +126,8 @@ async def run(client: httpx.AsyncClient) -> list[Result]:
         ).json()
         assert patched["city"] == "Austin, TX"
 
-    async def sample_and_places() -> None:
+    async def places() -> None:
         h = state["guest"]
-        items = expect(await s.req("GET", "/v1/sample/closet", headers=h), 200).json()
-        assert len(items) >= 10
         cities = expect(
             await s.req("GET", "/v1/places/autocomplete", headers=h, params={"q": "aus"}), 200
         ).json()
@@ -245,7 +244,13 @@ async def run(client: httpx.AsyncClient) -> list[Result]:
             ),
             200,
         )
-        assert dl.json()["profile"]["city"] == "Austin, TX"
+        import zipfile
+
+        data = json.loads(zipfile.ZipFile(io.BytesIO(dl.content)).read("data.json"))
+        assert data["profile"]["city"] == "Austin, TX"
+        assert any(g["subcategory"] == "jeans" for g in data["garments"]), (
+            "closet missing from the export"
+        )
 
     async def closet_add_garment() -> None:
         h = state["member"]
@@ -329,6 +334,127 @@ async def run(client: httpx.AsyncClient) -> list[Result]:
         ).json()
         assert len(bulk["items"]) == 2 and all(i["upload"] for i in bulk["items"])
 
+    async def closet_browse_and_manage() -> None:
+        h = state["member"]
+        gid = state["garment_id"]
+        page = expect(
+            await s.req(
+                "GET",
+                "/v1/garments",
+                headers=h,
+                params={"category": "bottom", "color": "navy", "thumb": "s"},
+            ),
+            200,
+        ).json()
+        assert [i["id"] for i in page["items"]] == [gid] and page["items"][0]["thumb_url"]
+        found = expect(
+            await s.req("GET", "/v1/garments", headers=h, params={"q": "navy jeans"}), 200
+        ).json()
+        assert found["total"] >= 1
+        summary = expect(await s.req("GET", "/v1/garments/summary", headers=h), 200).json()
+        assert summary["counts"]["by_subcategory"]["jeans"] >= 1
+        patched = expect(
+            await s.req(
+                "PATCH",
+                f"/v1/garments/{gid}",
+                "/v1/garments/{garment_id}",
+                headers=h,
+                json={
+                    "primary_color": "black",
+                    "favorite": True,
+                    "availability": "laundry",
+                    "reviewed": True,
+                },
+            ),
+            200,
+        ).json()
+        assert (
+            patched["primary_color"] == "black"
+            and patched["excluded_from_outfits"]
+            and patched["reviewed"]
+        )
+        bad = await s.req(
+            "PATCH",
+            f"/v1/garments/{gid}",
+            "/v1/garments/{garment_id}",
+            headers=h,
+            json={"formality": 9},
+        )
+        assert bad.status_code == 422
+        expect(
+            await s.req(
+                "POST",
+                f"/v1/garments/{gid}/reanalyse",
+                "/v1/garments/{garment_id}/reanalyse",
+                headers=h,
+            ),
+            202,
+        )
+        redone = {}
+        for _ in range(120):
+            redone = expect(
+                await s.req("GET", f"/v1/garments/{gid}", "/v1/garments/{garment_id}", headers=h),
+                200,
+            ).json()
+            if redone["analysis"]["status"] == "done":
+                break
+            await asyncio.sleep(0.25)
+        assert redone["analysis"]["status"] == "done" and redone["primary_color"] == "black", (
+            "user edit survives re-analysis"
+        )
+
+    async def closet_sample_and_limit() -> None:
+        h = await s.token(f"smoke-closet-{run_id}", "closet@example.com", "Closet")
+        expect(await s.req("POST", "/v1/auth/session", json=DEVICE, headers=h), 200)
+        sample = expect(await s.req("POST", "/v1/garments/sample", headers=h), 201).json()
+        assert len(sample) == 16 and all(g["is_sample"] for g in sample)
+        ent = expect(await s.req("GET", "/v1/entitlements", headers=h), 200).json()
+        assert ent["closet_items_used"] == 0, "sample items do not use up the free allowance"
+        remaining = ent["closet_items_remaining"]
+        n = 0
+        while remaining > 0:
+            chunk = min(remaining, 20)
+            expect(
+                await s.req(
+                    "POST",
+                    "/v1/garments/bulk",
+                    headers=h,
+                    json={"items": [{"client_id": f"fill-{run_id}-{n + k}"} for k in range(chunk)]},
+                ),
+                201,
+            )
+            n += chunk
+            remaining -= chunk
+        full = await s.req("POST", "/v1/garments", headers=h, json={"client_id": f"over-{run_id}"})
+        assert full.status_code == 403 and full.json()["error"]["code"] == "item_limit_reached", (
+            full.text
+        )
+        first = expect(
+            await s.req(
+                "GET",
+                "/v1/garments",
+                headers=h,
+                params={
+                    "limit": 1,
+                    "archived": "exclude",
+                    "sort": "created_asc",
+                    "reviewed": "false",
+                },
+            ),
+            200,
+        ).json()
+        victim = first["items"][0]["id"]
+        expect(
+            await s.req("DELETE", f"/v1/garments/{victim}", "/v1/garments/{garment_id}", headers=h),
+            204,
+        )
+        gone = await s.req("GET", f"/v1/garments/{victim}", "/v1/garments/{garment_id}", headers=h)
+        assert gone.status_code == 404
+        expect(
+            await s.req("POST", "/v1/garments", headers=h, json={"client_id": f"over-{run_id}"}),
+            201,
+        )  # a slot was freed
+
     async def sign_out_and_session_revoked() -> None:
         h = await s.token(other_uid, "other@example.com", "Other")
         h2 = {**h, "X-Device-Id": "smoke-device"}
@@ -382,11 +508,15 @@ async def run(client: httpx.AsyncClient) -> list[Result]:
     steps = [
         ("health", health), ("GET /v1/config", config), ("auth required", unauthenticated),
         ("guest session", guest_session), ("me + patch", me_and_patch),
-        ("sample closet + places", sample_and_places),
+        ("places autocomplete", places),
         ("age, onboarding, preferences", age_onboarding_prefs), ("consents", consents),
         ("idempotency replay", idempotency), ("guest upgrade keeps data", guest_upgrade_keeps_data),
-        ("sessions + cross-user privacy", sessions_and_privacy), ("export", export_flow),
-        ("closet: add garment end to end", closet_add_garment), ("sign-out revokes session", sign_out_and_session_revoked),
+        ("sessions + cross-user privacy", sessions_and_privacy),
+        ("closet: add garment end to end", closet_add_garment),
+        ("closet: browse, edit, re-analyse", closet_browse_and_manage),
+        ("closet: sample + free limit + delete", closet_sample_and_limit),
+        ("export (with closet and photos)", export_flow),
+        ("sign-out revokes session", sign_out_and_session_revoked),
         ("delete + restore", delete_and_restore), ("under-16 removes account", under_16_deletes_everything),
         ("merge guest into existing account", merge_guest_into_existing),
     ]  # fmt: skip

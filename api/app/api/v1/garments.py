@@ -1,31 +1,46 @@
 import uuid
 from datetime import UTC, datetime
-from typing import Annotated
+from typing import Annotated, Literal
 
-from fastapi import APIRouter, Depends, Request, Response
+from fastapi import APIRouter, Depends, Query, Request, Response
 from redis.asyncio import Redis
-from sqlalchemy import select
+from sqlalchemy import delete, func, select
 
 from app.core.auth import CurrentUser, DbSession
 from app.core.config import Settings, get_settings
 from app.core.errors import ApiError
 from app.core.ratelimit import hit
 from app.core.redis import get_redis
-from app.models import AnalysisStatus, Garment, GarmentImage, ImageStatus
+from app.data.sample_closet import SAMPLE_GARMENTS
+from app.domain.taxonomy import TAXONOMY_VERSION
+from app.models import (
+    AnalysisJob,
+    AnalysisStatus,
+    Availability,
+    Garment,
+    GarmentCorrection,
+    GarmentImage,
+    ImageStatus,
+)
 from app.queue.core import JobQueue
 from app.queue.deps import get_queue
 from app.schemas.closet import (
     BulkCreateIn,
     BulkCreateOut,
+    CategoryCounts,
+    ClosetSummary,
     CreateGarmentIn,
     EntitlementsOut,
     GarmentOut,
+    GarmentPage,
+    GarmentPatch,
     UploadTicketOut,
 )
 from app.services import closet as svc
+from app.services.closet_query import SORTS, Filters, list_garments
 from app.services.entitlements import ensure_can_add, get_entitlements
 from app.services.images import sniff_content_type
-from app.services.storage import ALLOWED_UPLOAD_TYPES, ObjectStorage, get_storage
+from app.services.storage import ALLOWED_UPLOAD_TYPES, ObjectStorage, garment_prefix, get_storage
 
 router = APIRouter(tags=["closet"])
 
@@ -263,6 +278,151 @@ async def complete_upload(
     return svc.serialize(garment, imgs, storage, _base(request), settings)
 
 
+@router.get("/garments", response_model=GarmentPage)
+async def list_closet(
+    request: Request,
+    user: CurrentUser,
+    session: DbSession,
+    settings: SettingsDep,
+    storage: StorageDep,
+    category: str | None = None,
+    subcategory: str | None = None,
+    color: str | None = None,
+    season: str | None = None,
+    formality_min: Annotated[int | None, Query(ge=1, le=5)] = None,
+    formality_max: Annotated[int | None, Query(ge=1, le=5)] = None,
+    q: Annotated[str | None, Query(max_length=80)] = None,
+    favorite: bool | None = None,
+    availability: Availability | None = None,
+    archived: Literal["exclude", "only", "include"] = "exclude",
+    analysis_status: AnalysisStatus | None = None,
+    reviewed: bool | None = None,
+    sort: Annotated[str, Query(pattern="^(" + "|".join(SORTS) + ")$")] = "created_desc",
+    thumb: Literal["s", "m", "l"] = "m",
+    limit: Annotated[int, Query(ge=1, le=100)] = 40,
+    cursor: str | None = None,
+) -> GarmentPage:
+    """The closet grid. Filters combine with AND; ``q`` searches names, colours, brand and notes.
+    Keyset pagination: pass ``next_cursor`` back as ``cursor`` (it is tied to the sort order)."""
+    f = Filters(
+        category,
+        subcategory,
+        color,
+        season,
+        formality_min,
+        formality_max,
+        q,
+        favorite,
+        availability,
+        archived,
+        analysis_status,
+        reviewed,
+    )
+    rows, next_cursor, total = await list_garments(
+        session, user.id, f, sort=sort, limit=limit, cursor=cursor
+    )
+    covers = await svc.covers_of(session, rows)
+    items = [
+        svc.list_item(g, covers.get(g.id), storage, _base(request), settings, thumb) for g in rows
+    ]
+    return GarmentPage(items=items, next_cursor=next_cursor, total=total)
+
+
+def _counts(rows: list[tuple[str | None, str | None, int]]) -> CategoryCounts:
+    by_cat: dict[str, int] = {}
+    by_sub: dict[str, int] = {}
+    for cat, sub, n in rows:
+        if cat:
+            by_cat[cat] = by_cat.get(cat, 0) + n
+        if sub:
+            by_sub[sub] = by_sub.get(sub, 0) + n
+    return CategoryCounts(by_category=by_cat, by_subcategory=by_sub)
+
+
+@router.get("/garments/summary", response_model=ClosetSummary)
+async def closet_summary(user: CurrentUser, session: DbSession, redis: RedisDep) -> ClosetSummary:
+    """Counts for the browse header and the completeness meter (cheap: aggregates only)."""
+
+    async def grouped(*where: object) -> list[tuple[str | None, str | None, int]]:
+        stmt = (
+            select(Garment.category, Garment.subcategory, func.count())
+            .where(Garment.user_id == user.id, *where)  # type: ignore[arg-type]
+            .group_by(Garment.category, Garment.subcategory)
+        )
+        return [(c, s, n) for c, s, n in (await session.execute(stmt)).all()]
+
+    live = Garment.archived_at.is_(None)
+    all_live = await grouped(live)
+    available = await grouped(live, Garment.availability == Availability.available)
+
+    async def count(*where: object) -> int:
+        stmt = select(func.count()).select_from(Garment).where(Garment.user_id == user.id, *where)  # type: ignore[arg-type]
+        return (await session.execute(stmt)).scalar_one()
+
+    ent = await get_entitlements(session, redis, user)
+    return ClosetSummary(
+        total=await count(live),
+        archived=await count(Garment.archived_at.is_not(None)),
+        favorites=await count(live, Garment.favorite.is_(True)),
+        needs_review=await count(live, Garment.reviewed_at.is_(None), Garment.is_sample.is_(False)),
+        counts=_counts(all_live),
+        available_counts=_counts(available),
+        closet_item_limit=ent.closet_item_limit,
+        closet_items_used=ent.closet_items_used,
+        closet_items_remaining=ent.remaining,
+    )
+
+
+@router.post("/garments/sample", response_model=list[GarmentOut], status_code=201)
+async def seed_sample_closet(
+    request: Request,
+    response: Response,
+    user: CurrentUser,
+    session: DbSession,
+    settings: SettingsDep,
+    storage: StorageDep,
+) -> list[GarmentOut]:
+    """The guest "try it" closet: 16 ready-made garments whose pictures ship inside the app (no upload,
+    no AI call, not counted against the item limit). Idempotent."""
+    existing = (
+        (
+            await session.execute(
+                select(Garment)
+                .where(Garment.user_id == user.id, Garment.is_sample.is_(True))
+                .order_by(Garment.created_at, Garment.id)
+            )
+        )
+        .scalars()
+        .all()
+    )
+    if existing:
+        response.status_code = 200
+        garments = list(existing)
+    else:
+        now = datetime.now(UTC)
+        garments = []
+        for spec in SAMPLE_GARMENTS:
+            g = Garment(
+                user_id=user.id,
+                client_id=f"sample-{spec['asset']}",
+                is_sample=True,
+                sample_asset=spec["asset"],
+                analysis_status=AnalysisStatus.done,
+                reviewed_at=now,
+                category=spec["category"],
+                subcategory=spec["subcategory"],
+                primary_color=spec["primary_color"],
+                pattern=spec["pattern"],
+                formality=spec["formality"],
+                seasons=spec["seasons"],
+                taxonomy_version=TAXONOMY_VERSION,
+            )
+            session.add(g)
+            garments.append(g)
+        await session.commit()
+    return [svc.serialize(g, [], storage, _base(request), settings) for g in garments]
+
+
 @router.get("/garments/{garment_id}", response_model=GarmentOut)
 async def get_garment(
     garment_id: uuid.UUID,
@@ -275,3 +435,85 @@ async def get_garment(
     garment = await svc.get_owned_garment(session, user, garment_id)
     imgs = (await svc.images_of(session, [garment.id]))[garment.id]
     return svc.serialize(garment, imgs, storage, _base(request), settings)
+
+
+@router.patch("/garments/{garment_id}", response_model=GarmentOut)
+async def patch_garment(
+    garment_id: uuid.UUID,
+    body: GarmentPatch,
+    request: Request,
+    user: CurrentUser,
+    session: DbSession,
+    redis: RedisDep,
+    settings: SettingsDep,
+    storage: StorageDep,
+) -> GarmentOut:
+    """Edit any field. Changing a value the AI filled in is stored as a correction (feedback data)."""
+    garment = await svc.get_owned_garment(session, user, garment_id)
+    changes = body.model_dump(exclude_unset=True)
+    unarchiving = changes.get("archived") is False and garment.archived_at is not None
+    if unarchiving:
+        ensure_can_add(await get_entitlements(session, redis, user))  # coming back counts again
+    svc.apply_patch(session, garment, changes)
+    await session.commit()
+    imgs = (await svc.images_of(session, [garment.id]))[garment.id]
+    return svc.serialize(garment, imgs, storage, _base(request), settings)
+
+
+@router.post("/garments/{garment_id}/reanalyse", response_model=GarmentOut, status_code=202)
+async def reanalyse(
+    garment_id: uuid.UUID,
+    request: Request,
+    user: CurrentUser,
+    session: DbSession,
+    redis: RedisDep,
+    settings: SettingsDep,
+    storage: StorageDep,
+    queue: QueueDep,
+) -> GarmentOut:
+    """Ask the AI to look again (the only way an existing analysis is ever redone).
+
+    Details the user has already edited are kept; only values that still match the previous AI answer
+    are replaced. Rate limited per user per day."""
+    garment = await svc.get_owned_garment(session, user, garment_id)
+    imgs = (await svc.images_of(session, [garment.id]))[garment.id]
+    ready = next((i for i in imgs if i.status == ImageStatus.ready), None)
+    if ready is None:
+        raise ApiError(409, "image_not_ready", "There is no processed photo to analyse yet.")
+    if garment.analysis_status in (AnalysisStatus.processing, AnalysisStatus.analysing):
+        raise ApiError(409, "analysis_in_progress", "Analysis is already running.")
+    await hit(
+        redis,
+        bucket="reanalyse",
+        user_id=user.id,
+        limit=settings.reanalyse_daily_cap,
+        window_seconds=86400,
+    )
+    garment.analysis_status = AnalysisStatus.analysing
+    await session.commit()
+    await queue.enqueue(
+        "analyse_garment", str(garment.id), str(ready.id), "reanalyse",
+        job_id=f"reanalyse-{ready.id}-{int(datetime.now(UTC).timestamp())}",
+    )  # fmt: skip
+    await session.refresh(garment)
+    imgs = (await svc.images_of(session, [garment.id]))[garment.id]
+    return svc.serialize(garment, imgs, storage, _base(request), settings)
+
+
+@router.delete("/garments/{garment_id}", status_code=204)
+async def delete_garment(
+    garment_id: uuid.UUID, user: CurrentUser, session: DbSession, storage: StorageDep
+) -> Response:
+    """Permanently deletes the garment and every stored image of it (original, full size, thumbnails)."""
+    garment = await svc.get_owned_garment(session, user, garment_id)
+    try:
+        await storage.delete_prefix(garment_prefix(garment.id))
+    except Exception as exc:  # keep the row so the user can retry: never orphan images
+        raise ApiError(
+            503, "storage_unavailable", "Could not delete the photos. Please try again."
+        ) from exc
+    for model in (GarmentImage, GarmentCorrection, AnalysisJob):
+        await session.execute(delete(model).where(model.garment_id == garment.id))
+    await session.delete(garment)
+    await session.commit()
+    return Response(status_code=204)
