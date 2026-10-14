@@ -7,14 +7,34 @@ did not call is reported as UNCOVERED (and fails), so new endpoints cannot skip 
 """
 
 import asyncio
+import io
 import sys
 import uuid
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
 
 import httpx
+from PIL import Image, ImageDraw
 
 DEVICE = {"device_id": "smoke-device", "platform": "ios", "app_version": "smoke"}
+
+
+def test_png(color: tuple[int, int, int] = (30, 60, 140)) -> bytes:
+    img = Image.new("RGB", (400, 600), (250, 250, 250))
+    ImageDraw.Draw(img).rectangle([80, 90, 320, 510], fill=color)
+    out = io.BytesIO()
+    img.save(out, format="PNG")
+    return out.getvalue()
+
+
+async def upload_via_ticket(
+    client: httpx.AsyncClient, ticket: dict[str, object], data: bytes
+) -> httpx.Response:
+    """Uploads the way the phone does: straight to the signed URL, never through /v1."""
+    url = str(ticket["url"])
+    if ticket["method"] == "PUT":
+        return await client.put(url, content=data, headers=ticket["headers"])  # type: ignore[arg-type]
+    return await client.post(url, data=ticket["fields"], files={"file": ("photo", data)})  # type: ignore[arg-type]
 
 
 @dataclass
@@ -227,6 +247,88 @@ async def run(client: httpx.AsyncClient) -> list[Result]:
         )
         assert dl.json()["profile"]["city"] == "Austin, TX"
 
+    async def closet_add_garment() -> None:
+        h = state["member"]
+        ent = expect(await s.req("GET", "/v1/entitlements", headers=h), 200).json()
+        assert ent["closet_item_limit"] >= 1 and ent["plan"] == "free"
+        g = expect(
+            await s.req(
+                "POST", "/v1/garments", headers=h,
+                json={"client_id": f"smoke-{run_id}-1", "filename": "navy_jeans_casual.png", "content_type": "image/png"},
+            ),
+            201,
+        ).json()  # fmt: skip
+        assert g["upload"]["url"] and g["analysis"]["status"] == "pending"
+        again = expect(
+            await s.req("POST", "/v1/garments", headers=h, json={"client_id": f"smoke-{run_id}-1"}),
+            200,
+        ).json()
+        assert again["id"] == g["id"], "create must be idempotent on client_id"
+        iid = g["images"][0]["id"]
+        fresh = expect(
+            await s.req(
+                "POST",
+                f"/v1/garments/{g['id']}/images/{iid}/upload-url",
+                "/v1/garments/{garment_id}/images/{image_id}/upload-url",
+                headers=h,
+            ),
+            200,
+        ).json()
+        up = await upload_via_ticket(client, fresh, test_png())
+        assert up.status_code in (200, 204), f"upload -> {up.status_code} {up.text[:120]}"
+        expect(
+            await s.req(
+                "POST",
+                f"/v1/garments/{g['id']}/images/{iid}/complete",
+                "/v1/garments/{garment_id}/images/{image_id}/complete",
+                headers=h,
+            ),
+            202,
+        )
+        late = await s.req(
+            "POST",
+            f"/v1/garments/{g['id']}/images/{iid}/upload-url",
+            "/v1/garments/{garment_id}/images/{image_id}/upload-url",
+            headers=h,
+        )
+        assert late.status_code == 409, "no new upload URL once the photo is in"
+        detail = g
+        for _ in range(120):  # the worker is a separate process locally: poll
+            detail = expect(
+                await s.req(
+                    "GET", f"/v1/garments/{g['id']}", "/v1/garments/{garment_id}", headers=h
+                ),
+                200,
+            ).json()
+            if detail["analysis"]["status"] in ("done", "needs_manual"):
+                break
+            await asyncio.sleep(0.25)
+        assert detail["analysis"]["status"] == "done", detail["analysis"]
+        assert (detail["category"], detail["subcategory"], detail["primary_color"]) == (
+            "bottom",
+            "jeans",
+            "navy",
+        )
+        assert detail["images"][0]["status"] == "ready"
+        thumb = await client.get(detail["images"][0]["urls"]["m"])
+        assert thumb.status_code == 200 and thumb.headers["content-type"] == "image/webp"
+        state["garment_id"] = detail["id"]
+        bulk = expect(
+            await s.req(
+                "POST",
+                "/v1/garments/bulk",
+                headers=h,
+                json={
+                    "items": [
+                        {"client_id": f"smoke-{run_id}-b1"},
+                        {"client_id": f"smoke-{run_id}-b2"},
+                    ]
+                },
+            ),
+            201,
+        ).json()
+        assert len(bulk["items"]) == 2 and all(i["upload"] for i in bulk["items"])
+
     async def sign_out_and_session_revoked() -> None:
         h = await s.token(other_uid, "other@example.com", "Other")
         h2 = {**h, "X-Device-Id": "smoke-device"}
@@ -284,7 +386,7 @@ async def run(client: httpx.AsyncClient) -> list[Result]:
         ("age, onboarding, preferences", age_onboarding_prefs), ("consents", consents),
         ("idempotency replay", idempotency), ("guest upgrade keeps data", guest_upgrade_keeps_data),
         ("sessions + cross-user privacy", sessions_and_privacy), ("export", export_flow),
-        ("sign-out revokes session", sign_out_and_session_revoked),
+        ("closet: add garment end to end", closet_add_garment), ("sign-out revokes session", sign_out_and_session_revoked),
         ("delete + restore", delete_and_restore), ("under-16 removes account", under_16_deletes_everything),
         ("merge guest into existing account", merge_guest_into_existing),
     ]  # fmt: skip

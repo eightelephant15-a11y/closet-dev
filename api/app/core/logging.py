@@ -4,6 +4,9 @@ import structlog
 
 
 def configure_logging(env: str) -> None:
+    logging.basicConfig(
+        level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s", force=False
+    )
     renderer = (
         structlog.dev.ConsoleRenderer() if env == "dev" else structlog.processors.JSONRenderer()
     )

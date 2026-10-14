@@ -1,4 +1,4 @@
-.PHONY: api-local api-smoke run-app-local-api ios-flavors-setup setup api-test api-lint app-test app-lint app-gen up down run-mock test lint openapi
+.PHONY: redis-local worker-local api-local api-smoke run-app-local-api ios-flavors-setup setup api-test api-lint app-test app-lint app-gen up down run-mock test lint openapi
 
 setup:
 	cd api && python3.12 -m venv .venv && . .venv/bin/activate && pip install -e ".[dev]"
@@ -50,10 +50,17 @@ ios-flavors-setup:  ## re-apply iOS flavor config to the Xcode project (idempote
 	python3 app/tool/gen_ios_strings.py
 
 # ---- the real API on this laptop, no Docker -------------------------------------------------
-# api-local          FastAPI + SQLite + in-process fake Redis + AUTH_MODE=dev (no Firebase). Migrates + seeds flags.
+# api-local          FastAPI + SQLite + fake Redis (TCP) + a worker subprocess + disk storage + AUTH_MODE=dev. Migrates + seeds flags.
+#                    `make api-local WORKER=external` leaves the worker to `make worker-local` in another terminal.
 # api-smoke          hit every /v1 endpoint on the running local server and print PASS/FAIL
 # run-app-local-api  run the Flutter dev flavor against it (Android emulator: localhost is mapped to 10.0.2.2)
 PORT ?= 8000
+
+redis-local:   ## a Redis-compatible server for the local queue (only needed with WORKER=external)
+	cd api && . .venv/bin/activate && python -m app.fake_redis
+
+worker-local:  ## the closet worker (image processing + AI analysis) as its own process
+	cd api && . .venv/bin/activate && python -m app.local_server --worker-only
 
 api-local:
 	cd api && . .venv/bin/activate && PORT=$(PORT) python -m app.local_server

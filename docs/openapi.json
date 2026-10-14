@@ -14,6 +14,89 @@
         "title": "AgeConfirmation",
         "type": "object"
       },
+      "AnalysisOut": {
+        "properties": {
+          "fields": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "$ref": "#/components/schemas/FieldValue"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fields"
+          },
+          "low_confidence_fields": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Low Confidence Fields",
+            "type": "array"
+          },
+          "model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model"
+          },
+          "provider": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Provider"
+          },
+          "status": {
+            "$ref": "#/components/schemas/AnalysisStatus"
+          },
+          "taxonomy_version": {
+            "title": "Taxonomy Version",
+            "type": "integer"
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Version"
+          }
+        },
+        "required": [
+          "status",
+          "taxonomy_version"
+        ],
+        "title": "AnalysisOut",
+        "type": "object"
+      },
+      "AnalysisStatus": {
+        "enum": [
+          "pending",
+          "processing",
+          "analysing",
+          "done",
+          "needs_manual"
+        ],
+        "title": "AnalysisStatus",
+        "type": "string"
+      },
       "AuthSessionResponse": {
         "properties": {
           "is_new_user": {
@@ -33,6 +116,55 @@
           "is_new_user"
         ],
         "title": "AuthSessionResponse",
+        "type": "object"
+      },
+      "Availability": {
+        "enum": [
+          "available",
+          "laundry",
+          "lent",
+          "repair"
+        ],
+        "title": "Availability",
+        "type": "string"
+      },
+      "BulkCreateIn": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/CreateGarmentIn"
+            },
+            "maxItems": 50,
+            "minItems": 1,
+            "title": "Items",
+            "type": "array"
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "title": "BulkCreateIn",
+        "type": "object"
+      },
+      "BulkCreateOut": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/GarmentOut"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "remaining": {
+            "title": "Remaining",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "remaining"
+        ],
+        "title": "BulkCreateOut",
         "type": "object"
       },
       "ClothingDepartment": {
@@ -197,6 +329,58 @@
         "title": "ConsentPut",
         "type": "object"
       },
+      "CreateGarmentIn": {
+        "properties": {
+          "client_id": {
+            "maxLength": 64,
+            "minLength": 8,
+            "pattern": "^[A-Za-z0-9_-]+$",
+            "title": "Client Id",
+            "type": "string"
+          },
+          "content_type": {
+            "default": "image/jpeg",
+            "enum": [
+              "image/jpeg",
+              "image/png",
+              "image/webp",
+              "image/heic",
+              "image/heif"
+            ],
+            "title": "Content Type",
+            "type": "string"
+          },
+          "filename": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Filename"
+          },
+          "size_bytes": {
+            "anyOf": [
+              {
+                "minimum": 1.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Size Bytes"
+          }
+        },
+        "required": [
+          "client_id"
+        ],
+        "title": "CreateGarmentIn",
+        "type": "object"
+      },
       "DeletionOut": {
         "properties": {
           "purge_after": {
@@ -209,6 +393,44 @@
           "purge_after"
         ],
         "title": "DeletionOut",
+        "type": "object"
+      },
+      "EntitlementsOut": {
+        "properties": {
+          "bulk_add_enabled": {
+            "title": "Bulk Add Enabled",
+            "type": "boolean"
+          },
+          "bulk_max": {
+            "title": "Bulk Max",
+            "type": "integer"
+          },
+          "closet_item_limit": {
+            "title": "Closet Item Limit",
+            "type": "integer"
+          },
+          "closet_items_remaining": {
+            "title": "Closet Items Remaining",
+            "type": "integer"
+          },
+          "closet_items_used": {
+            "title": "Closet Items Used",
+            "type": "integer"
+          },
+          "plan": {
+            "title": "Plan",
+            "type": "string"
+          }
+        },
+        "required": [
+          "plan",
+          "closet_item_limit",
+          "closet_items_used",
+          "closet_items_remaining",
+          "bulk_add_enabled",
+          "bulk_max"
+        ],
+        "title": "EntitlementsOut",
         "type": "object"
       },
       "ExportOut": {
@@ -281,6 +503,278 @@
         "title": "ExportStatus",
         "type": "string"
       },
+      "FieldValue": {
+        "properties": {
+          "confidence": {
+            "title": "Confidence",
+            "type": "number"
+          },
+          "value": {
+            "title": "Value"
+          }
+        },
+        "required": [
+          "value",
+          "confidence"
+        ],
+        "title": "FieldValue",
+        "type": "object"
+      },
+      "GarmentOut": {
+        "properties": {
+          "analysis": {
+            "$ref": "#/components/schemas/AnalysisOut"
+          },
+          "archived": {
+            "title": "Archived",
+            "type": "boolean"
+          },
+          "availability": {
+            "$ref": "#/components/schemas/Availability"
+          },
+          "brand": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Brand"
+          },
+          "category": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category"
+          },
+          "client_id": {
+            "title": "Client Id",
+            "type": "string"
+          },
+          "cover_image_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cover Image Id"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "excluded_from_outfits": {
+            "title": "Excluded From Outfits",
+            "type": "boolean"
+          },
+          "favorite": {
+            "title": "Favorite",
+            "type": "boolean"
+          },
+          "fit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fit"
+          },
+          "formality": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Formality"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "images": {
+            "items": {
+              "$ref": "#/components/schemas/ImageOut"
+            },
+            "title": "Images",
+            "type": "array"
+          },
+          "is_sample": {
+            "title": "Is Sample",
+            "type": "boolean"
+          },
+          "material": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Material"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "pattern": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pattern"
+          },
+          "primary_color": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Primary Color"
+          },
+          "reviewed": {
+            "title": "Reviewed",
+            "type": "boolean"
+          },
+          "sample_asset": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sample Asset"
+          },
+          "seasons": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Seasons"
+          },
+          "secondary_color": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Secondary Color"
+          },
+          "subcategory": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Subcategory"
+          },
+          "unavailable_until": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unavailable Until"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          },
+          "upload": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/UploadTicketOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "client_id",
+          "category",
+          "subcategory",
+          "primary_color",
+          "secondary_color",
+          "pattern",
+          "formality",
+          "seasons",
+          "fit",
+          "material",
+          "brand",
+          "notes",
+          "favorite",
+          "availability",
+          "unavailable_until",
+          "archived",
+          "reviewed",
+          "excluded_from_outfits",
+          "is_sample",
+          "sample_asset",
+          "analysis",
+          "images",
+          "cover_image_id",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "GarmentOut",
+        "type": "object"
+      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
@@ -292,6 +786,124 @@
           }
         },
         "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "ImageOut": {
+        "properties": {
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          },
+          "height": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Height"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ImageStatus"
+          },
+          "urls": {
+            "$ref": "#/components/schemas/ImageUrls"
+          },
+          "width": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Width"
+          }
+        },
+        "required": [
+          "id",
+          "status",
+          "width",
+          "height",
+          "urls"
+        ],
+        "title": "ImageOut",
+        "type": "object"
+      },
+      "ImageStatus": {
+        "enum": [
+          "awaiting_upload",
+          "uploaded",
+          "processing",
+          "ready",
+          "failed"
+        ],
+        "title": "ImageStatus",
+        "type": "string"
+      },
+      "ImageUrls": {
+        "properties": {
+          "full": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Full"
+          },
+          "l": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "L"
+          },
+          "m": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "M"
+          },
+          "s": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "S"
+          }
+        },
+        "title": "ImageUrls",
         "type": "object"
       },
       "OnboardingOut": {
@@ -636,6 +1248,61 @@
           }
         },
         "title": "UpgradeRequest",
+        "type": "object"
+      },
+      "UploadTicketOut": {
+        "description": "Where and how to upload one image. ``method`` is PUT (local) or POST with form ``fields`` (S3).",
+        "properties": {
+          "expires_at": {
+            "title": "Expires At",
+            "type": "integer"
+          },
+          "fields": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Fields",
+            "type": "object"
+          },
+          "headers": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Headers",
+            "type": "object"
+          },
+          "image_id": {
+            "format": "uuid",
+            "title": "Image Id",
+            "type": "string"
+          },
+          "max_bytes": {
+            "title": "Max Bytes",
+            "type": "integer"
+          },
+          "method": {
+            "enum": [
+              "PUT",
+              "POST"
+            ],
+            "title": "Method",
+            "type": "string"
+          },
+          "url": {
+            "title": "Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "image_id",
+          "url",
+          "method",
+          "headers",
+          "fields",
+          "expires_at",
+          "max_bytes"
+        ],
+        "title": "UploadTicketOut",
         "type": "object"
       },
       "UserOut": {
@@ -1276,6 +1943,470 @@
         "summary": "Get Config",
         "tags": [
           "config"
+        ]
+      }
+    },
+    "/v1/entitlements": {
+      "get": {
+        "operationId": "entitlements_v1_entitlements_get",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-device-id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Device-Id"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntitlementsOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Entitlements",
+        "tags": [
+          "closet"
+        ]
+      }
+    },
+    "/v1/garments": {
+      "post": {
+        "description": "Creates a garment and hands back the signed URL to upload its photo to.\n\nIdempotent on ``client_id``: a retry after a lost response returns the same garment (and a fresh\nupload URL while the photo has not arrived), never a duplicate.",
+        "operationId": "create_garment_v1_garments_post",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-device-id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Device-Id"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateGarmentIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GarmentOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Garment",
+        "tags": [
+          "closet"
+        ]
+      }
+    },
+    "/v1/garments/bulk": {
+      "post": {
+        "description": "Up to 20 garments at once (the multi-select flow). All or nothing against the item limit.",
+        "operationId": "create_garments_bulk_v1_garments_bulk_post",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-device-id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Device-Id"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkCreateIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BulkCreateOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Garments Bulk",
+        "tags": [
+          "closet"
+        ]
+      }
+    },
+    "/v1/garments/{garment_id}": {
+      "get": {
+        "operationId": "get_garment_v1_garments__garment_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "garment_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Garment Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-device-id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Device-Id"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GarmentOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Garment",
+        "tags": [
+          "closet"
+        ]
+      }
+    },
+    "/v1/garments/{garment_id}/images/{image_id}/complete": {
+      "post": {
+        "description": "The phone says \"the upload finished\". We check the object really is a supported image of an\nacceptable size (by content, not by what the client claims), then queue processing. Idempotent.",
+        "operationId": "complete_upload_v1_garments__garment_id__images__image_id__complete_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "garment_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Garment Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "image_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Image Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-device-id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Device-Id"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GarmentOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Complete Upload",
+        "tags": [
+          "closet"
+        ]
+      }
+    },
+    "/v1/garments/{garment_id}/images/{image_id}/upload-url": {
+      "post": {
+        "description": "A fresh signed URL (the first one expires after 15 minutes; a queued upload may outlive it).",
+        "operationId": "new_upload_url_v1_garments__garment_id__images__image_id__upload_url_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "garment_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Garment Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "image_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Image Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-device-id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Device-Id"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadTicketOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "New Upload Url",
+        "tags": [
+          "closet"
         ]
       }
     },

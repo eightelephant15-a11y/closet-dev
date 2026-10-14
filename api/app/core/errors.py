@@ -21,24 +21,36 @@ class ErrorResponse(BaseModel):
 
 class ApiError(Exception):
     def __init__(
-        self, status: int, code: str, message: str, details: dict[str, Any] | None = None
+        self,
+        status: int,
+        code: str,
+        message: str,
+        details: dict[str, Any] | None = None,
+        headers: dict[str, str] | None = None,
     ) -> None:
         super().__init__(message)
         self.status = status
         self.code = code
         self.message = message
         self.details = details
+        self.headers = headers
 
 
-def _response(status: int, code: str, message: str, details: dict[str, Any] | None) -> JSONResponse:
+def _response(
+    status: int,
+    code: str,
+    message: str,
+    details: dict[str, Any] | None,
+    headers: dict[str, str] | None = None,
+) -> JSONResponse:
     body = ErrorResponse(error=ErrorBody(code=code, message=message, details=details))
-    return JSONResponse(status_code=status, content=body.model_dump(mode="json"))
+    return JSONResponse(status_code=status, content=body.model_dump(mode="json"), headers=headers)
 
 
 def install_error_handlers(app: FastAPI) -> None:
     @app.exception_handler(ApiError)
     async def _api_error(_: Request, exc: ApiError) -> JSONResponse:
-        return _response(exc.status, exc.code, exc.message, exc.details)
+        return _response(exc.status, exc.code, exc.message, exc.details, exc.headers)
 
     @app.exception_handler(RequestValidationError)
     async def _validation(_: Request, exc: RequestValidationError) -> JSONResponse:

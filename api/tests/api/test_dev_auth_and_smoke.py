@@ -4,21 +4,16 @@ import time
 from collections.abc import AsyncIterator
 from pathlib import Path
 
-import fakeredis
 import pytest
-from httpx import ASGITransport, AsyncClient
+from httpx import AsyncClient
 from pydantic import ValidationError
-from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
-from sqlalchemy.pool import StaticPool
 
 from app import smoke
 from app.core import auth as auth_mod
-from app.core import redis as redis_mod
 from app.core.config import Settings, get_settings
-from app.core.db import Base, get_session, get_sessionmaker
 from app.core.errors import ApiError
 from app.main import create_app
-from app.services.storage import LocalStorage, set_storage
+from tests.conftest import make_env
 
 SECRET = "x" * 32
 
@@ -141,27 +136,12 @@ async def dev_client(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> AsyncIt
     monkeypatch.setenv("DEV_AUTH_SECRET", SECRET)
     get_settings.cache_clear()
     auth_mod._verifier = None
-    redis_mod.set_redis(fakeredis.FakeAsyncRedis(decode_responses=True))
-    set_storage(LocalStorage(tmp_path / "exports"))
-    engine = create_async_engine(
-        "sqlite+aiosqlite://", poolclass=StaticPool, connect_args={"check_same_thread": False}
-    )
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-    maker = async_sessionmaker(engine, expire_on_commit=False)
-
-    async def _session() -> AsyncIterator:  # type: ignore[type-arg]
-        async with maker() as s:
-            yield s
-
-    app = create_app()
-    app.dependency_overrides[get_session] = _session
-    app.dependency_overrides[get_sessionmaker] = lambda: maker
-    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as c:
-        yield c
-    await engine.dispose()
-    auth_mod._verifier = None
-    get_settings.cache_clear()
+    try:
+        async with make_env(tmp_path, fake_auth=False) as e:
+            yield e.client
+    finally:
+        auth_mod._verifier = None
+        get_settings.cache_clear()
 
 
 async def test_smoke_script_passes_against_the_real_app(dev_client: AsyncClient) -> None:

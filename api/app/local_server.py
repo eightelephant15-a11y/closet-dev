@@ -1,14 +1,22 @@
 """Run the real API on a laptop: ``python -m app.local_server`` (or ``make api-local``).
 
 * SQLite by default (``DATABASE_URL`` to use a local Postgres instead), migrations applied on start.
-* An in-process fake Redis unless ``REDIS_URL`` is set.
+* An in-process Redis-compatible server (fakeredis over TCP) unless ``REDIS_URL`` is set, so the API and
+  the worker are separate processes that really talk through a queue.
+* A worker subprocess (``python -m app.worker``) unless ``WORKER=external`` (start it yourself with
+  ``make worker-local``) or ``WORKER=none``.
+* Images on local disk (``STORAGE_DIR``), served through HMAC-signed URLs; the fake vision provider.
 * ``AUTH_MODE=dev``: no Firebase. Mint tokens with ``POST /dev/token`` (the Flutter app does this).
 * Feature flags are seeded into the ``feature_flags`` table so they can be edited with SQL.
-Never use this in a deployed environment: the settings validator refuses AUTH_MODE=dev there.
+Never use this in a deployed environment: the settings validators refuse dev auth and local storage there.
+
+``python -m app.local_server --worker-only`` runs just the worker with the same local settings.
 """
 
 import asyncio
+import atexit
 import os
+import subprocess
 import sys
 from pathlib import Path
 
@@ -23,6 +31,13 @@ def prepare_environment() -> None:
     os.environ.setdefault("DEV_AUTH_SECRET", "local-dev-secret-not-for-production")
     os.environ.setdefault("DATABASE_URL", f"sqlite+aiosqlite:///{ROOT / 'local.db'}")
     os.environ.setdefault("STORAGE_DIR", str(ROOT / ".storage"))
+    os.environ.setdefault("QUEUE_BACKEND", "arq")
+    if "REDIS_URL" not in os.environ:
+        from app.fake_redis import DEFAULT_PORT
+
+        port = int(os.environ.get("FAKE_REDIS_PORT", DEFAULT_PORT))
+        os.environ["REDIS_URL"] = f"redis://127.0.0.1:{port}/0"
+        os.environ["FAKE_REDIS"] = "1"
 
 
 def migrate(database_url: str) -> None:
@@ -56,23 +71,35 @@ async def seed_flags(database_url: str) -> list[str]:
     return created
 
 
-def main() -> int:
+def start_worker() -> subprocess.Popen[bytes]:
+    proc = subprocess.Popen([sys.executable, "-m", "app.worker"], cwd=ROOT, env=os.environ.copy())
+    atexit.register(proc.terminate)
+    return proc
+
+
+def main(argv: list[str] | None = None) -> int:
+    argv = sys.argv[1:] if argv is None else argv
     prepare_environment()
     from app.core.config import get_settings
 
-    settings = get_settings()  # raises if AUTH_MODE=dev is not allowed here
+    settings = get_settings()  # raises if AUTH_MODE=dev / local storage is not allowed here
+
+    if os.environ.get("FAKE_REDIS") == "1":
+        from app.fake_redis import start
+
+        start()
+    if "--worker-only" in argv:
+        from app.worker import main as worker_main
+
+        worker_main()
+        return 0
+
     migrate(settings.database_url)
     seeded = asyncio.run(seed_flags(settings.database_url))
 
-    if "REDIS_URL" not in os.environ:
-        import fakeredis
-
-        from app.core.redis import set_redis
-
-        set_redis(fakeredis.FakeAsyncRedis(decode_responses=True))
-        redis_note = "in-process fake Redis"
-    else:
-        redis_note = settings.redis_url
+    worker_mode = os.environ.get("WORKER", "embedded")
+    if worker_mode == "embedded":
+        start_worker()
 
     auth_note = (
         " (mint tokens: POST /dev/token)"
@@ -82,9 +109,13 @@ def main() -> int:
     host, port = os.environ.get("HOST", "127.0.0.1"), int(os.environ.get("PORT", "8000"))
     print(
         f"\nLocal API on http://{host}:{port}  (docs: /docs)\n"
-        f"  database : {settings.database_url}\n  redis    : {redis_note}\n"
-        f"  auth     : AUTH_MODE={settings.auth_mode}"
-        f"{auth_note}\n"
+        f"  database : {settings.database_url}\n"
+        f"  redis    : {settings.redis_url}"
+        f"{' (in-process fake)' if os.environ.get('FAKE_REDIS') == '1' else ''}\n"
+        f"  storage  : {settings.storage_dir}  (signed local URLs)\n"
+        f"  worker   : {worker_mode}"
+        f"{' (run `make worker-local` yourself)' if worker_mode == 'external' else ''}\n"
+        f"  auth     : AUTH_MODE={settings.auth_mode}{auth_note}\n"
         f"  flags    : seeded {seeded or 'nothing new'}\n"
         f"  smoke    : python -m app.smoke http://{host}:{port}\n",
         file=sys.stderr,
