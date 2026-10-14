@@ -1359,6 +1359,630 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Stylist uses your approximate location to suggest weather-appropriate outfits. We never store your exact position.'**
   String get iosLocationUsage;
+
+  /// No description provided for @taxCatTop.
+  ///
+  /// In en, this message translates to:
+  /// **'Top'**
+  String get taxCatTop;
+
+  /// No description provided for @taxSubTShirt.
+  ///
+  /// In en, this message translates to:
+  /// **'T-shirt'**
+  String get taxSubTShirt;
+
+  /// No description provided for @taxSubLongSleeveTee.
+  ///
+  /// In en, this message translates to:
+  /// **'Long-sleeve tee'**
+  String get taxSubLongSleeveTee;
+
+  /// No description provided for @taxSubShirt.
+  ///
+  /// In en, this message translates to:
+  /// **'Shirt'**
+  String get taxSubShirt;
+
+  /// No description provided for @taxSubBlouse.
+  ///
+  /// In en, this message translates to:
+  /// **'Blouse'**
+  String get taxSubBlouse;
+
+  /// No description provided for @taxSubPolo.
+  ///
+  /// In en, this message translates to:
+  /// **'Polo'**
+  String get taxSubPolo;
+
+  /// No description provided for @taxSubSweater.
+  ///
+  /// In en, this message translates to:
+  /// **'Sweater'**
+  String get taxSubSweater;
+
+  /// No description provided for @taxSubHoodie.
+  ///
+  /// In en, this message translates to:
+  /// **'Hoodie'**
+  String get taxSubHoodie;
+
+  /// No description provided for @taxSubTankTop.
+  ///
+  /// In en, this message translates to:
+  /// **'Tank top'**
+  String get taxSubTankTop;
+
+  /// No description provided for @taxSubCropTop.
+  ///
+  /// In en, this message translates to:
+  /// **'Crop top'**
+  String get taxSubCropTop;
+
+  /// No description provided for @taxSubCardigan.
+  ///
+  /// In en, this message translates to:
+  /// **'Cardigan'**
+  String get taxSubCardigan;
+
+  /// No description provided for @taxSubBodysuit.
+  ///
+  /// In en, this message translates to:
+  /// **'Bodysuit'**
+  String get taxSubBodysuit;
+
+  /// No description provided for @taxCatBottom.
+  ///
+  /// In en, this message translates to:
+  /// **'Bottom'**
+  String get taxCatBottom;
+
+  /// No description provided for @taxSubJeans.
+  ///
+  /// In en, this message translates to:
+  /// **'Jeans'**
+  String get taxSubJeans;
+
+  /// No description provided for @taxSubTrousers.
+  ///
+  /// In en, this message translates to:
+  /// **'Trousers'**
+  String get taxSubTrousers;
+
+  /// No description provided for @taxSubChinos.
+  ///
+  /// In en, this message translates to:
+  /// **'Chinos'**
+  String get taxSubChinos;
+
+  /// No description provided for @taxSubShorts.
+  ///
+  /// In en, this message translates to:
+  /// **'Shorts'**
+  String get taxSubShorts;
+
+  /// No description provided for @taxSubJoggers.
+  ///
+  /// In en, this message translates to:
+  /// **'Joggers'**
+  String get taxSubJoggers;
+
+  /// No description provided for @taxSubLeggings.
+  ///
+  /// In en, this message translates to:
+  /// **'Leggings'**
+  String get taxSubLeggings;
+
+  /// No description provided for @taxSubSkirt.
+  ///
+  /// In en, this message translates to:
+  /// **'Skirt'**
+  String get taxSubSkirt;
+
+  /// No description provided for @taxCatOuterwear.
+  ///
+  /// In en, this message translates to:
+  /// **'Outerwear'**
+  String get taxCatOuterwear;
+
+  /// No description provided for @taxSubJacket.
+  ///
+  /// In en, this message translates to:
+  /// **'Jacket'**
+  String get taxSubJacket;
+
+  /// No description provided for @taxSubBlazer.
+  ///
+  /// In en, this message translates to:
+  /// **'Blazer'**
+  String get taxSubBlazer;
+
+  /// No description provided for @taxSubSuitJacket.
+  ///
+  /// In en, this message translates to:
+  /// **'Suit jacket'**
+  String get taxSubSuitJacket;
+
+  /// No description provided for @taxSubCoat.
+  ///
+  /// In en, this message translates to:
+  /// **'Coat'**
+  String get taxSubCoat;
+
+  /// No description provided for @taxSubPuffer.
+  ///
+  /// In en, this message translates to:
+  /// **'Puffer jacket'**
+  String get taxSubPuffer;
+
+  /// No description provided for @taxSubDenimJacket.
+  ///
+  /// In en, this message translates to:
+  /// **'Denim jacket'**
+  String get taxSubDenimJacket;
+
+  /// No description provided for @taxSubRaincoat.
+  ///
+  /// In en, this message translates to:
+  /// **'Raincoat'**
+  String get taxSubRaincoat;
+
+  /// No description provided for @taxSubVest.
+  ///
+  /// In en, this message translates to:
+  /// **'Vest'**
+  String get taxSubVest;
+
+  /// No description provided for @taxCatFootwear.
+  ///
+  /// In en, this message translates to:
+  /// **'Footwear'**
+  String get taxCatFootwear;
+
+  /// No description provided for @taxSubSneakers.
+  ///
+  /// In en, this message translates to:
+  /// **'Sneakers'**
+  String get taxSubSneakers;
+
+  /// No description provided for @taxSubBoots.
+  ///
+  /// In en, this message translates to:
+  /// **'Boots'**
+  String get taxSubBoots;
+
+  /// No description provided for @taxSubLoafers.
+  ///
+  /// In en, this message translates to:
+  /// **'Loafers'**
+  String get taxSubLoafers;
+
+  /// No description provided for @taxSubSandals.
+  ///
+  /// In en, this message translates to:
+  /// **'Sandals'**
+  String get taxSubSandals;
+
+  /// No description provided for @taxSubDressShoes.
+  ///
+  /// In en, this message translates to:
+  /// **'Dress shoes'**
+  String get taxSubDressShoes;
+
+  /// No description provided for @taxSubHeels.
+  ///
+  /// In en, this message translates to:
+  /// **'Heels'**
+  String get taxSubHeels;
+
+  /// No description provided for @taxSubFlats.
+  ///
+  /// In en, this message translates to:
+  /// **'Flats'**
+  String get taxSubFlats;
+
+  /// No description provided for @taxCatDress.
+  ///
+  /// In en, this message translates to:
+  /// **'Dress'**
+  String get taxCatDress;
+
+  /// No description provided for @taxSubCasualDress.
+  ///
+  /// In en, this message translates to:
+  /// **'Casual dress'**
+  String get taxSubCasualDress;
+
+  /// No description provided for @taxSubCocktailDress.
+  ///
+  /// In en, this message translates to:
+  /// **'Cocktail dress'**
+  String get taxSubCocktailDress;
+
+  /// No description provided for @taxSubMaxiDress.
+  ///
+  /// In en, this message translates to:
+  /// **'Maxi dress'**
+  String get taxSubMaxiDress;
+
+  /// No description provided for @taxSubJumpsuit.
+  ///
+  /// In en, this message translates to:
+  /// **'Jumpsuit'**
+  String get taxSubJumpsuit;
+
+  /// No description provided for @taxCatAccessory.
+  ///
+  /// In en, this message translates to:
+  /// **'Accessory'**
+  String get taxCatAccessory;
+
+  /// No description provided for @taxSubHat.
+  ///
+  /// In en, this message translates to:
+  /// **'Hat'**
+  String get taxSubHat;
+
+  /// No description provided for @taxSubScarf.
+  ///
+  /// In en, this message translates to:
+  /// **'Scarf'**
+  String get taxSubScarf;
+
+  /// No description provided for @taxSubBelt.
+  ///
+  /// In en, this message translates to:
+  /// **'Belt'**
+  String get taxSubBelt;
+
+  /// No description provided for @taxSubTie.
+  ///
+  /// In en, this message translates to:
+  /// **'Tie'**
+  String get taxSubTie;
+
+  /// No description provided for @taxSubBag.
+  ///
+  /// In en, this message translates to:
+  /// **'Bag'**
+  String get taxSubBag;
+
+  /// No description provided for @taxSubJewelry.
+  ///
+  /// In en, this message translates to:
+  /// **'Jewelry'**
+  String get taxSubJewelry;
+
+  /// No description provided for @taxSubSunglasses.
+  ///
+  /// In en, this message translates to:
+  /// **'Sunglasses'**
+  String get taxSubSunglasses;
+
+  /// No description provided for @taxSubWatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch'**
+  String get taxSubWatch;
+
+  /// No description provided for @taxColorBlack.
+  ///
+  /// In en, this message translates to:
+  /// **'Black'**
+  String get taxColorBlack;
+
+  /// No description provided for @taxColorWhite.
+  ///
+  /// In en, this message translates to:
+  /// **'White'**
+  String get taxColorWhite;
+
+  /// No description provided for @taxColorGrey.
+  ///
+  /// In en, this message translates to:
+  /// **'Grey'**
+  String get taxColorGrey;
+
+  /// No description provided for @taxColorNavy.
+  ///
+  /// In en, this message translates to:
+  /// **'Navy'**
+  String get taxColorNavy;
+
+  /// No description provided for @taxColorBlue.
+  ///
+  /// In en, this message translates to:
+  /// **'Blue'**
+  String get taxColorBlue;
+
+  /// No description provided for @taxColorLightBlue.
+  ///
+  /// In en, this message translates to:
+  /// **'Light blue'**
+  String get taxColorLightBlue;
+
+  /// No description provided for @taxColorTeal.
+  ///
+  /// In en, this message translates to:
+  /// **'Teal'**
+  String get taxColorTeal;
+
+  /// No description provided for @taxColorGreen.
+  ///
+  /// In en, this message translates to:
+  /// **'Green'**
+  String get taxColorGreen;
+
+  /// No description provided for @taxColorOlive.
+  ///
+  /// In en, this message translates to:
+  /// **'Olive'**
+  String get taxColorOlive;
+
+  /// No description provided for @taxColorYellow.
+  ///
+  /// In en, this message translates to:
+  /// **'Yellow'**
+  String get taxColorYellow;
+
+  /// No description provided for @taxColorOrange.
+  ///
+  /// In en, this message translates to:
+  /// **'Orange'**
+  String get taxColorOrange;
+
+  /// No description provided for @taxColorRed.
+  ///
+  /// In en, this message translates to:
+  /// **'Red'**
+  String get taxColorRed;
+
+  /// No description provided for @taxColorBurgundy.
+  ///
+  /// In en, this message translates to:
+  /// **'Burgundy'**
+  String get taxColorBurgundy;
+
+  /// No description provided for @taxColorPink.
+  ///
+  /// In en, this message translates to:
+  /// **'Pink'**
+  String get taxColorPink;
+
+  /// No description provided for @taxColorPurple.
+  ///
+  /// In en, this message translates to:
+  /// **'Purple'**
+  String get taxColorPurple;
+
+  /// No description provided for @taxColorBrown.
+  ///
+  /// In en, this message translates to:
+  /// **'Brown'**
+  String get taxColorBrown;
+
+  /// No description provided for @taxColorBeige.
+  ///
+  /// In en, this message translates to:
+  /// **'Beige'**
+  String get taxColorBeige;
+
+  /// No description provided for @taxColorCream.
+  ///
+  /// In en, this message translates to:
+  /// **'Cream'**
+  String get taxColorCream;
+
+  /// No description provided for @taxPatternSolid.
+  ///
+  /// In en, this message translates to:
+  /// **'Solid'**
+  String get taxPatternSolid;
+
+  /// No description provided for @taxPatternStriped.
+  ///
+  /// In en, this message translates to:
+  /// **'Striped'**
+  String get taxPatternStriped;
+
+  /// No description provided for @taxPatternChecked.
+  ///
+  /// In en, this message translates to:
+  /// **'Checked'**
+  String get taxPatternChecked;
+
+  /// No description provided for @taxPatternFloral.
+  ///
+  /// In en, this message translates to:
+  /// **'Floral'**
+  String get taxPatternFloral;
+
+  /// No description provided for @taxPatternPolkaDot.
+  ///
+  /// In en, this message translates to:
+  /// **'Polka dot'**
+  String get taxPatternPolkaDot;
+
+  /// No description provided for @taxPatternGraphic.
+  ///
+  /// In en, this message translates to:
+  /// **'Graphic'**
+  String get taxPatternGraphic;
+
+  /// No description provided for @taxPatternAnimalPrint.
+  ///
+  /// In en, this message translates to:
+  /// **'Animal print'**
+  String get taxPatternAnimalPrint;
+
+  /// No description provided for @taxPatternCamouflage.
+  ///
+  /// In en, this message translates to:
+  /// **'Camouflage'**
+  String get taxPatternCamouflage;
+
+  /// No description provided for @taxPatternOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get taxPatternOther;
+
+  /// No description provided for @taxSeasonSpring.
+  ///
+  /// In en, this message translates to:
+  /// **'Spring'**
+  String get taxSeasonSpring;
+
+  /// No description provided for @taxSeasonSummer.
+  ///
+  /// In en, this message translates to:
+  /// **'Summer'**
+  String get taxSeasonSummer;
+
+  /// No description provided for @taxSeasonAutumn.
+  ///
+  /// In en, this message translates to:
+  /// **'Autumn'**
+  String get taxSeasonAutumn;
+
+  /// No description provided for @taxSeasonWinter.
+  ///
+  /// In en, this message translates to:
+  /// **'Winter'**
+  String get taxSeasonWinter;
+
+  /// No description provided for @taxFitSlim.
+  ///
+  /// In en, this message translates to:
+  /// **'Slim'**
+  String get taxFitSlim;
+
+  /// No description provided for @taxFitRegular.
+  ///
+  /// In en, this message translates to:
+  /// **'Regular'**
+  String get taxFitRegular;
+
+  /// No description provided for @taxFitRelaxed.
+  ///
+  /// In en, this message translates to:
+  /// **'Relaxed'**
+  String get taxFitRelaxed;
+
+  /// No description provided for @taxFitOversized.
+  ///
+  /// In en, this message translates to:
+  /// **'Oversized'**
+  String get taxFitOversized;
+
+  /// No description provided for @taxMaterialCotton.
+  ///
+  /// In en, this message translates to:
+  /// **'Cotton'**
+  String get taxMaterialCotton;
+
+  /// No description provided for @taxMaterialLinen.
+  ///
+  /// In en, this message translates to:
+  /// **'Linen'**
+  String get taxMaterialLinen;
+
+  /// No description provided for @taxMaterialWool.
+  ///
+  /// In en, this message translates to:
+  /// **'Wool'**
+  String get taxMaterialWool;
+
+  /// No description provided for @taxMaterialCashmere.
+  ///
+  /// In en, this message translates to:
+  /// **'Cashmere'**
+  String get taxMaterialCashmere;
+
+  /// No description provided for @taxMaterialSilk.
+  ///
+  /// In en, this message translates to:
+  /// **'Silk'**
+  String get taxMaterialSilk;
+
+  /// No description provided for @taxMaterialDenim.
+  ///
+  /// In en, this message translates to:
+  /// **'Denim'**
+  String get taxMaterialDenim;
+
+  /// No description provided for @taxMaterialLeather.
+  ///
+  /// In en, this message translates to:
+  /// **'Leather'**
+  String get taxMaterialLeather;
+
+  /// No description provided for @taxMaterialSuede.
+  ///
+  /// In en, this message translates to:
+  /// **'Suede'**
+  String get taxMaterialSuede;
+
+  /// No description provided for @taxMaterialPolyester.
+  ///
+  /// In en, this message translates to:
+  /// **'Polyester'**
+  String get taxMaterialPolyester;
+
+  /// No description provided for @taxMaterialNylon.
+  ///
+  /// In en, this message translates to:
+  /// **'Nylon'**
+  String get taxMaterialNylon;
+
+  /// No description provided for @taxMaterialKnit.
+  ///
+  /// In en, this message translates to:
+  /// **'Knit'**
+  String get taxMaterialKnit;
+
+  /// No description provided for @taxMaterialFleece.
+  ///
+  /// In en, this message translates to:
+  /// **'Fleece'**
+  String get taxMaterialFleece;
+
+  /// No description provided for @taxMaterialOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get taxMaterialOther;
+
+  /// No description provided for @taxFormality1.
+  ///
+  /// In en, this message translates to:
+  /// **'Loungewear'**
+  String get taxFormality1;
+
+  /// No description provided for @taxFormality2.
+  ///
+  /// In en, this message translates to:
+  /// **'Casual'**
+  String get taxFormality2;
+
+  /// No description provided for @taxFormality3.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart casual'**
+  String get taxFormality3;
+
+  /// No description provided for @taxFormality4.
+  ///
+  /// In en, this message translates to:
+  /// **'Business'**
+  String get taxFormality4;
+
+  /// No description provided for @taxFormality5.
+  ///
+  /// In en, this message translates to:
+  /// **'Formal'**
+  String get taxFormality5;
 }
 
 class _AppLocalizationsDelegate

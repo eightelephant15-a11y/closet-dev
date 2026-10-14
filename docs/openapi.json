@@ -76,6 +76,10 @@
             "title": "Privacy Policy Url",
             "type": "string"
           },
+          "taxonomy_version": {
+            "title": "Taxonomy Version",
+            "type": "integer"
+          },
           "terms_url": {
             "title": "Terms Url",
             "type": "string"
@@ -86,7 +90,8 @@
           "policy_version",
           "privacy_policy_url",
           "terms_url",
-          "min_age"
+          "min_age",
+          "taxonomy_version"
         ],
         "title": "ConfigResponse",
         "type": "object"
@@ -2377,6 +2382,30 @@
         "summary": "Sample Closet",
         "tags": [
           "sample"
+        ]
+      }
+    },
+    "/v1/taxonomy": {
+      "get": {
+        "description": "The garment taxonomy document (public; the app also bundles it).",
+        "operationId": "get_taxonomy_v1_taxonomy_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Get Taxonomy V1 Taxonomy Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Taxonomy",
+        "tags": [
+          "config"
         ]
       }
     }

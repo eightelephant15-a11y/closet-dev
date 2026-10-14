@@ -25,6 +25,9 @@ jobs:
         run: git diff --exit-code lib/l10n/gen
       - name: iOS permission strings are generated from the ARB
         run: python3 tool/gen_ios_strings.py && git diff --exit-code ios/Runner/en.lproj
+      - name: Taxonomy-derived files are up to date
+        run: python3 tool/gen_taxonomy.py --check
+        working-directory: .
       - run: dart run build_runner build -d
       - run: dart format --set-exit-if-changed lib test integration_test
       - run: flutter analyze

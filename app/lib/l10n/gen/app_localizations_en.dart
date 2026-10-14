@@ -712,4 +712,316 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get iosLocationUsage =>
       'Stylist uses your approximate location to suggest weather-appropriate outfits. We never store your exact position.';
+
+  @override
+  String get taxCatTop => 'Top';
+
+  @override
+  String get taxSubTShirt => 'T-shirt';
+
+  @override
+  String get taxSubLongSleeveTee => 'Long-sleeve tee';
+
+  @override
+  String get taxSubShirt => 'Shirt';
+
+  @override
+  String get taxSubBlouse => 'Blouse';
+
+  @override
+  String get taxSubPolo => 'Polo';
+
+  @override
+  String get taxSubSweater => 'Sweater';
+
+  @override
+  String get taxSubHoodie => 'Hoodie';
+
+  @override
+  String get taxSubTankTop => 'Tank top';
+
+  @override
+  String get taxSubCropTop => 'Crop top';
+
+  @override
+  String get taxSubCardigan => 'Cardigan';
+
+  @override
+  String get taxSubBodysuit => 'Bodysuit';
+
+  @override
+  String get taxCatBottom => 'Bottom';
+
+  @override
+  String get taxSubJeans => 'Jeans';
+
+  @override
+  String get taxSubTrousers => 'Trousers';
+
+  @override
+  String get taxSubChinos => 'Chinos';
+
+  @override
+  String get taxSubShorts => 'Shorts';
+
+  @override
+  String get taxSubJoggers => 'Joggers';
+
+  @override
+  String get taxSubLeggings => 'Leggings';
+
+  @override
+  String get taxSubSkirt => 'Skirt';
+
+  @override
+  String get taxCatOuterwear => 'Outerwear';
+
+  @override
+  String get taxSubJacket => 'Jacket';
+
+  @override
+  String get taxSubBlazer => 'Blazer';
+
+  @override
+  String get taxSubSuitJacket => 'Suit jacket';
+
+  @override
+  String get taxSubCoat => 'Coat';
+
+  @override
+  String get taxSubPuffer => 'Puffer jacket';
+
+  @override
+  String get taxSubDenimJacket => 'Denim jacket';
+
+  @override
+  String get taxSubRaincoat => 'Raincoat';
+
+  @override
+  String get taxSubVest => 'Vest';
+
+  @override
+  String get taxCatFootwear => 'Footwear';
+
+  @override
+  String get taxSubSneakers => 'Sneakers';
+
+  @override
+  String get taxSubBoots => 'Boots';
+
+  @override
+  String get taxSubLoafers => 'Loafers';
+
+  @override
+  String get taxSubSandals => 'Sandals';
+
+  @override
+  String get taxSubDressShoes => 'Dress shoes';
+
+  @override
+  String get taxSubHeels => 'Heels';
+
+  @override
+  String get taxSubFlats => 'Flats';
+
+  @override
+  String get taxCatDress => 'Dress';
+
+  @override
+  String get taxSubCasualDress => 'Casual dress';
+
+  @override
+  String get taxSubCocktailDress => 'Cocktail dress';
+
+  @override
+  String get taxSubMaxiDress => 'Maxi dress';
+
+  @override
+  String get taxSubJumpsuit => 'Jumpsuit';
+
+  @override
+  String get taxCatAccessory => 'Accessory';
+
+  @override
+  String get taxSubHat => 'Hat';
+
+  @override
+  String get taxSubScarf => 'Scarf';
+
+  @override
+  String get taxSubBelt => 'Belt';
+
+  @override
+  String get taxSubTie => 'Tie';
+
+  @override
+  String get taxSubBag => 'Bag';
+
+  @override
+  String get taxSubJewelry => 'Jewelry';
+
+  @override
+  String get taxSubSunglasses => 'Sunglasses';
+
+  @override
+  String get taxSubWatch => 'Watch';
+
+  @override
+  String get taxColorBlack => 'Black';
+
+  @override
+  String get taxColorWhite => 'White';
+
+  @override
+  String get taxColorGrey => 'Grey';
+
+  @override
+  String get taxColorNavy => 'Navy';
+
+  @override
+  String get taxColorBlue => 'Blue';
+
+  @override
+  String get taxColorLightBlue => 'Light blue';
+
+  @override
+  String get taxColorTeal => 'Teal';
+
+  @override
+  String get taxColorGreen => 'Green';
+
+  @override
+  String get taxColorOlive => 'Olive';
+
+  @override
+  String get taxColorYellow => 'Yellow';
+
+  @override
+  String get taxColorOrange => 'Orange';
+
+  @override
+  String get taxColorRed => 'Red';
+
+  @override
+  String get taxColorBurgundy => 'Burgundy';
+
+  @override
+  String get taxColorPink => 'Pink';
+
+  @override
+  String get taxColorPurple => 'Purple';
+
+  @override
+  String get taxColorBrown => 'Brown';
+
+  @override
+  String get taxColorBeige => 'Beige';
+
+  @override
+  String get taxColorCream => 'Cream';
+
+  @override
+  String get taxPatternSolid => 'Solid';
+
+  @override
+  String get taxPatternStriped => 'Striped';
+
+  @override
+  String get taxPatternChecked => 'Checked';
+
+  @override
+  String get taxPatternFloral => 'Floral';
+
+  @override
+  String get taxPatternPolkaDot => 'Polka dot';
+
+  @override
+  String get taxPatternGraphic => 'Graphic';
+
+  @override
+  String get taxPatternAnimalPrint => 'Animal print';
+
+  @override
+  String get taxPatternCamouflage => 'Camouflage';
+
+  @override
+  String get taxPatternOther => 'Other';
+
+  @override
+  String get taxSeasonSpring => 'Spring';
+
+  @override
+  String get taxSeasonSummer => 'Summer';
+
+  @override
+  String get taxSeasonAutumn => 'Autumn';
+
+  @override
+  String get taxSeasonWinter => 'Winter';
+
+  @override
+  String get taxFitSlim => 'Slim';
+
+  @override
+  String get taxFitRegular => 'Regular';
+
+  @override
+  String get taxFitRelaxed => 'Relaxed';
+
+  @override
+  String get taxFitOversized => 'Oversized';
+
+  @override
+  String get taxMaterialCotton => 'Cotton';
+
+  @override
+  String get taxMaterialLinen => 'Linen';
+
+  @override
+  String get taxMaterialWool => 'Wool';
+
+  @override
+  String get taxMaterialCashmere => 'Cashmere';
+
+  @override
+  String get taxMaterialSilk => 'Silk';
+
+  @override
+  String get taxMaterialDenim => 'Denim';
+
+  @override
+  String get taxMaterialLeather => 'Leather';
+
+  @override
+  String get taxMaterialSuede => 'Suede';
+
+  @override
+  String get taxMaterialPolyester => 'Polyester';
+
+  @override
+  String get taxMaterialNylon => 'Nylon';
+
+  @override
+  String get taxMaterialKnit => 'Knit';
+
+  @override
+  String get taxMaterialFleece => 'Fleece';
+
+  @override
+  String get taxMaterialOther => 'Other';
+
+  @override
+  String get taxFormality1 => 'Loungewear';
+
+  @override
+  String get taxFormality2 => 'Casual';
+
+  @override
+  String get taxFormality3 => 'Smart casual';
+
+  @override
+  String get taxFormality4 => 'Business';
+
+  @override
+  String get taxFormality5 => 'Formal';
 }

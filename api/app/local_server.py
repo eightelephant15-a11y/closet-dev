@@ -22,7 +22,7 @@ def prepare_environment() -> None:
     os.environ.setdefault("AUTH_MODE", "dev")
     os.environ.setdefault("DEV_AUTH_SECRET", "local-dev-secret-not-for-production")
     os.environ.setdefault("DATABASE_URL", f"sqlite+aiosqlite:///{ROOT / 'local.db'}")
-    os.environ.setdefault("EXPORT_DIR", str(ROOT / ".exports"))
+    os.environ.setdefault("STORAGE_DIR", str(ROOT / ".storage"))
 
 
 def migrate(database_url: str) -> None:

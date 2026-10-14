@@ -50,7 +50,14 @@ def test_upgrade_matches_models_and_downgrades(cfg: Config, tmp_path: Path) -> N
             "feature_flags",
             "onboarding_state",
             "preferences",
+            "consents",
+            "export_jobs",
+            "garments",
+            "garment_images",
+            "garment_corrections",
+            "analysis_jobs",
         } <= set(inspect(conn).get_table_names())
     command.downgrade(cfg, "base")
     with engine.connect() as conn:
-        assert "users" not in inspect(conn).get_table_names()
+        tables = inspect(conn).get_table_names()
+        assert "users" not in tables and "garments" not in tables

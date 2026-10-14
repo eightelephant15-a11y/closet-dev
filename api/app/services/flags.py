@@ -13,9 +13,14 @@ CACHE_TTL = 60
 FLAG_DEFAULTS: dict[str, bool | str | int] = {
     "guest_mode_enabled": True,
     "onboarding_variant": "quiz_first",
+    # closet (phase 2)
+    "closet_bulk_add_enabled": True,
+    "closet_item_limit_free": 30,
+    "vision_provider": "fake",  # "fake" | "claude"
 }
 ALLOWED: dict[str, set[Any] | None] = {
     "onboarding_variant": {"quiz_first", "closet_first"},
+    "vision_provider": {"fake", "claude"},
 }
 
 

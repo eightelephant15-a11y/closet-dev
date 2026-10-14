@@ -76,6 +76,8 @@ async def run(client: httpx.AsyncClient) -> list[Result]:
         body = expect(await s.req("GET", "/v1/config"), 200).json()
         assert body["flags"]["onboarding_variant"] in ("quiz_first", "closet_first")
         assert body["min_age"] == 16
+        tax = expect(await s.req("GET", "/v1/taxonomy"), 200).json()
+        assert tax["version"] == body["taxonomy_version"]
 
     async def unauthenticated() -> None:
         r = await s.req("GET", "/v1/me")
