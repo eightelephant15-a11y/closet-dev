@@ -87,7 +87,7 @@ Counts at the time of writing: 85 API tests, 151+ app tests (including the acces
 | Screen-reader behaviour on a real device (TalkBack / VoiceOver) | **Blocked on a device** | runbook step 11 has the scripted walkthrough |
 | Empty/loading/error states, offline queue + sync | Verified (by test) | `shared/widgets/state_views.dart`, `outbox_test.dart`, `offline_sync_test.dart` |
 | Cold start < 2 s on a mid-range Android and iPhone 12+ | **Blocked on a device** | `app/tool/measure_startup.sh`, [performance.md](performance.md) |
-| Release build works offline-capable network access | Verified (by test) | found by this pass: the release manifest lacked `INTERNET`; added (`AndroidManifest.xml`); release APK builds locally |
+| Release builds can reach the network | Verified (by test) | found by this pass: the release manifest lacked `INTERNET`; added (`AndroidManifest.xml`); release APK builds locally |
 | No secrets in repo; `.env.example`; Secrets Manager via Terraform | Verified (by CI) | **scan**, `infra/modules/secrets` |
 
 ## 7. Infra and CI
