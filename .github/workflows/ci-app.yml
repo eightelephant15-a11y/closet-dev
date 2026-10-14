@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults: { run: { working-directory: app } }
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: subosito/flutter-action@v2
         with: { flutter-version: "${{ env.FLUTTER_VERSION }}", channel: stable, cache: true }
       - run: flutter pub get
@@ -39,7 +39,7 @@ jobs:
     needs: lint-test
     defaults: { run: { working-directory: app } }
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-java@v4
         with: { distribution: temurin, java-version: "17", cache: gradle }
       - uses: subosito/flutter-action@v2
@@ -57,7 +57,7 @@ jobs:
         flavor: [dev, staging, prod]
     defaults: { run: { working-directory: app } }
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: subosito/flutter-action@v2
         with: { flutter-version: "${{ env.FLUTTER_VERSION }}", channel: stable, cache: true }
       - uses: actions/cache@v4
