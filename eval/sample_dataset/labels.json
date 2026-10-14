@@ -1,0 +1,889 @@
+{
+  "taxonomy_version": 1,
+  "items": [
+    {
+      "file": "01_navy_jeans_f2_slim_denim.png",
+      "labels": {
+        "category": "bottom",
+        "subcategory": "jeans",
+        "primary_color": "navy",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 2,
+        "seasons": [
+          "spring",
+          "summer",
+          "autumn",
+          "winter"
+        ],
+        "fit": "slim",
+        "material": "denim"
+      }
+    },
+    {
+      "file": "02_white_t_shirt_f1_regular_cotton_spring_summer.png",
+      "labels": {
+        "category": "top",
+        "subcategory": "t_shirt",
+        "primary_color": "white",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 1,
+        "seasons": [
+          "spring",
+          "summer"
+        ],
+        "fit": "regular",
+        "material": "cotton"
+      }
+    },
+    {
+      "file": "03_black_trousers_f4_slim.png",
+      "labels": {
+        "category": "bottom",
+        "subcategory": "trousers",
+        "primary_color": "black",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 4,
+        "seasons": [
+          "spring",
+          "summer",
+          "autumn",
+          "winter"
+        ],
+        "fit": "slim",
+        "material": null
+      }
+    },
+    {
+      "file": "04_grey_sweater_f2_relaxed_wool_autumn_winter.png",
+      "labels": {
+        "category": "top",
+        "subcategory": "sweater",
+        "primary_color": "grey",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 2,
+        "seasons": [
+          "autumn",
+          "winter"
+        ],
+        "fit": "relaxed",
+        "material": "wool"
+      }
+    },
+    {
+      "file": "05_red_casual_dress_f3_spring_summer.png",
+      "labels": {
+        "category": "dress",
+        "subcategory": "casual_dress",
+        "primary_color": "red",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 3,
+        "seasons": [
+          "spring",
+          "summer"
+        ],
+        "fit": null,
+        "material": null
+      }
+    },
+    {
+      "file": "06_beige_chinos_f3_regular_cotton_spring_summer_autumn.png",
+      "labels": {
+        "category": "bottom",
+        "subcategory": "chinos",
+        "primary_color": "beige",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 3,
+        "seasons": [
+          "spring",
+          "summer",
+          "autumn"
+        ],
+        "fit": "regular",
+        "material": "cotton"
+      }
+    },
+    {
+      "file": "07_white_sneakers_f2.png",
+      "labels": {
+        "category": "footwear",
+        "subcategory": "sneakers",
+        "primary_color": "white",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 2,
+        "seasons": [
+          "spring",
+          "summer",
+          "autumn",
+          "winter"
+        ],
+        "fit": null,
+        "material": null
+      }
+    },
+    {
+      "file": "08_brown_loafers_f4_leather.png",
+      "labels": {
+        "category": "footwear",
+        "subcategory": "loafers",
+        "primary_color": "brown",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 4,
+        "seasons": [
+          "spring",
+          "summer",
+          "autumn",
+          "winter"
+        ],
+        "fit": null,
+        "material": "leather"
+      }
+    },
+    {
+      "file": "09_navy_blazer_f4_slim_wool_spring_autumn_winter.png",
+      "labels": {
+        "category": "outerwear",
+        "subcategory": "blazer",
+        "primary_color": "navy",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 4,
+        "seasons": [
+          "spring",
+          "autumn",
+          "winter"
+        ],
+        "fit": "slim",
+        "material": "wool"
+      }
+    },
+    {
+      "file": "10_olive_jacket_f2_regular_cotton_spring_autumn.png",
+      "labels": {
+        "category": "outerwear",
+        "subcategory": "jacket",
+        "primary_color": "olive",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 2,
+        "seasons": [
+          "spring",
+          "autumn"
+        ],
+        "fit": "regular",
+        "material": "cotton"
+      }
+    },
+    {
+      "file": "11_pink_blouse_f3_regular_silk_spring_summer.png",
+      "labels": {
+        "category": "top",
+        "subcategory": "blouse",
+        "primary_color": "pink",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 3,
+        "seasons": [
+          "spring",
+          "summer"
+        ],
+        "fit": "regular",
+        "material": "silk"
+      }
+    },
+    {
+      "file": "12_black_heels_f4.png",
+      "labels": {
+        "category": "footwear",
+        "subcategory": "heels",
+        "primary_color": "black",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 4,
+        "seasons": [
+          "spring",
+          "summer",
+          "autumn",
+          "winter"
+        ],
+        "fit": null,
+        "material": null
+      }
+    },
+    {
+      "file": "13_blue_shirt_f3_regular_cotton.png",
+      "labels": {
+        "category": "top",
+        "subcategory": "shirt",
+        "primary_color": "blue",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 3,
+        "seasons": [
+          "spring",
+          "summer",
+          "autumn",
+          "winter"
+        ],
+        "fit": "regular",
+        "material": "cotton"
+      }
+    },
+    {
+      "file": "14_green_hoodie_f1_oversized_cotton_autumn_winter.png",
+      "labels": {
+        "category": "top",
+        "subcategory": "hoodie",
+        "primary_color": "green",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 1,
+        "seasons": [
+          "autumn",
+          "winter"
+        ],
+        "fit": "oversized",
+        "material": "cotton"
+      }
+    },
+    {
+      "file": "15_cream_cardigan_f3_relaxed_knit_autumn_winter.png",
+      "labels": {
+        "category": "top",
+        "subcategory": "cardigan",
+        "primary_color": "cream",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 3,
+        "seasons": [
+          "autumn",
+          "winter"
+        ],
+        "fit": "relaxed",
+        "material": "knit"
+      }
+    },
+    {
+      "file": "16_burgundy_skirt_f3_autumn_winter.png",
+      "labels": {
+        "category": "bottom",
+        "subcategory": "skirt",
+        "primary_color": "burgundy",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 3,
+        "seasons": [
+          "autumn",
+          "winter"
+        ],
+        "fit": null,
+        "material": null
+      }
+    },
+    {
+      "file": "17_yellow_tank_top_f2_regular_cotton_summer.png",
+      "labels": {
+        "category": "top",
+        "subcategory": "tank_top",
+        "primary_color": "yellow",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 2,
+        "seasons": [
+          "summer"
+        ],
+        "fit": "regular",
+        "material": "cotton"
+      }
+    },
+    {
+      "file": "18_brown_boots_f3_leather_autumn_winter.png",
+      "labels": {
+        "category": "footwear",
+        "subcategory": "boots",
+        "primary_color": "brown",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 3,
+        "seasons": [
+          "autumn",
+          "winter"
+        ],
+        "fit": null,
+        "material": "leather"
+      }
+    },
+    {
+      "file": "19_grey_joggers_f1_relaxed_cotton.png",
+      "labels": {
+        "category": "bottom",
+        "subcategory": "joggers",
+        "primary_color": "grey",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 1,
+        "seasons": [
+          "spring",
+          "summer",
+          "autumn",
+          "winter"
+        ],
+        "fit": "relaxed",
+        "material": "cotton"
+      }
+    },
+    {
+      "file": "20_white_shirt_f4_slim_cotton.png",
+      "labels": {
+        "category": "top",
+        "subcategory": "shirt",
+        "primary_color": "white",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 4,
+        "seasons": [
+          "spring",
+          "summer",
+          "autumn",
+          "winter"
+        ],
+        "fit": "slim",
+        "material": "cotton"
+      }
+    },
+    {
+      "file": "21_navy_coat_f4_regular_wool_winter.png",
+      "labels": {
+        "category": "outerwear",
+        "subcategory": "coat",
+        "primary_color": "navy",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 4,
+        "seasons": [
+          "winter"
+        ],
+        "fit": "regular",
+        "material": "wool"
+      }
+    },
+    {
+      "file": "22_black_puffer_f2_oversized_nylon_winter.png",
+      "labels": {
+        "category": "outerwear",
+        "subcategory": "puffer",
+        "primary_color": "black",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 2,
+        "seasons": [
+          "winter"
+        ],
+        "fit": "oversized",
+        "material": "nylon"
+      }
+    },
+    {
+      "file": "23_purple_scarf_f3_wool_autumn_winter.png",
+      "labels": {
+        "category": "accessory",
+        "subcategory": "scarf",
+        "primary_color": "purple",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 3,
+        "seasons": [
+          "autumn",
+          "winter"
+        ],
+        "fit": null,
+        "material": "wool"
+      }
+    },
+    {
+      "file": "24_beige_belt_f3_leather.png",
+      "labels": {
+        "category": "accessory",
+        "subcategory": "belt",
+        "primary_color": "beige",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 3,
+        "seasons": [
+          "spring",
+          "summer",
+          "autumn",
+          "winter"
+        ],
+        "fit": null,
+        "material": "leather"
+      }
+    },
+    {
+      "file": "25_navy_jeans_f2_slim_denim.png",
+      "labels": {
+        "category": "bottom",
+        "subcategory": "jeans",
+        "primary_color": "navy",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 2,
+        "seasons": [
+          "spring",
+          "summer",
+          "autumn",
+          "winter"
+        ],
+        "fit": "slim",
+        "material": "denim"
+      }
+    },
+    {
+      "file": "26_white_t_shirt_f1_regular_cotton_spring_summer.png",
+      "labels": {
+        "category": "top",
+        "subcategory": "t_shirt",
+        "primary_color": "white",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 1,
+        "seasons": [
+          "spring",
+          "summer"
+        ],
+        "fit": "regular",
+        "material": "cotton"
+      }
+    },
+    {
+      "file": "27_black_trousers_f4_slim.png",
+      "labels": {
+        "category": "bottom",
+        "subcategory": "trousers",
+        "primary_color": "black",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 4,
+        "seasons": [
+          "spring",
+          "summer",
+          "autumn",
+          "winter"
+        ],
+        "fit": "slim",
+        "material": null
+      }
+    },
+    {
+      "file": "28_grey_sweater_f2_relaxed_wool_autumn_winter.png",
+      "labels": {
+        "category": "top",
+        "subcategory": "sweater",
+        "primary_color": "grey",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 2,
+        "seasons": [
+          "autumn",
+          "winter"
+        ],
+        "fit": "relaxed",
+        "material": "wool"
+      }
+    },
+    {
+      "file": "29_red_casual_dress_f3_spring_summer.png",
+      "labels": {
+        "category": "dress",
+        "subcategory": "casual_dress",
+        "primary_color": "red",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 3,
+        "seasons": [
+          "spring",
+          "summer"
+        ],
+        "fit": null,
+        "material": null
+      }
+    },
+    {
+      "file": "30_beige_chinos_f3_regular_cotton_spring_summer_autumn.png",
+      "labels": {
+        "category": "bottom",
+        "subcategory": "chinos",
+        "primary_color": "beige",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 3,
+        "seasons": [
+          "spring",
+          "summer",
+          "autumn"
+        ],
+        "fit": "regular",
+        "material": "cotton"
+      }
+    },
+    {
+      "file": "31_white_sneakers_f2.png",
+      "labels": {
+        "category": "footwear",
+        "subcategory": "sneakers",
+        "primary_color": "white",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 2,
+        "seasons": [
+          "spring",
+          "summer",
+          "autumn",
+          "winter"
+        ],
+        "fit": null,
+        "material": null
+      }
+    },
+    {
+      "file": "32_brown_loafers_f4_leather.png",
+      "labels": {
+        "category": "footwear",
+        "subcategory": "loafers",
+        "primary_color": "brown",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 4,
+        "seasons": [
+          "spring",
+          "summer",
+          "autumn",
+          "winter"
+        ],
+        "fit": null,
+        "material": "leather"
+      }
+    },
+    {
+      "file": "33_navy_blazer_f4_slim_wool_spring_autumn_winter.png",
+      "labels": {
+        "category": "outerwear",
+        "subcategory": "blazer",
+        "primary_color": "navy",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 4,
+        "seasons": [
+          "spring",
+          "autumn",
+          "winter"
+        ],
+        "fit": "slim",
+        "material": "wool"
+      }
+    },
+    {
+      "file": "34_olive_jacket_f2_regular_cotton_spring_autumn.png",
+      "labels": {
+        "category": "outerwear",
+        "subcategory": "jacket",
+        "primary_color": "olive",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 2,
+        "seasons": [
+          "spring",
+          "autumn"
+        ],
+        "fit": "regular",
+        "material": "cotton"
+      }
+    },
+    {
+      "file": "35_pink_blouse_f3_regular_silk_spring_summer.png",
+      "labels": {
+        "category": "top",
+        "subcategory": "blouse",
+        "primary_color": "pink",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 3,
+        "seasons": [
+          "spring",
+          "summer"
+        ],
+        "fit": "regular",
+        "material": "silk"
+      }
+    },
+    {
+      "file": "36_black_heels_f4.png",
+      "labels": {
+        "category": "footwear",
+        "subcategory": "heels",
+        "primary_color": "black",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 4,
+        "seasons": [
+          "spring",
+          "summer",
+          "autumn",
+          "winter"
+        ],
+        "fit": null,
+        "material": null
+      }
+    },
+    {
+      "file": "37_blue_shirt_f3_regular_cotton.png",
+      "labels": {
+        "category": "top",
+        "subcategory": "shirt",
+        "primary_color": "blue",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 3,
+        "seasons": [
+          "spring",
+          "summer",
+          "autumn",
+          "winter"
+        ],
+        "fit": "regular",
+        "material": "cotton"
+      }
+    },
+    {
+      "file": "38_green_hoodie_f1_oversized_cotton_autumn_winter.png",
+      "labels": {
+        "category": "top",
+        "subcategory": "hoodie",
+        "primary_color": "green",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 1,
+        "seasons": [
+          "autumn",
+          "winter"
+        ],
+        "fit": "oversized",
+        "material": "cotton"
+      }
+    },
+    {
+      "file": "39_cream_cardigan_f3_relaxed_knit_autumn_winter.png",
+      "labels": {
+        "category": "top",
+        "subcategory": "cardigan",
+        "primary_color": "cream",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 3,
+        "seasons": [
+          "autumn",
+          "winter"
+        ],
+        "fit": "relaxed",
+        "material": "knit"
+      }
+    },
+    {
+      "file": "40_burgundy_skirt_f3_autumn_winter.png",
+      "labels": {
+        "category": "bottom",
+        "subcategory": "skirt",
+        "primary_color": "burgundy",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 3,
+        "seasons": [
+          "autumn",
+          "winter"
+        ],
+        "fit": null,
+        "material": null
+      }
+    },
+    {
+      "file": "41_yellow_tank_top_f2_regular_cotton_summer.png",
+      "labels": {
+        "category": "top",
+        "subcategory": "tank_top",
+        "primary_color": "yellow",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 2,
+        "seasons": [
+          "summer"
+        ],
+        "fit": "regular",
+        "material": "cotton"
+      }
+    },
+    {
+      "file": "42_brown_boots_f3_leather_autumn_winter.png",
+      "labels": {
+        "category": "footwear",
+        "subcategory": "boots",
+        "primary_color": "brown",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 3,
+        "seasons": [
+          "autumn",
+          "winter"
+        ],
+        "fit": null,
+        "material": "leather"
+      }
+    },
+    {
+      "file": "43_grey_joggers_f1_relaxed_cotton.png",
+      "labels": {
+        "category": "bottom",
+        "subcategory": "joggers",
+        "primary_color": "grey",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 1,
+        "seasons": [
+          "spring",
+          "summer",
+          "autumn",
+          "winter"
+        ],
+        "fit": "relaxed",
+        "material": "cotton"
+      }
+    },
+    {
+      "file": "44_white_shirt_f4_slim_cotton.png",
+      "labels": {
+        "category": "top",
+        "subcategory": "shirt",
+        "primary_color": "white",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 4,
+        "seasons": [
+          "spring",
+          "summer",
+          "autumn",
+          "winter"
+        ],
+        "fit": "slim",
+        "material": "cotton"
+      }
+    },
+    {
+      "file": "45_navy_coat_f4_regular_wool_winter.png",
+      "labels": {
+        "category": "outerwear",
+        "subcategory": "coat",
+        "primary_color": "navy",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 4,
+        "seasons": [
+          "winter"
+        ],
+        "fit": "regular",
+        "material": "wool"
+      }
+    },
+    {
+      "file": "46_black_puffer_f2_oversized_nylon_winter.png",
+      "labels": {
+        "category": "outerwear",
+        "subcategory": "puffer",
+        "primary_color": "black",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 2,
+        "seasons": [
+          "winter"
+        ],
+        "fit": "oversized",
+        "material": "nylon"
+      }
+    },
+    {
+      "file": "47_purple_scarf_f3_wool_autumn_winter.png",
+      "labels": {
+        "category": "accessory",
+        "subcategory": "scarf",
+        "primary_color": "purple",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 3,
+        "seasons": [
+          "autumn",
+          "winter"
+        ],
+        "fit": null,
+        "material": "wool"
+      }
+    },
+    {
+      "file": "48_beige_belt_f3_leather.png",
+      "labels": {
+        "category": "accessory",
+        "subcategory": "belt",
+        "primary_color": "beige",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 3,
+        "seasons": [
+          "spring",
+          "summer",
+          "autumn",
+          "winter"
+        ],
+        "fit": null,
+        "material": "leather"
+      }
+    },
+    {
+      "file": "IMG_0049.png",
+      "labels": {
+        "category": "top",
+        "subcategory": "polo",
+        "primary_color": "teal",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 3,
+        "seasons": [
+          "spring",
+          "summer"
+        ],
+        "fit": null,
+        "material": null
+      }
+    },
+    {
+      "file": "IMG_0050.png",
+      "labels": {
+        "category": "outerwear",
+        "subcategory": "raincoat",
+        "primary_color": "orange",
+        "secondary_color": null,
+        "pattern": "solid",
+        "formality": 2,
+        "seasons": [
+          "spring",
+          "autumn"
+        ],
+        "fit": null,
+        "material": null
+      }
+    }
+  ]
+}

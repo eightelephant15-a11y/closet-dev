@@ -1,4 +1,4 @@
-.PHONY: redis-local worker-local api-local api-smoke run-app-local-api ios-flavors-setup setup api-test api-lint app-test app-lint app-gen up down run-mock test lint openapi
+.PHONY: eval-vision redis-local worker-local api-local api-smoke run-app-local-api ios-flavors-setup setup api-test api-lint app-test app-lint app-gen up down run-mock test lint openapi
 
 setup:
 	cd api && python3.12 -m venv .venv && . .venv/bin/activate && pip install -e ".[dev]"
@@ -72,3 +72,12 @@ run-app-local-api:
 	cd app && flutter run --flavor dev -t lib/main_dev.dart \
 	  --dart-define=USE_MOCK=false --dart-define=AUTH_MODE=dev \
 	  --dart-define=API_BASE_URL=http://localhost:$(PORT)
+
+# ---- AI accuracy evaluation ------------------------------------------------------------------
+# make eval-vision                                   free: fake provider on the bundled synthetic dataset
+# make eval-vision DATASET=~/photos PROVIDER=claude EVAL_ARGS="--yes --limit 20"
+#                                                    REAL calls (needs ANTHROPIC_API_KEY): uploads photos, costs money
+DATASET ?= eval/sample_dataset
+PROVIDER ?= fake
+eval-vision:
+	cd api && . .venv/bin/activate && python -m app.eval.vision_eval $(abspath $(DATASET)) --provider $(PROVIDER) $(EVAL_ARGS)

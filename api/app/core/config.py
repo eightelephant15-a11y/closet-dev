@@ -45,7 +45,8 @@ class Settings(BaseSettings):
     queue_backend: Literal["arq", "eager"] = "arq"
     queue_max_tries: int = 3
     # Vision. The provider *name* is a remote-config flag (`vision_provider`); these are its settings.
-    vision_model: str = "claude-haiku-5-5"
+    vision_model: str = "claude-opus-5-5"
+    vision_effort: str = "low"  # empty = omit; see app/vision/claude.py
     anthropic_api_key: SecretStr = SecretStr("")
     vision_price_input_per_mtok: float = 0.0  # USD per million tokens; 0 = unknown
     vision_price_output_per_mtok: float = 0.0
