@@ -86,6 +86,13 @@ unless runner.shell_script_build_phases.any? { |p| p.name == 'Copy GoogleService
   runner.build_phases.move(phase, runner.build_phases.index(runner.resources_build_phase) + 1)
 end
 
+# Minimum iOS: firebase_auth requires 15.0 (iPhone 12 and newer all run iOS 15+).
+MIN_IOS = '15.0'.freeze
+[project, runner, tests].each do |owner|
+  owner.build_configuration_list.build_configurations.each do |cfg|
+    cfg.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = MIN_IOS if cfg.build_settings.key?('IPHONEOS_DEPLOYMENT_TARGET')
+  end
+end
 project.save
 
 # Shared schemes: one per flavor, mapped to <Mode>-<flavor> configurations.
@@ -102,6 +109,7 @@ mapping = FLAVORS.flat_map do |f|
 end
 block = "project 'Runner', {\n  'Debug' => :debug,\n  'Profile' => :release,\n  'Release' => :release,\n" +
         mapping.map { |m| "  #{m},\n" }.join + "}\n"
+podfile.sub!(/^#? ?platform :ios, '[0-9.]+'/, "platform :ios, '15.0'")
 podfile.sub!(/project 'Runner', \{.*?\n\}\n/m, block)
 File.write('Podfile', podfile)
 puts 'iOS flavors configured'
