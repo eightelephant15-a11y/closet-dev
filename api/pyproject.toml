@@ -26,7 +26,7 @@ dependencies = [
 rembg = ["rembg>=2.0"]
 dev = [
   "pytest>=8", "pytest-asyncio>=0.23", "httpx>=0.27", "aiosqlite>=0.20",
-  "fakeredis>=2.23", "jsonschema>=4.20", "ruff>=0.5", "mypy>=1.10", "psycopg2-binary>=2.9", "greenlet",
+  "fakeredis>=2.23", "jsonschema>=4.20", "ruff>=0.5", "mypy>=1.10", "psycopg2-binary>=2.9.13", "greenlet",
 ]
 
 [tool.setuptools.packages.find]
