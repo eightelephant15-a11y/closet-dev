@@ -63,7 +63,7 @@ resource "aws_iam_role_policy_attachment" "execution" {
 data "aws_iam_policy_document" "read_secrets" {
   statement {
     actions   = ["secretsmanager:GetSecretValue"]
-    resources = values(var.secrets)
+    resources = values(merge(var.secrets, var.worker_secrets))
   }
 }
 
@@ -83,6 +83,19 @@ data "aws_iam_policy_document" "task" {
     sid       = "ExportObjects"
     actions   = ["s3:PutObject", "s3:GetObject", "s3:DeleteObject"]
     resources = ["${var.export_bucket_arn}/*"]
+  }
+
+  # API: sign upload/read URLs, check uploads (head), delete a garment's photos. Worker: read the raw
+  # upload, write the processed sizes. ListBucket is needed to delete everything under a prefix.
+  statement {
+    sid       = "GarmentPhotos"
+    actions   = ["s3:PutObject", "s3:GetObject", "s3:DeleteObject"]
+    resources = ["${var.images_bucket_arn}/*"]
+  }
+  statement {
+    sid       = "GarmentPhotosList"
+    actions   = ["s3:ListBucket"]
+    resources = [var.images_bucket_arn]
   }
 }
 
@@ -132,6 +145,111 @@ resource "aws_ecs_task_definition" "api" {
     }
     readonlyRootFilesystem = false
   }])
+}
+
+# ---- Worker (image processing + garment analysis) -------------------------------------------------
+# Same image as the API, different command. No load balancer: it pulls jobs from Redis (arq).
+
+resource "aws_cloudwatch_log_group" "worker" {
+  name              = "/ecs/${var.name}-worker"
+  retention_in_days = var.log_retention_days
+}
+
+resource "aws_ecs_task_definition" "worker" {
+  family                   = "${var.name}-worker"
+  requires_compatibilities = ["FARGATE"]
+  network_mode             = "awsvpc"
+  cpu                      = var.worker_cpu
+  memory                   = var.worker_memory
+  execution_role_arn       = aws_iam_role.execution.arn
+  task_role_arn            = aws_iam_role.task.arn
+
+  runtime_platform {
+    operating_system_family = "LINUX"
+    cpu_architecture        = "ARM64"
+  }
+
+  container_definitions = jsonencode([{
+    name        = "worker"
+    image       = "${aws_ecr_repository.api.repository_url}:${var.image_tag}"
+    essential   = true
+    command     = ["python", "-m", "app.worker"]
+    environment = [for k, v in merge(var.environment, var.worker_environment, { WORKER_CONCURRENCY = tostring(var.worker_concurrency) }) : { name = k, value = v }]
+    secrets     = [for k, arn in merge(var.secrets, var.worker_secrets) : { name = k, valueFrom = arn }]
+    logConfiguration = {
+      logDriver = "awslogs"
+      options = {
+        awslogs-group         = aws_cloudwatch_log_group.worker.name
+        awslogs-region        = data.aws_region.current.name
+        awslogs-stream-prefix = "worker"
+      }
+    }
+    stopTimeout = 60 # let running jobs finish; they are idempotent if cut off anyway
+  }])
+}
+
+resource "aws_ecs_service" "worker" {
+  name            = "${var.name}-worker"
+  cluster         = aws_ecs_cluster.this.id
+  task_definition = aws_ecs_task_definition.worker.arn
+  desired_count   = var.worker_desired_count
+  launch_type     = "FARGATE"
+
+  deployment_minimum_healthy_percent = 100
+  deployment_maximum_percent         = 200
+
+  deployment_circuit_breaker {
+    enable   = true
+    rollback = true
+  }
+
+  network_configuration {
+    subnets          = var.private_subnet_ids
+    security_groups  = [var.app_security_group_id]
+    assign_public_ip = false
+  }
+
+  lifecycle {
+    ignore_changes = [desired_count] # autoscaling owns it
+  }
+}
+
+resource "aws_appautoscaling_target" "worker" {
+  max_capacity       = var.worker_max_count
+  min_capacity       = var.worker_desired_count
+  resource_id        = "service/${aws_ecs_cluster.this.name}/${aws_ecs_service.worker.name}"
+  scalable_dimension = "ecs:service:DesiredCount"
+  service_namespace  = "ecs"
+}
+
+resource "aws_appautoscaling_policy" "worker_cpu" {
+  name               = "${var.name}-worker-cpu"
+  policy_type        = "TargetTrackingScaling"
+  resource_id        = aws_appautoscaling_target.worker.resource_id
+  scalable_dimension = aws_appautoscaling_target.worker.scalable_dimension
+  service_namespace  = aws_appautoscaling_target.worker.service_namespace
+
+  target_tracking_scaling_policy_configuration {
+    target_value = 65
+    predefined_metric_specification {
+      predefined_metric_type = "ECSServiceAverageCPUUtilization"
+    }
+    scale_in_cooldown  = 300
+    scale_out_cooldown = 60
+  }
+}
+
+# A job that exhausts its retries is logged as job_dead (and pushed on the Redis list dlq:closet).
+resource "aws_cloudwatch_log_metric_filter" "dead_jobs" {
+  name           = "${var.name}-dead-jobs"
+  log_group_name = aws_cloudwatch_log_group.worker.name
+  pattern        = "\"job_dead\""
+
+  metric_transformation {
+    name      = "DeadJobs"
+    namespace = "${var.name}/worker"
+    value     = "1"
+  }
 }
 
 # ---- Load balancer ----------------------------------------------------------------------

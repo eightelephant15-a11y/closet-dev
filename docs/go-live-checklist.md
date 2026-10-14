@@ -193,3 +193,60 @@ iOS: Settings > Accessibility > Display & Text Size > Larger Text (max). Android
 3. Replace remaining placeholders ([placeholders.md](placeholders.md)), update [checklist.md](checklist.md) statuses from "Blocked" to "Verified (manual)" with the date.
 
 **Success:** a fresh clone passes CI, a staging deploy is one click, and every step 8 row passed on a real device.
+
+---
+
+# Phase 2 additions (closet)
+
+Do these after step 10 (AWS staging exists) and step 8 (a device can sign in). Each has a **Success** line.
+
+## 13. Real S3 photo storage, Redis and the worker
+
+What exists: Terraform creates the private photos bucket, the worker service, the Anthropic secret container and a dead-job alarm
+([infra/README.md](../infra/README.md)). Nothing has been applied.
+
+1. In `infra/envs/staging` run `terraform plan -out tfplan` and read the plan: new resources are the `*-images-*` bucket (+ policy, encryption,
+   lifecycle), the `*-worker` ECS service/task/log group/autoscaling, the `DeadJobs` metric filter and alarm, the Anthropic secret container, and an
+   IAM statement for the task role on the photos bucket. `terraform apply tfplan` only when you are happy.
+2. Push the API image (the same image runs the API and the worker). Check the worker is up:
+   `aws logs tail /ecs/stylist-staging-worker --since 10m` should show `worker_started`.
+3. Add one item from a staging build of the app (a throwaway account). The photo goes through the **presigned POST** straight to S3, the app calls
+   "complete", and the worker log shows `image_processed`. (The local smoke script uses the local-disk PUT tickets, so it cannot stand in for this.)
+4. Check the bucket: the uploaded original disappears after processing; `thumb_s/m/l.webp` and `full.webp` remain; after deleting the garment
+   in the app, `aws s3 ls s3://<images bucket>/g/<garment id>/ --recursive` is empty.
+5. Check a signed read URL stops working after about 10 minutes, and that the bucket has no public access (`aws s3api get-public-access-block`).
+
+**Success:** a photo goes phone -> S3 -> worker -> thumbnails; deleting the item (and then the account) leaves no object behind; the worker log shows
+`image_processed ... ms=` under about 2000 on the staging task size.
+
+## 14. Camera, photo library and the grid on a real phone
+
+The in-app camera (`camera` plugin) and the library picker are only exercised through fakes in CI.
+
+1. Run a dev build on a phone: `make run-app-local-api` (needs the local stack: `make api-local`) or a staging build.
+2. Add an item with the camera in good light, then in a dim room, then in direct sun. **Success:** the hint text under the preview changes
+   ("Too dark..." / "Too bright..." / "Lighting looks good."), the shutter works, retake works, the crop suggestion toggle appears for a garment on a plain background.
+3. Deny the camera permission in system settings, reopen "Add item". **Success:** a clear message and "Choose from photos" works.
+4. Pick a **HEIC** photo from the library (iPhone) and a large (12 MP+) photo. **Success:** both upload; thumbnails look right (not rotated).
+5. Time it with a stopwatch from "Use this photo" to the AI details appearing. **Success:** under 20 s on Wi-Fi with the fake provider, under 20 s with Claude.
+6. Airplane mode: add an item, force-quit the app, turn the network on, reopen. **Success:** the photo uploads without a duplicate.
+7. Add 30 items; the 31st shows the "free closet is full" screen. Bulk add 20 photos from the library.
+8. Scroll a 500-item closet ([performance.md](performance.md)). **Success:** no frame over 100 ms.
+9. TalkBack / VoiceOver on: closet grid (each tile reads its name and status), review (chips read "Navy, selected"), detail, bulk add.
+
+## 15. Real vision key (Claude)
+
+1. Create an Anthropic API key in your Anthropic console with a monthly spend limit you are comfortable with.
+2. Put it in Secrets Manager (never in git, never in a chat):
+   `aws secretsmanager put-secret-value --secret-id stylist-staging/anthropic-api-key --secret-string '<key>'`
+3. Set `claude_vision_enabled = true` in `infra/envs/staging/terraform.tfvars`, plan, apply (the worker restarts with the key).
+4. Switch the flag for **your own account first**: `vision_provider = "claude"` (flags table / admin path from Phase 1). The default stays `fake`.
+5. Add a few items. **Success:** details are filled in sensibly; the worker log has `vision_call provider=claude model=... in_tokens=... cost_usd=...`;
+   a correction in the app creates a `garment_corrections` row. Roll back any time by setting the flag back to `fake`.
+
+Cost controls already in place: 200 analyses per user per day, 10 re-analyses per day, 120 uploads per hour.
+
+## 16. Measure accuracy on your 300 labelled photos
+
+Follow [vision-eval.md](vision-eval.md). **Success:** category >= 92%, primary colour >= 85%, formality within 1 point >= 80% (the command exits 1 otherwise).
+If a target is missed, read the confusion table first: it usually points at one prompt rule or one mislabelled photo.

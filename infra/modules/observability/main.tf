@@ -75,3 +75,31 @@ resource "aws_cloudwatch_metric_alarm" "rds_storage" {
   comparison_operator = "LessThanThreshold"
   alarm_actions       = [aws_sns_topic.alerts.arn]
 }
+
+resource "aws_cloudwatch_metric_alarm" "worker_cpu" {
+  alarm_name          = "${var.name}-worker-cpu-high"
+  namespace           = "AWS/ECS"
+  metric_name         = "CPUUtilization"
+  dimensions          = { ClusterName = var.cluster_name, ServiceName = var.worker_service_name }
+  statistic           = "Average"
+  period              = 300
+  evaluation_periods  = 3
+  threshold           = 85
+  comparison_operator = "GreaterThanThreshold"
+  alarm_actions       = [aws_sns_topic.alerts.arn]
+}
+
+# Photos whose analysis gave up after retries. Users see "add the details yourself", so this is a
+# quality signal rather than an outage: alert when it keeps happening.
+resource "aws_cloudwatch_metric_alarm" "dead_jobs" {
+  alarm_name          = "${var.name}-dead-jobs"
+  namespace           = var.worker_metric_namespace
+  metric_name         = "DeadJobs"
+  statistic           = "Sum"
+  period              = 900
+  evaluation_periods  = 1
+  threshold           = 5
+  comparison_operator = "GreaterThanThreshold"
+  treat_missing_data  = "notBreaching"
+  alarm_actions       = [aws_sns_topic.alerts.arn]
+}

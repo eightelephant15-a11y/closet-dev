@@ -25,3 +25,11 @@ output "sentry_dsn_secret_arn" {
 output "firebase_credentials_secret_arn" {
   value = module.secrets.firebase_credentials_secret_arn
 }
+
+output "images_bucket" {
+  value = module.storage.images_bucket_name
+}
+
+output "worker_service" {
+  value = module.api.worker_service_name
+}

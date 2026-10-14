@@ -73,3 +73,47 @@ variable "protect" {
   type    = bool
   default = false
 }
+
+variable "images_bucket_arn" {
+  type        = string
+  description = "Private bucket for garment photos (API signs URLs for it, the worker processes into it)."
+}
+
+variable "worker_environment" {
+  type        = map(string)
+  default     = {}
+  description = "Extra plain environment for the worker container (merged over var.environment)."
+}
+
+variable "worker_secrets" {
+  type        = map(string)
+  default     = {}
+  description = "Extra Secrets Manager entries for the worker only (for example ANTHROPIC_API_KEY)."
+}
+
+variable "worker_cpu" {
+  type    = number
+  default = 512
+}
+
+variable "worker_memory" {
+  type        = number
+  default     = 1024
+  description = "Image decoding (HEIC, 8000 px photos) needs more headroom than the API."
+}
+
+variable "worker_desired_count" {
+  type    = number
+  default = 1
+}
+
+variable "worker_max_count" {
+  type    = number
+  default = 4
+}
+
+variable "worker_concurrency" {
+  type        = number
+  default     = 4
+  description = "Jobs one worker process runs at once (WORKER_CONCURRENCY)."
+}

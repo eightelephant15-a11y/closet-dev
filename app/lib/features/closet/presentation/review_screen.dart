@@ -271,7 +271,12 @@ class _StatusLine extends StatelessWidget {
     final offline =
         item != null && item!.isActive && item!.errorCode == 'offline';
     final (text, spinner) = failed
-        ? (l10n.reviewFailed, false)
+        ? (
+            item!.state == UploadState.rejected
+                ? uploadErrorLabel(l10n, item!.errorCode)
+                : l10n.reviewFailed,
+            false,
+          )
         : offline
         ? (l10n.reviewWaiting, false)
         : status == AnalysisStatus.done

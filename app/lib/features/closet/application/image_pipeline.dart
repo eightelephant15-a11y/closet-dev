@@ -164,9 +164,12 @@ ProcessedPhoto _process(_Job job) {
       'This photo format is not supported. Try a JPEG or PNG.',
     );
   }
-  decoded = img.bakeOrientation(
-    decoded,
-  ); // applies the EXIF rotation, then the tag is gone
+  // Apply the EXIF rotation. This only resets the orientation tag: GPS, camera make/model and the rest
+  // would still be written into the JPEG, so drop all metadata (the server strips again; this keeps it
+  // off the wire too).
+  decoded = img.bakeOrientation(decoded);
+  decoded.exif.clear();
+  decoded.iccProfile = null;
   final crop = job.crop;
   if (crop != null) {
     final x = (crop.left * decoded.width).round();

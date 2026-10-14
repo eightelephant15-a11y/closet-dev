@@ -7,6 +7,7 @@ never repeats work or creates a second result.
 import asyncio
 import hashlib
 import logging
+import time
 import uuid
 from datetime import UTC, datetime
 from typing import Any
@@ -57,6 +58,7 @@ async def _processing_dead(deps: JobDeps, args: tuple[Any, ...], error: str) -> 
 
 @job("process_image", on_dead=_processing_dead)
 async def process_image(deps: JobDeps, image_id: str) -> None:
+    started = time.perf_counter()
     async with deps.maker() as s:
         img = await s.get(GarmentImage, uuid.UUID(image_id))
         if img is None or img.status in (ImageStatus.ready, ImageStatus.failed):
@@ -124,6 +126,13 @@ async def process_image(deps: JobDeps, image_id: str) -> None:
         await s.commit()
         garment_id = str(garment.id)
 
+    log.info(
+        "image_processed image=%s ms=%d bytes_in=%d bytes_out=%d",
+        image_id,
+        (time.perf_counter() - started) * 1000,
+        len(raw),
+        len(processed.full),
+    )
     await deps.queue.enqueue(
         "analyse_garment", garment_id, image_id, "analyse", job_id=f"analyse-{image_id}"
     )

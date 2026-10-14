@@ -1,9 +1,14 @@
-# Stylist: AI personal & couple stylist (Phase 1: account + onboarding)
+# Stylist: AI personal & couple stylist (Phase 1: onboarding, Phase 2: digital closet)
 
-A wardrobe-based stylist. **This phase** ships the foundation, sign-in, guest mode, the preference quiz,
+A wardrobe-based stylist. **Phase 1** ships the foundation, sign-in, guest mode, the preference quiz,
 the full onboarding journey, permissions, consent/privacy controls, data export/deletion and onboarding
-analytics. Closet capture, recommendations, couples and payments are later phases and only have
-extension points (`ClosetRepository`, `RecommendationService`, purge hooks).
+analytics. **Phase 2** adds the digital closet: take or pick a photo, it uploads in the background, an AI fills in
+the details, you correct with one tap, then browse, filter, edit, mark unavailable, archive or delete. Recommendations,
+couples and payments are later phases and only have extension points (`RecommendationService`, `excluded_from_outfits`, entitlements).
+
+Everything that needs an outside account sits behind an interface with a fake that works with none (storage, queue, vision,
+background removal, camera). The real implementations are built and marked **unverified** until run with real keys
+([docs/checklist.md](docs/checklist.md), [docs/go-live-checklist.md](docs/go-live-checklist.md) steps 13 to 16).
 
 | Path | What |
 |---|---|
@@ -27,16 +32,21 @@ Prerequisites: Python 3.12, Flutter (stable, 3.41+), optionally Docker and pre-c
 `flutter run --flavor dev -t lib/main_dev.dart --dart-define=USE_MOCK=true` (what `make run-mock` does).
 In mock mode the repositories are in-process fakes selected in `app/lib/core/providers.dart`: a fake Google
 sign-in (account "Ada Lovelace"), a fake backend that persists in local storage (so killing the app and
-resuming works), canned city autocomplete and the sample closet. The same interfaces are implemented over
+resuming works), canned city autocomplete, and a pretend closet backend (`MockClosetBackend`) that runs the whole add flow: signed-ticket upload,
+processing, a deterministic fake AI that reads hints from the file name (`navy_jeans_f2.jpg`), the 30-item limit. The same interfaces are implemented over
 HTTP for the real API, selected with `USE_MOCK=false` and `--dart-define=API_BASE_URL=...`.
 
 ### Run the real API locally, no Docker
 
 ```bash
 make api-local          # FastAPI + SQLite + in-process fake Redis; migrates, seeds flags; http://127.0.0.1:8000
-make api-smoke          # hits every /v1 endpoint on that server, prints PASS/FAIL (17 checks)
+make api-smoke          # hits every /v1 endpoint on that server, prints PASS/FAIL (20 checks, incl. the closet flow)
 make run-app-local-api  # Flutter dev flavor talking to it (no mock, no Firebase)
+make eval-vision        # AI accuracy report on the bundled synthetic photos (free, no network)
 ```
+
+`make api-local` also starts the **job worker** (image processing + AI analysis) against the in-process fake Redis and stores photos
+on local disk with signed URLs. To run the pieces separately: `make redis-local` and `make worker-local` (`make api-local WORKER=external`).
 
 `make api-local` uses `AUTH_MODE=dev`: instead of Firebase, the server accepts HMAC-signed dev tokens that
 the app gets from `POST /dev/token`. **This mode cannot be enabled outside `APP_ENV` in `dev|local|test`**:
@@ -67,13 +77,17 @@ Flutter  presentation -> application (Riverpod controllers) -> domain (pure Dart
 FastAPI  routers -> services -> SQLAlchemy models -> Postgres ; Redis for idempotency keys + flag cache
    /v1/*, error model {error:{code,message,details}}, X-Request-ID, Idempotency-Key, Page{items,next_cursor}
 Auth     Firebase (Google, anonymous guest) behind AuthProvider / TokenVerifier interfaces
+Closet   phone -> POST /v1/garments -> signed upload straight to ObjectStorage (local disk | S3) -> /complete
+         -> Redis queue (arq) -> worker: validate, rotate, strip EXIF/GPS, WebP thumbnails -> VisionProvider (fake | Claude)
+         -> fields + confidence stored once; the app shows the review screen while this happens
 ```
 
 Details: [docs/phase1-plan.md](docs/phase1-plan.md) (original plan), [docs/decisions.md](docs/decisions.md)
 (every choice made along the way), [docs/analytics.md](docs/analytics.md), [infra/README.md](infra/README.md).
 
 * **Flags**: `GET /v1/config` returns server-driven flags from the `feature_flags` table (defaults in code):
-  `guest_mode_enabled` (true) and `onboarding_variant` (`quiz_first` | `closet_first`). `set_flag()` in
+  `guest_mode_enabled` (true), `onboarding_variant` (`quiz_first` | `closet_first`), `closet_bulk_add_enabled` (true),
+  `closet_item_limit_free` (30) and `vision_provider` (`fake` | `claude`, default `fake`). `set_flag()` in
   `api/app/services/flags.py` is the write path a future admin panel will call.
 * **Onboarding** is a local-first state machine (`OnboardingController`), resumable after a kill, across
   devices (server copy) and via the deep link `stylist://onboarding/resume`.
@@ -107,7 +121,9 @@ CI (GitHub Actions): `ci-api`, `ci-app`, `ci-infra`; `deploy-staging` exists but
 | [docs/placeholders.md](docs/placeholders.md) | every placeholder value and the file to change it in |
 | [docs/rename-app.md](docs/rename-app.md) | app name, bundle ID, icons, Firebase files, iOS + Android flavors |
 | [docs/local-api.md](docs/local-api.md) | running the real API without Docker; dev tokens and their safety rules |
-| [docs/performance.md](docs/performance.md) | measuring cold start on a device |
+| [docs/phase2-plan.md](docs/phase2-plan.md) | Phase 2 design: architecture, job flow, schema, endpoints, risks |
+| [docs/vision-eval.md](docs/vision-eval.md) | measuring AI tagging accuracy, including on your own 300 labelled photos |
+| [docs/performance.md](docs/performance.md) | cold start on a device; closet budgets (API p95, image pipeline, 500-item grid) |
 | [docs/checklist.md](docs/checklist.md) | requirement -> code -> test mapping with an honest status per item |
 
 ## Tooling notes

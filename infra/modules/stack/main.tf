@@ -81,12 +81,21 @@ module "api" {
   max_count             = var.api_max_count
   certificate_arn       = var.certificate_arn
   export_bucket_arn     = module.storage.bucket_arn
+  images_bucket_arn     = module.storage.images_bucket_arn
   protect               = var.protect
+  worker_cpu            = var.worker_cpu
+  worker_memory         = var.worker_memory
+  worker_desired_count  = var.worker_desired_count
+  worker_max_count      = var.worker_max_count
 
   environment = {
     APP_ENV             = var.environment
     REDIS_URL           = module.cache.redis_url
     EXPORT_BUCKET       = module.storage.bucket_name
+    STORAGE_BACKEND     = "s3"
+    IMAGES_BUCKET       = module.storage.images_bucket_name
+    AWS_REGION          = var.region
+    QUEUE_BACKEND       = "arq"
     FIREBASE_PROJECT_ID = var.firebase_project_id
     PRIVACY_POLICY_URL  = var.privacy_policy_url
     TERMS_URL           = var.terms_url
@@ -98,6 +107,16 @@ module "api" {
     SENTRY_DSN                = module.secrets.sentry_dsn_secret_arn
     FIREBASE_CREDENTIALS_JSON = module.secrets.firebase_credentials_secret_arn
   }
+
+  worker_environment = {
+    VISION_MODEL = var.vision_model
+  }
+
+  # The key reaches the worker only when explicitly enabled; the container would fail to start while the
+  # secret has no value. The remote-config flag vision_provider still decides whether Claude is used.
+  worker_secrets = var.claude_vision_enabled ? {
+    ANTHROPIC_API_KEY = module.secrets.anthropic_api_key_secret_arn
+  } : {}
 }
 
 module "jobs" {
@@ -120,4 +139,6 @@ module "observability" {
   cluster_name            = module.api.cluster_name
   service_name            = module.api.service_name
   db_identifier           = module.database.identifier
+  worker_service_name     = module.api.worker_service_name
+  worker_metric_namespace = module.api.dead_jobs_metric_namespace
 }

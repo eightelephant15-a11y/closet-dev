@@ -16,6 +16,10 @@ What `make api-local` does (`api/app/local_server.py`):
    `sqlite3 api/local.db "update feature_flags set value='\"closet_first\"' where key='onboarding_variant'"` (the flag cache lasts 60 s).
 4. Uses an in-process fake Redis unless `REDIS_URL` is set.
 5. Mounts `POST /dev/token`, the stand-in for Google / anonymous sign-in.
+6. Stores photos on local disk (`api/.storage`, git-ignored) with HMAC-signed upload/read URLs served by the API itself
+   (`STORAGE_BACKEND=local`, which the settings refuse outside dev/local/test).
+7. Starts the **worker** (`python -m app.worker`) as a subprocess against the same fake Redis, so uploaded photos are processed and analysed
+   (fake vision provider). `make api-local WORKER=external` leaves it to `make worker-local` in another terminal.
 
 ## Dev tokens
 

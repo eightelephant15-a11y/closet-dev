@@ -26,3 +26,11 @@ variable "service_name" {
 variable "db_identifier" {
   type = string
 }
+
+variable "worker_service_name" {
+  type = string
+}
+
+variable "worker_metric_namespace" {
+  type = string
+}

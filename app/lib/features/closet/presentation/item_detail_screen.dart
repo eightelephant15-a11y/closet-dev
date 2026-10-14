@@ -8,6 +8,7 @@ import 'package:stylist/core/network/api_exception.dart';
 import 'package:stylist/core/providers.dart';
 import 'package:stylist/features/closet/application/closet_providers.dart';
 import 'package:stylist/features/closet/domain/garment.dart';
+import 'package:stylist/features/closet/domain/taxonomy.dart';
 import 'package:stylist/features/closet/presentation/closet_routes.dart';
 import 'package:stylist/features/closet/presentation/closet_widgets.dart';
 import 'package:stylist/features/closet/presentation/garment_fields_editor.dart';
@@ -418,7 +419,7 @@ class _TextFields extends StatelessWidget {
             },
             child: TextField(
               controller: brand,
-              maxLength: 60,
+              maxLength: Taxonomy.instance.brandMax,
               textInputAction: TextInputAction.next,
               decoration: InputDecoration(labelText: l10n.fieldBrand),
               onSubmitted: (v) => onSave('brand', v),
@@ -430,7 +431,7 @@ class _TextFields extends StatelessWidget {
             },
             child: TextField(
               controller: notes,
-              maxLength: 500,
+              maxLength: Taxonomy.instance.notesMax,
               maxLines: 3,
               decoration: InputDecoration(labelText: l10n.fieldNotes),
             ),

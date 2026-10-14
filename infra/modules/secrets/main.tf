@@ -11,3 +11,9 @@ resource "aws_secretsmanager_secret" "firebase_credentials" {
   description             = "Firebase Admin service-account JSON (set the value manually)"
   recovery_window_in_days = var.recovery_window_in_days
 }
+
+resource "aws_secretsmanager_secret" "anthropic_api_key" {
+  name                    = "${var.name}/anthropic-api-key"
+  description             = "Anthropic API key for garment analysis in the worker (set the value manually BEFORE enabling claude_vision_enabled)"
+  recovery_window_in_days = var.recovery_window_in_days
+}

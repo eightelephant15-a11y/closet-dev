@@ -10,11 +10,11 @@ infra/
     network/        VPC, 2 public + 2 private subnets, NAT, S3 gateway endpoint
     database/       RDS Postgres 16 (encrypted, private), DATABASE_URL in Secrets Manager
     cache/          ElastiCache Redis 7 (encrypted at rest and in transit)
-    storage/        S3 bucket for data exports (private, SSE, 3-day lifecycle, TLS-only)
-    secrets/        Secrets Manager containers: Sentry DSN, Firebase service account
-    api_service/    ECR, ECS Fargate (ARM64), ALB, autoscaling, IAM, log group
+    storage/        S3 buckets: data exports (3-day lifecycle) and garment photos (private, no versioning, TLS-only)
+    secrets/        Secrets Manager containers: Sentry DSN, Firebase service account, Anthropic API key
+    api_service/    ECR, ECS Fargate (ARM64), ALB, autoscaling, IAM, log group; plus the job worker service
     jobs/           EventBridge -> ECS run-task: daily account purge, 15-min export sweeper
-    observability/  SNS alerts + CloudWatch alarms (5xx, unhealthy hosts, CPU, RDS storage)
+    observability/  SNS alerts + CloudWatch alarms (5xx, unhealthy hosts, CPU, RDS storage, worker CPU, dead jobs)
   envs/
     staging/        small and cheap: 1 NAT, single-AZ DB, 1 task, HTTP allowed until a domain exists
     prod/           2 NAT, Multi-AZ DB, 14-day backups, 2+ tasks, deletion protection, HTTPS required
@@ -63,3 +63,14 @@ state bucket private and encrypted.
 
 NAT gateway and RDS dominate. If cost matters before launch, scale the staging ECS service to 0 and
 stop the RDS instance when not testing.
+
+## Phase 2 additions (closet)
+
+* **Photos bucket** `stylist-<env>-images-<account>`: private, SSE, versioning off (deleting a garment deletes
+  the bytes), TLS-only. Phones upload straight to it with short-lived presigned POSTs; the API signs them.
+* **Worker service** `stylist-<env>-worker`: the API image with `python -m app.worker`, no load balancer,
+  pulls image-processing and garment-analysis jobs from Redis (arq). Scales on CPU. A log metric filter
+  turns `job_dead` lines into a `DeadJobs` metric with an alarm.
+* **Anthropic key**: `stylist-<env>/anthropic-api-key` is an empty container. The worker only receives it when
+  `claude_vision_enabled = true` (set the value first, or the task cannot start). The `vision_provider`
+  remote-config flag still decides whether Claude is used at all; the default is `fake`.

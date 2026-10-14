@@ -100,3 +100,34 @@ variable "alert_email" {
   type    = string
   default = ""
 }
+
+variable "worker_cpu" {
+  type    = number
+  default = 512
+}
+
+variable "worker_memory" {
+  type    = number
+  default = 1024
+}
+
+variable "worker_desired_count" {
+  type    = number
+  default = 1
+}
+
+variable "worker_max_count" {
+  type    = number
+  default = 4
+}
+
+variable "claude_vision_enabled" {
+  type        = bool
+  default     = false
+  description = "Give the worker the Anthropic key. Put the secret value in Secrets Manager first (see docs/go-live-checklist.md); the vision_provider flag then selects claude."
+}
+
+variable "vision_model" {
+  type    = string
+  default = "claude-opus-5-5"
+}

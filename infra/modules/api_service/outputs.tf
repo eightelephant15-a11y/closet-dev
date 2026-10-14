@@ -37,3 +37,15 @@ output "task_role_arn" {
 output "execution_role_arn" {
   value = aws_iam_role.execution.arn
 }
+
+output "worker_service_name" {
+  value = aws_ecs_service.worker.name
+}
+
+output "worker_log_group_name" {
+  value = aws_cloudwatch_log_group.worker.name
+}
+
+output "dead_jobs_metric_namespace" {
+  value = "${var.name}/worker"
+}
