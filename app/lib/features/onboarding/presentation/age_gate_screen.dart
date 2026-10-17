@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:stylist/features/consent/presentation/consent_prompt.dart';
 import 'package:stylist/features/onboarding/application/onboarding_controller.dart';
 import 'package:stylist/l10n/gen/app_localizations.dart';
+import 'package:stylist/shared/widgets/atelier.dart';
 import 'package:stylist/shared/widgets/state_views.dart';
 import 'package:stylist/theme/tokens.dart';
 
@@ -13,32 +14,58 @@ class AgeGateScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final ctl = ref.read(onboardingControllerProvider.notifier);
+    final text = Theme.of(context).textTheme;
+    final scheme = Theme.of(context).colorScheme;
     return Scaffold(
       body: PageBody(
         child: CenteredScroll(
           children: [
+            Center(
+              child: BadgeIcon(
+                icon: Icons.verified_outlined,
+                pill: l10n.ageBadge,
+              ),
+            ),
+            const SizedBox(height: Spacing.lg),
+            Eyebrow(l10n.ageEyebrow, align: TextAlign.center),
+            const SizedBox(height: Spacing.xs),
             Text(
               l10n.ageTitle,
-              style: Theme.of(context).textTheme.displaySmall,
+              style: text.headlineLarge,
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: Spacing.md),
-            Text(l10n.ageBody, textAlign: TextAlign.center),
-            const SizedBox(height: Spacing.xl),
+            const SizedBox(height: Spacing.sm),
+            Text(
+              l10n.ageBody,
+              style: text.bodyLarge?.copyWith(color: scheme.onSurfaceVariant),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: Spacing.lg),
+            NoteCard(
+              icon: Icons.shield_outlined,
+              child: Text(l10n.ageNote),
+            ),
+            const SizedBox(height: Spacing.lg),
             SizedBox(
               width: double.infinity,
-              child: FilledButton(
+              height: 52,
+              child: FilledButton.icon(
                 onPressed: () async {
                   await askAnalyticsConsentIfNeeded(context, ref);
                   await ctl.confirmAge();
                 },
-                child: Text(l10n.ageConfirmButton),
+                icon: const Icon(Icons.check),
+                label: Text(l10n.ageConfirmButton),
               ),
             ),
             const SizedBox(height: Spacing.sm),
             SizedBox(
               width: double.infinity,
-              child: OutlinedButton(
+              child: FilledButton.tonal(
+                style: FilledButton.styleFrom(
+                  backgroundColor: scheme.surfaceContainerHigh,
+                  foregroundColor: scheme.onSurface,
+                ),
                 onPressed: ctl.rejectAge,
                 child: Text(l10n.ageUnderButton),
               ),

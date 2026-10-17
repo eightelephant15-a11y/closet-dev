@@ -271,7 +271,7 @@ abstract class AppLocalizations {
   /// No description provided for @ageBody.
   ///
   /// In en, this message translates to:
-  /// **'You must be 16 or older to use this app. We only record that you confirmed it, not your birth date.'**
+  /// **'You must be 16 or older to use this app.'**
   String get ageBody;
 
   /// No description provided for @ageConfirmButton.
@@ -2433,6 +2433,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{title}. Slide {n} of {total}'**
   String welcomeSlideLabel(String title, int n, int total);
+
+  /// No description provided for @ageEyebrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Age check'**
+  String get ageEyebrow;
+
+  /// No description provided for @ageNote.
+  ///
+  /// In en, this message translates to:
+  /// **'We only record that you confirmed it, not your birth date.'**
+  String get ageNote;
+
+  /// No description provided for @ageBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'16+'**
+  String get ageBadge;
 
   /// No description provided for @taxCatTop.
   ///

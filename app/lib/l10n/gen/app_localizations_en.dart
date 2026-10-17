@@ -104,8 +104,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ageTitle => 'Quick check';
 
   @override
-  String get ageBody =>
-      'You must be 16 or older to use this app. We only record that you confirmed it, not your birth date.';
+  String get ageBody => 'You must be 16 or older to use this app.';
 
   @override
   String get ageConfirmButton => 'I am 16 or older';
@@ -1357,6 +1356,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String welcomeSlideLabel(String title, int n, int total) {
     return '$title. Slide $n of $total';
   }
+
+  @override
+  String get ageEyebrow => 'Age check';
+
+  @override
+  String get ageNote =>
+      'We only record that you confirmed it, not your birth date.';
+
+  @override
+  String get ageBadge => '16+';
 
   @override
   String get taxCatTop => 'Top';

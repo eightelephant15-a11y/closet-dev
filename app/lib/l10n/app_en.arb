@@ -39,7 +39,7 @@
   "signInBody": "Sign in with Google to keep your wardrobe and preferences safe.",
   "signInFailed": "Sign-in didn't work. Please try again.",
   "ageTitle": "Quick check",
-  "ageBody": "You must be 16 or older to use this app. We only record that you confirmed it, not your birth date.",
+  "ageBody": "You must be 16 or older to use this app.",
   "ageConfirmButton": "I am 16 or older",
   "ageUnderButton": "I am under 16",
   "blockedTitle": "Thanks for stopping by",
@@ -736,6 +736,9 @@
       }
     }
   },
+  "ageEyebrow": "Age check",
+  "ageNote": "We only record that you confirmed it, not your birth date.",
+  "ageBadge": "16+",
   "taxCatTop": "Top",
   "taxSubTShirt": "T-shirt",
   "taxSubLongSleeveTee": "Long-sleeve tee",
