@@ -1587,6 +1587,83 @@ class AppLocalizationsEn extends AppLocalizations {
   String get capturePreviewTitle => 'Check the photo';
 
   @override
+  String get bulkHeadline => 'Choose up to 20 photos';
+
+  @override
+  String get bulkStepPick => '1. Pick';
+
+  @override
+  String get bulkStepUpload => '2. Upload';
+
+  @override
+  String get bulkStepReview => '3. Review';
+
+  @override
+  String get bulkPickCardTitle => 'Pick from your library';
+
+  @override
+  String get bulkPickCardBody =>
+      'Flat or hung garments in natural light work best.';
+
+  @override
+  String get bulkRowReady => 'Ready';
+
+  @override
+  String get uploadPrivacyNote =>
+      'Your photos are private and stored securely.';
+
+  @override
+  String get uploadDone => 'Done';
+
+  @override
+  String get limitCapacity => 'Closet capacity';
+
+  @override
+  String get limitTipsTitle => 'Ways to make room';
+
+  @override
+  String get limitTipArchiveTitle => 'Archive pieces you rarely wear';
+
+  @override
+  String get limitTipArchiveBody =>
+      'Archived items stay saved but do not use up your spots.';
+
+  @override
+  String get limitTipReviewTitle => 'Review flagged items';
+
+  @override
+  String limitTipReviewBody(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n items need a quick look. Some may be duplicates.',
+      one: '1 item needs a quick look. It may be a duplicate.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String limitViewArchived(int n) {
+    return 'View archived pieces ($n)';
+  }
+
+  @override
+  String get closetEmptySample => 'Or try the sample closet';
+
+  @override
+  String get closetTipsTitle => 'How it works';
+
+  @override
+  String get closetTip1 =>
+      'Lay the garment flat or hang it against a clear wall.';
+
+  @override
+  String get closetTip2 => 'We read the type, colours, pattern and season.';
+
+  @override
+  String get closetTip3 => 'Fix anything with a single tap.';
+
+  @override
   String get taxCatTop => 'Top';
 
   @override

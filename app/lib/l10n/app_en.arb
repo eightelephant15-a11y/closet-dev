@@ -866,6 +866,41 @@
   "captureBulkShort": "Bulk add",
   "captureCropBody": "Centre the garment and trim the plain background.",
   "capturePreviewTitle": "Check the photo",
+  "bulkHeadline": "Choose up to 20 photos",
+  "bulkStepPick": "1. Pick",
+  "bulkStepUpload": "2. Upload",
+  "bulkStepReview": "3. Review",
+  "bulkPickCardTitle": "Pick from your library",
+  "bulkPickCardBody": "Flat or hung garments in natural light work best.",
+  "bulkRowReady": "Ready",
+  "uploadPrivacyNote": "Your photos are private and stored securely.",
+  "uploadDone": "Done",
+  "limitCapacity": "Closet capacity",
+  "limitTipsTitle": "Ways to make room",
+  "limitTipArchiveTitle": "Archive pieces you rarely wear",
+  "limitTipArchiveBody": "Archived items stay saved but do not use up your spots.",
+  "limitTipReviewTitle": "Review flagged items",
+  "limitTipReviewBody": "{n, plural, =1{1 item needs a quick look. It may be a duplicate.} other{{n} items need a quick look. Some may be duplicates.}}",
+  "@limitTipReviewBody": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "limitViewArchived": "View archived pieces ({n})",
+  "@limitViewArchived": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "closetEmptySample": "Or try the sample closet",
+  "closetTipsTitle": "How it works",
+  "closetTip1": "Lay the garment flat or hang it against a clear wall.",
+  "closetTip2": "We read the type, colours, pattern and season.",
+  "closetTip3": "Fix anything with a single tap.",
   "taxCatTop": "Top",
   "taxSubTShirt": "T-shirt",
   "taxSubLongSleeveTee": "Long-sleeve tee",

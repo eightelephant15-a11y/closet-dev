@@ -2806,6 +2806,132 @@ abstract class AppLocalizations {
   /// **'Check the photo'**
   String get capturePreviewTitle;
 
+  /// No description provided for @bulkHeadline.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose up to 20 photos'**
+  String get bulkHeadline;
+
+  /// No description provided for @bulkStepPick.
+  ///
+  /// In en, this message translates to:
+  /// **'1. Pick'**
+  String get bulkStepPick;
+
+  /// No description provided for @bulkStepUpload.
+  ///
+  /// In en, this message translates to:
+  /// **'2. Upload'**
+  String get bulkStepUpload;
+
+  /// No description provided for @bulkStepReview.
+  ///
+  /// In en, this message translates to:
+  /// **'3. Review'**
+  String get bulkStepReview;
+
+  /// No description provided for @bulkPickCardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick from your library'**
+  String get bulkPickCardTitle;
+
+  /// No description provided for @bulkPickCardBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Flat or hung garments in natural light work best.'**
+  String get bulkPickCardBody;
+
+  /// No description provided for @bulkRowReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready'**
+  String get bulkRowReady;
+
+  /// No description provided for @uploadPrivacyNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Your photos are private and stored securely.'**
+  String get uploadPrivacyNote;
+
+  /// No description provided for @uploadDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get uploadDone;
+
+  /// No description provided for @limitCapacity.
+  ///
+  /// In en, this message translates to:
+  /// **'Closet capacity'**
+  String get limitCapacity;
+
+  /// No description provided for @limitTipsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Ways to make room'**
+  String get limitTipsTitle;
+
+  /// No description provided for @limitTipArchiveTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Archive pieces you rarely wear'**
+  String get limitTipArchiveTitle;
+
+  /// No description provided for @limitTipArchiveBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Archived items stay saved but do not use up your spots.'**
+  String get limitTipArchiveBody;
+
+  /// No description provided for @limitTipReviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Review flagged items'**
+  String get limitTipReviewTitle;
+
+  /// No description provided for @limitTipReviewBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{n, plural, =1{1 item needs a quick look. It may be a duplicate.} other{{n} items need a quick look. Some may be duplicates.}}'**
+  String limitTipReviewBody(int n);
+
+  /// No description provided for @limitViewArchived.
+  ///
+  /// In en, this message translates to:
+  /// **'View archived pieces ({n})'**
+  String limitViewArchived(int n);
+
+  /// No description provided for @closetEmptySample.
+  ///
+  /// In en, this message translates to:
+  /// **'Or try the sample closet'**
+  String get closetEmptySample;
+
+  /// No description provided for @closetTipsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'How it works'**
+  String get closetTipsTitle;
+
+  /// No description provided for @closetTip1.
+  ///
+  /// In en, this message translates to:
+  /// **'Lay the garment flat or hang it against a clear wall.'**
+  String get closetTip1;
+
+  /// No description provided for @closetTip2.
+  ///
+  /// In en, this message translates to:
+  /// **'We read the type, colours, pattern and season.'**
+  String get closetTip2;
+
+  /// No description provided for @closetTip3.
+  ///
+  /// In en, this message translates to:
+  /// **'Fix anything with a single tap.'**
+  String get closetTip3;
+
   /// No description provided for @taxCatTop.
   ///
   /// In en, this message translates to:

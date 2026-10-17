@@ -122,6 +122,10 @@ abstract final class AppTheme {
         backgroundColor: scheme.primary,
         foregroundColor: scheme.onPrimary,
         extendedTextStyle: text.labelLarge,
+        elevation: 2,
+        focusElevation: 2,
+        hoverElevation: 3,
+        highlightElevation: 3,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(RadiusTokens.lg),
         ),

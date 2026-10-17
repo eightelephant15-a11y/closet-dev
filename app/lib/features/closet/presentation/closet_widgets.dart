@@ -9,6 +9,7 @@ import 'package:stylist/features/closet/domain/garment.dart';
 import 'package:stylist/features/closet/domain/taxonomy.dart';
 import 'package:stylist/features/closet/domain/taxonomy_labels.dart';
 import 'package:stylist/l10n/gen/app_localizations.dart';
+import 'package:stylist/shared/widgets/atelier.dart';
 import 'package:stylist/theme/tokens.dart';
 
 /// "Navy Jeans", or just the type / category when the AI has not filled the rest in yet.
@@ -309,12 +310,13 @@ class UploadSheet extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
+    final scheme = Theme.of(context).colorScheme;
     final items = ref.watch(uploadItemsProvider).valueOrNull ?? const [];
     final queue = ref.read(uploadQueueProvider);
     return SafeArea(
       child: ConstrainedBox(
         constraints: BoxConstraints(
-          maxHeight: MediaQuery.sizeOf(context).height * 0.7,
+          maxHeight: MediaQuery.sizeOf(context).height * 0.8,
         ),
         child: ListView(
           shrinkWrap: true,
@@ -329,12 +331,29 @@ class UploadSheet extends ConsumerWidget {
               header: true,
               child: Text(
                 l10n.uploadSheetTitle,
-                style: Theme.of(context).textTheme.titleLarge,
+                style: Theme.of(context).textTheme.headlineMedium,
               ),
             ),
-            const SizedBox(height: Spacing.sm),
+            const SizedBox(height: Spacing.md),
             for (var i = 0; i < items.length; i++)
               _UploadRow(index: i + 1, item: items[i], queue: queue),
+            NoteCard(
+              icon: Icons.lock_outline,
+              child: Text(l10n.uploadPrivacyNote),
+            ),
+            const SizedBox(height: Spacing.md),
+            SizedBox(
+              width: double.infinity,
+              height: 52,
+              child: FilledButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text(l10n.uploadDone),
+              ),
+            ),
+            SizedBox(
+              height: Spacing.xs,
+              child: ColoredBox(color: scheme.surface),
+            ),
           ],
         ),
       ),
@@ -342,7 +361,7 @@ class UploadSheet extends ConsumerWidget {
   }
 }
 
-class _UploadRow extends StatelessWidget {
+class _UploadRow extends ConsumerWidget {
   const _UploadRow({
     required this.index,
     required this.item,
@@ -353,57 +372,152 @@ class _UploadRow extends StatelessWidget {
   final UploadQueue queue;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
+    final scheme = Theme.of(context).colorScheme;
+    final text = Theme.of(context).textTheme;
     final state = uploadStateLabel(l10n, item.state);
     final problem =
         item.state == UploadState.failed || item.state == UploadState.rejected;
     final percent = (item.progress * 100).round();
-    return Semantics(
-      container: true,
-      label: l10n.uploadItemLabel(index, state),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: Spacing.xs),
-        child: Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: Spacing.sm),
+      child: Semantics(
+        container: true,
+        label: l10n.uploadItemLabel(index, state),
+        child: Container(
+          padding: const EdgeInsets.all(Spacing.sm + 4),
+          decoration: BoxDecoration(
+            color: problem
+                ? scheme.errorContainer.withValues(alpha: 0.6)
+                : scheme.surfaceContainerLow,
+            borderRadius: BorderRadius.circular(RadiusTokens.lg),
+            border: Border.all(color: scheme.outlineVariant),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
                 children: [
                   ExcludeSemantics(
-                    child: Text(
-                      '$index. ${item.filename}',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(RadiusTokens.md),
+                      child: SizedBox(
+                        width: 52,
+                        height: 52,
+                        child: _QueuedThumb(photoKey: item.photoKey),
+                      ),
                     ),
                   ),
-                  ExcludeSemantics(
-                    child: Text(
-                      problem ? uploadErrorLabel(l10n, item.errorCode) : state,
-                      style: Theme.of(context).textTheme.bodySmall,
+                  const SizedBox(width: Spacing.md),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ExcludeSemantics(
+                          child: Text(
+                            item.filename,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: text.titleSmall,
+                          ),
+                        ),
+                        ExcludeSemantics(
+                          child: Text(
+                            problem
+                                ? uploadErrorLabel(l10n, item.errorCode)
+                                : state,
+                            style: text.bodySmall?.copyWith(
+                              color: problem
+                                  ? scheme.onErrorContainer
+                                  : scheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   if (item.state == UploadState.uploading)
-                    Semantics(
-                      label: l10n.uploadProgressLabel(percent),
-                      child: LinearProgressIndicator(value: item.progress),
+                    Text(
+                      '$percent%',
+                      style: text.labelLarge?.copyWith(color: scheme.primary),
                     ),
                 ],
               ),
-            ),
-            if (problem && item.state == UploadState.failed)
-              TextButton(
-                onPressed: () => unawaited(queue.retry(item.clientId)),
-                child: Text(l10n.uploadRetry),
-              ),
-            if (problem)
-              TextButton(
-                onPressed: () => unawaited(queue.remove(item.clientId)),
-                child: Text(l10n.uploadRemove),
-              ),
-          ],
+              if (item.state == UploadState.uploading) ...[
+                const SizedBox(height: Spacing.sm),
+                Semantics(
+                  label: l10n.uploadProgressLabel(percent),
+                  child: ExcludeSemantics(
+                    child: LinearProgressIndicator(
+                      value: item.progress,
+                      minHeight: 6,
+                      borderRadius: BorderRadius.circular(3),
+                    ),
+                  ),
+                ),
+              ],
+              if (problem) ...[
+                const SizedBox(height: Spacing.sm),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () => unawaited(queue.remove(item.clientId)),
+                      child: Text(l10n.uploadRemove),
+                    ),
+                    if (item.state == UploadState.failed) ...[
+                      const SizedBox(width: Spacing.sm),
+                      OutlinedButton.icon(
+                        style: OutlinedButton.styleFrom(
+                          backgroundColor: scheme.surfaceContainerLowest,
+                          foregroundColor: scheme.primary,
+                        ),
+                        onPressed: () => unawaited(queue.retry(item.clientId)),
+                        icon: const Icon(Icons.refresh, size: 18),
+                        label: Text(l10n.uploadRetry),
+                      ),
+                    ],
+                  ],
+                ),
+              ],
+            ],
+          ),
         ),
       ),
     );
+  }
+}
+
+/// The photo waiting in the upload queue (read from the local queue store).
+class _QueuedThumb extends ConsumerStatefulWidget {
+  const _QueuedThumb({required this.photoKey});
+  final String photoKey;
+
+  @override
+  ConsumerState<_QueuedThumb> createState() => _QueuedThumbState();
+}
+
+class _QueuedThumbState extends ConsumerState<_QueuedThumb> {
+  Uint8List? _bytes;
+
+  @override
+  void initState() {
+    super.initState();
+    unawaited(
+      ref.read(queueBlobStoreProvider).get(widget.photoKey).then((b) {
+        if (mounted && b != null) setState(() => _bytes = b);
+      }),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final b = _bytes;
+    return b == null
+        ? ColoredBox(
+            color: Theme.of(context).colorScheme.surfaceContainerHighest,
+          )
+        : Image.memory(b, fit: BoxFit.cover, cacheWidth: 156);
   }
 }

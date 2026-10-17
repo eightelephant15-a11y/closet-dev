@@ -15,6 +15,7 @@ import 'package:stylist/features/closet/presentation/closet_routes.dart';
 import 'package:stylist/features/closet/presentation/closet_widgets.dart';
 import 'package:stylist/features/closet/presentation/garment_fields_editor.dart';
 import 'package:stylist/l10n/gen/app_localizations.dart';
+import 'package:stylist/shared/widgets/atelier.dart';
 import 'package:stylist/shared/widgets/state_views.dart';
 import 'package:stylist/theme/tokens.dart';
 
@@ -154,12 +155,14 @@ class _ClosetScreenState extends ConsumerState<ClosetScreen> {
             ),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        heroTag: null,
-        onPressed: () => context.push(ClosetRoutes.add),
-        icon: const Icon(Icons.add_a_photo_outlined),
-        label: Text(l10n.closetAdd),
-      ),
+      floatingActionButton: _showFab(list.valueOrNull, query)
+          ? FloatingActionButton.extended(
+              heroTag: null,
+              onPressed: () => context.push(ClosetRoutes.add),
+              icon: const Icon(Icons.add_a_photo_outlined),
+              label: Text(l10n.closetAdd),
+            )
+          : null,
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () async {
@@ -184,6 +187,13 @@ class _ClosetScreenState extends ConsumerState<ClosetScreen> {
     );
   }
 }
+
+/// The floating "Add item" button hides on an empty closet, where the page has its own big button.
+bool _showFab(ClosetListState? state, ClosetQuery query) =>
+    !(state != null &&
+        state.items.isEmpty &&
+        query.isDefault &&
+        query.text.isEmpty);
 
 class _Grid extends ConsumerWidget {
   const _Grid({
@@ -257,42 +267,95 @@ class _Grid extends ConsumerWidget {
   }
 }
 
-class _Empty extends StatelessWidget {
+class _Empty extends ConsumerWidget {
   const _Empty({required this.filtered});
   final bool filtered;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
+    final scheme = Theme.of(context).colorScheme;
+    final text = Theme.of(context).textTheme;
+    if (filtered) {
+      return Padding(
+        padding: const EdgeInsets.all(Spacing.lg),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const ExcludeSemantics(child: Icon(Icons.search_off, size: 56)),
+            const SizedBox(height: Spacing.md),
+            Text(
+              l10n.closetNoMatches,
+              style: text.headlineMedium,
+              textAlign: TextAlign.center,
+            ),
+            TextButton(
+              onPressed: () => ref.read(closetQueryProvider.notifier).state =
+                  const ClosetQuery(),
+              child: Text(l10n.filterClear),
+            ),
+          ],
+        ),
+      );
+    }
     return Padding(
       padding: const EdgeInsets.all(Spacing.lg),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          ExcludeSemantics(
-            child: Icon(
-              filtered ? Icons.search_off : Icons.checkroom_outlined,
-              size: 56,
-            ),
-          ),
-          const SizedBox(height: Spacing.md),
+          const BadgeIcon(icon: Icons.checkroom_outlined),
+          const SizedBox(height: Spacing.lg),
           Text(
-            filtered ? l10n.closetNoMatches : l10n.closetEmptyTitle,
-            style: Theme.of(context).textTheme.titleLarge,
+            l10n.closetEmptyTitle,
+            style: text.headlineLarge,
             textAlign: TextAlign.center,
           ),
-          if (!filtered) ...[
-            const SizedBox(height: Spacing.sm),
-            Text(l10n.closetEmptyBody, textAlign: TextAlign.center),
-          ],
-          if (filtered)
-            Consumer(
-              builder: (context, ref, _) => TextButton(
-                onPressed: () => ref.read(closetQueryProvider.notifier).state =
-                    const ClosetQuery(),
-                child: Text(l10n.filterClear),
-              ),
+          const SizedBox(height: Spacing.sm),
+          Text(
+            l10n.closetEmptyBody,
+            textAlign: TextAlign.center,
+            style: text.bodyLarge?.copyWith(color: scheme.onSurfaceVariant),
+          ),
+          const SizedBox(height: Spacing.lg),
+          SizedBox(
+            width: double.infinity,
+            height: 52,
+            child: FilledButton.icon(
+              onPressed: () => context.push(ClosetRoutes.add),
+              icon: const Icon(Icons.add_a_photo_outlined),
+              label: Text(l10n.closetAdd),
             ),
+          ),
+          const SizedBox(height: Spacing.xs),
+          TextButton(
+            onPressed: () async {
+              await ref.read(garmentRepositoryProvider).seedSample();
+              ref
+                ..invalidate(closetSummaryProvider)
+                ..invalidate(closetItemsProvider);
+              await ref.read(closetListProvider.notifier).refresh();
+            },
+            child: Text(l10n.closetEmptySample),
+          ),
+          const SizedBox(height: Spacing.md),
+          NoteCard(
+            icon: Icons.auto_awesome_outlined,
+            title: l10n.closetTipsTitle,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                for (final (i, t) in [
+                  l10n.closetTip1,
+                  l10n.closetTip2,
+                  l10n.closetTip3,
+                ].indexed)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: Spacing.xs),
+                    child: Text('0${i + 1}  $t'),
+                  ),
+              ],
+            ),
+          ),
         ],
       ),
     );
