@@ -64,6 +64,8 @@ class _PermissionsScreenState extends ConsumerState<PermissionsScreen> {
                 child: PermissionPrimer(
                   key: ValueKey(_index),
                   kind: PermissionsScreen.kinds[_index],
+                  step: _index + 1,
+                  steps: PermissionsScreen.kinds.length,
                   onDone: () => _advanceFrom(_index + 1),
                 ),
               ),

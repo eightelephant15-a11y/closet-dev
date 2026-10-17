@@ -2488,6 +2488,84 @@ abstract class AppLocalizations {
   /// **'Black tie, bespoke tailoring, evening attire'**
   String get dressCodeDesc4;
 
+  /// No description provided for @permStep.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {n} of {total}'**
+  String permStep(int n, int total);
+
+  /// No description provided for @permNote.
+  ///
+  /// In en, this message translates to:
+  /// **'You can change this any time in your phone settings.'**
+  String get permNote;
+
+  /// No description provided for @firstItemsEyebrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Getting started'**
+  String get firstItemsEyebrow;
+
+  /// No description provided for @ruleTitleTops.
+  ///
+  /// In en, this message translates to:
+  /// **'Tops'**
+  String get ruleTitleTops;
+
+  /// No description provided for @ruleTitleBottoms.
+  ///
+  /// In en, this message translates to:
+  /// **'Bottoms'**
+  String get ruleTitleBottoms;
+
+  /// No description provided for @ruleTitleShoes.
+  ///
+  /// In en, this message translates to:
+  /// **'Shoes'**
+  String get ruleTitleShoes;
+
+  /// No description provided for @ruleTitleDress.
+  ///
+  /// In en, this message translates to:
+  /// **'A dress'**
+  String get ruleTitleDress;
+
+  /// No description provided for @ruleCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{have} of {need} added'**
+  String ruleCount(int have, int need);
+
+  /// No description provided for @ruleRowLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{title}, {count}'**
+  String ruleRowLabel(String title, String count);
+
+  /// No description provided for @firstItemsAway.
+  ///
+  /// In en, this message translates to:
+  /// **'{n, plural, =1{You are 1 piece away from your first outfit.} other{You are {n} pieces away from your first outfit.}}'**
+  String firstItemsAway(int n);
+
+  /// No description provided for @firstItemsLocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Add more items to unlock your first look'**
+  String get firstItemsLocked;
+
+  /// No description provided for @outfitWhyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Why this works'**
+  String get outfitWhyTitle;
+
+  /// No description provided for @firstOutfitSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Built from the pieces you just added.'**
+  String get firstOutfitSubtitle;
+
   /// No description provided for @taxCatTop.
   ///
   /// In en, this message translates to:

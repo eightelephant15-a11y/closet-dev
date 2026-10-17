@@ -52,5 +52,15 @@ class UnlockProgress {
   bool get isUnlocked =>
       shoes >= 1 && ((tops >= 2 && bottoms >= 2) || dresses >= 1);
 
+  /// How many more items the user needs before the first outfit unlocks (the cheaper of the two ways).
+  int get itemsAway {
+    if (isUnlocked) return 0;
+    int need(int want, int have) => want > have ? want - have : 0;
+    final shoesNeeded = need(1, shoes);
+    final separates = need(2, tops) + need(2, bottoms) + shoesNeeded;
+    final dress = need(1, dresses) + shoesNeeded;
+    return separates < dress ? separates : dress;
+  }
+
   double get ringProgress => (total / firstItemsTarget).clamp(0, 1).toDouble();
 }

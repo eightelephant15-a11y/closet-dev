@@ -166,7 +166,7 @@ Uint8List _defaultJpeg() {
 
 /// Larger surface so screens don't need scrolling in tests.
 void useTallScreen(WidgetTester tester) {
-  tester.view.physicalSize = const Size(900, 2400);
+  tester.view.physicalSize = const Size(900, 4200);
   tester.view.devicePixelRatio = 2;
   addTearDown(tester.view.reset);
 }

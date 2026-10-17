@@ -7,6 +7,7 @@ import 'package:stylist/features/auth/application/session_controller.dart';
 import 'package:stylist/features/auth/domain/auth_provider.dart';
 import 'package:stylist/features/closet/application/closet_providers.dart';
 import 'package:stylist/features/closet/domain/closet_item.dart';
+import 'package:stylist/features/closet/presentation/closet_widgets.dart';
 import 'package:stylist/features/closet/domain/taxonomy_labels.dart';
 import 'package:stylist/features/onboarding/application/onboarding_controller.dart';
 import 'package:stylist/features/onboarding/domain/onboarding_step.dart';
@@ -14,6 +15,7 @@ import 'package:stylist/features/onboarding/domain/preference_model.dart';
 import 'package:stylist/features/recommendation/domain/recommendation.dart';
 import 'package:stylist/l10n/gen/app_localizations.dart';
 import 'package:stylist/shared/l10n/labels.dart';
+import 'package:stylist/shared/widgets/atelier.dart';
 import 'package:stylist/shared/widgets/state_views.dart';
 import 'package:stylist/theme/tokens.dart';
 
@@ -72,10 +74,6 @@ class _FirstOutfitScreenState extends ConsumerState<FirstOutfitScreen> {
       }
     });
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.firstOutfitTitle),
-        automaticallyImplyLeading: false,
-      ),
       body: PageBody(
         child: outfits.when(
           loading: () => const LoadingView(),
@@ -110,8 +108,21 @@ class _FirstOutfitScreenState extends ConsumerState<FirstOutfitScreen> {
               }
             });
             final all = [data.primary, ...data.alternatives];
+            final text = Theme.of(context).textTheme;
             return ListView(
               children: [
+                Semantics(
+                  header: true,
+                  child: Text(l10n.firstOutfitTitle, style: text.headlineLarge),
+                ),
+                const SizedBox(height: Spacing.xs),
+                Text(
+                  l10n.firstOutfitSubtitle,
+                  style: text.bodyLarge?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(height: Spacing.lg),
                 for (var i = 0; i < all.length; i++) ...[
                   if (i == 1)
                     Padding(
@@ -171,80 +182,215 @@ class OutfitCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final scheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
+    final text = Theme.of(context).textTheme;
+    final names = [for (final i in outfit.items) _itemName(l10n, i)];
     return Semantics(
       container: true,
-      label: l10n.outfitLabel(index + 1),
-      child: Card(
-        elevation: 0,
-        margin: EdgeInsets.zero,
-        color: prominent
-            ? scheme.primary.withValues(alpha: 0.08)
-            : scheme.surface,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(RadiusTokens.lg),
-          side: BorderSide(
+      label: '${l10n.outfitLabel(index + 1)}: ${names.join(', ')}',
+      child: Container(
+        padding: const EdgeInsets.all(Spacing.md),
+        decoration: BoxDecoration(
+          color: scheme.surfaceContainerLowest,
+          borderRadius: BorderRadius.circular(RadiusTokens.xl),
+          border: Border.all(
             color: prominent ? scheme.primary : scheme.outlineVariant,
+            width: prominent ? 2 : 1,
           ),
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(Spacing.md),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(l10n.outfitLabel(index + 1), style: textTheme.titleLarge),
-              const SizedBox(height: Spacing.sm),
-              for (final item in outfit.items)
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: Spacing.xs),
-                  child: Row(
-                    children: [
-                      ExcludeSemantics(
-                        child: Icon(
-                          _icon(item.category),
-                          color: scheme.primary,
-                        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(l10n.outfitLabel(index + 1), style: text.titleLarge),
+            const SizedBox(height: Spacing.sm + 4),
+            if (prominent)
+              _PhotoGrid(items: outfit.items)
+            else
+              _PhotoStrip(items: outfit.items),
+            const SizedBox(height: Spacing.sm + 4),
+            NoteCard(
+              icon: Icons.edit_outlined,
+              title: l10n.outfitWhyTitle,
+              child: Text(
+                l10n.why(outfit.why),
+                style: const TextStyle(fontStyle: FontStyle.italic),
+              ),
+            ),
+            const SizedBox(height: Spacing.sm + 4),
+            SizedBox(
+              width: double.infinity,
+              child: prominent
+                  ? FilledButton.icon(
+                      onPressed: saved ? null : onSave,
+                      icon: Icon(
+                        saved ? Icons.bookmark : Icons.bookmark_border,
                       ),
-                      const SizedBox(width: Spacing.sm),
-                      Expanded(
-                        child: Text(
-                          _itemName(l10n, item),
-                          style: textTheme.bodyLarge,
+                      label: Text(saved ? l10n.outfitSaved : l10n.saveOutfit),
+                    )
+                  : OutlinedButton.icon(
+                      onPressed: saved ? null : onSave,
+                      icon: Icon(
+                        saved ? Icons.bookmark : Icons.bookmark_border,
+                      ),
+                      label: Text(saved ? l10n.outfitSaved : l10n.saveOutfit),
+                    ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+String _categoryId(ItemCategory c) => switch (c) {
+  ItemCategory.top => 'top',
+  ItemCategory.bottom => 'bottom',
+  ItemCategory.shoes => 'footwear',
+  ItemCategory.dress => 'dress',
+  ItemCategory.outerwear => 'outerwear',
+};
+
+/// One garment picture: the bundled sample image or the user's uploaded photo.
+class _ItemPhoto extends StatelessWidget {
+  const _ItemPhoto({required this.item});
+  final ClosetItem item;
+
+  @override
+  Widget build(BuildContext context) {
+    if (item.sampleAsset != null) {
+      return Image.asset(
+        'assets/sample_closet/${item.sampleAsset}.webp',
+        fit: BoxFit.cover,
+        excludeFromSemantics: true,
+      );
+    }
+    return GarmentImageView(imageId: item.imageId, url: item.thumbUrl);
+  }
+}
+
+/// Large photos with the category and name on a label strip, two per row.
+class _PhotoGrid extends StatelessWidget {
+  const _PhotoGrid({required this.items});
+  final List<ClosetItem> items;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final scheme = Theme.of(context).colorScheme;
+    final text = Theme.of(context).textTheme;
+    return LayoutBuilder(
+      builder: (context, box) {
+        const gap = Spacing.sm;
+        final half = (box.maxWidth - gap) / 2;
+        return Wrap(
+          spacing: gap,
+          runSpacing: gap,
+          children: [
+            for (var i = 0; i < items.length; i++)
+              SizedBox(
+                width: i == items.length - 1 && items.length.isOdd
+                    ? box.maxWidth
+                    : half,
+                height: i == items.length - 1 && items.length.isOdd
+                    ? half * 0.8
+                    : half * 1.1,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(RadiusTokens.lg),
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      ExcludeSemantics(child: _ItemPhoto(item: items[i])),
+                      Positioned(
+                        left: Spacing.sm,
+                        right: Spacing.sm,
+                        bottom: Spacing.sm,
+                        child: ExcludeSemantics(
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              color: scheme.surface.withValues(alpha: 0.9),
+                              borderRadius: BorderRadius.circular(
+                                RadiusTokens.sm,
+                              ),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: Spacing.sm,
+                                vertical: Spacing.xs + 2,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Eyebrow(
+                                    l10n.taxCategory(
+                                      _categoryId(items[i].category),
+                                    ),
+                                  ),
+                                  Text(
+                                    _itemName(l10n, items[i]),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: text.labelLarge?.copyWith(
+                                      color: scheme.onSurface,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ),
-              const SizedBox(height: Spacing.sm),
-              Text(
-                l10n.why(outfit.why),
-                style: textTheme.bodyMedium?.copyWith(
-                  fontStyle: FontStyle.italic,
-                ),
               ),
-              const SizedBox(height: Spacing.sm),
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton.icon(
-                  onPressed: saved ? null : onSave,
-                  icon: Icon(saved ? Icons.bookmark : Icons.bookmark_border),
-                  label: Text(saved ? l10n.outfitSaved : l10n.saveOutfit),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+          ],
+        );
+      },
     );
   }
+}
 
-  IconData _icon(ItemCategory c) => switch (c) {
-    ItemCategory.top => Icons.checkroom,
-    ItemCategory.bottom => Icons.straighten,
-    ItemCategory.shoes => Icons.hiking,
-    ItemCategory.dress => Icons.dry_cleaning,
-    ItemCategory.outerwear => Icons.layers_outlined,
-  };
+/// Small thumbnails side by side (alternatives) with names underneath.
+class _PhotoStrip extends StatelessWidget {
+  const _PhotoStrip({required this.items});
+  final List<ClosetItem> items;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final text = Theme.of(context).textTheme;
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        for (var i = 0; i < items.length; i++) ...[
+          if (i > 0) const SizedBox(width: Spacing.sm),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AspectRatio(
+                  aspectRatio: 1,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(RadiusTokens.md),
+                    child: ExcludeSemantics(child: _ItemPhoto(item: items[i])),
+                  ),
+                ),
+                const SizedBox(height: Spacing.xs),
+                ExcludeSemantics(
+                  child: Text(
+                    _itemName(l10n, items[i]),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: text.bodySmall,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ],
+    );
+  }
 }
 
 /// Shown only when a guest tries to save: upgrade to a Google account without losing data.

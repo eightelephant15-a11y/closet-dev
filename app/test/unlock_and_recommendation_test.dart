@@ -23,6 +23,46 @@ ClosetItem item(
 );
 
 void main() {
+  group('items away from unlocking', () {
+    UnlockProgress of(List<ClosetItem> items) => UnlockProgress.of(items);
+
+    test('empty closet needs the cheaper route (dress + shoes = 2)', () {
+      expect(of([]).itemsAway, 2);
+    });
+
+    test('counts what is missing', () {
+      expect(
+        of([
+          item('t1', ItemCategory.top),
+          item('b1', ItemCategory.bottom),
+        ]).itemsAway,
+        2,
+        reason:
+            'one dress + shoes also costs 2; separates need top, bottom, shoes',
+      );
+      expect(
+        of([
+          item('t1', ItemCategory.top),
+          item('t2', ItemCategory.top),
+          item('b1', ItemCategory.bottom),
+          item('b2', ItemCategory.bottom),
+        ]).itemsAway,
+        1,
+      );
+      expect(of([item('s1', ItemCategory.shoes)]).itemsAway, 1);
+    });
+
+    test('zero once unlocked', () {
+      expect(
+        of([
+          item('d', ItemCategory.dress),
+          item('s', ItemCategory.shoes),
+        ]).itemsAway,
+        0,
+      );
+    });
+  });
+
   group('unlock rule', () {
     test('2 tops + 2 bottoms + shoes unlocks', () {
       final p = UnlockProgress.of([

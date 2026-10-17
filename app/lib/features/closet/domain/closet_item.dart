@@ -16,6 +16,9 @@ class ClosetItem {
     this.tags = const [],
     this.subcategory,
     this.colorId,
+    this.sampleAsset,
+    this.imageId,
+    this.thumbUrl,
   });
 
   factory ClosetItem.fromJson(Map<String, dynamic> j) => ClosetItem(
@@ -45,6 +48,11 @@ class ClosetItem {
   /// Taxonomy ids, for showing a localised name ("Navy jeans").
   final String? subcategory;
   final String? colorId;
+
+  /// Where the picture comes from (a bundled sample image, or an uploaded photo). Not persisted.
+  final String? sampleAsset;
+  final String? imageId;
+  final String? thumbUrl;
 
   Map<String, dynamic> toJson() => {
     'id': id,

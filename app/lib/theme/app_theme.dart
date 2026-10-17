@@ -142,6 +142,23 @@ abstract final class AppTheme {
           borderSide: BorderSide(color: scheme.primary, width: 2),
         ),
       ),
+      segmentedButtonTheme: SegmentedButtonThemeData(
+        style: ButtonStyle(
+          minimumSize: const WidgetStatePropertyAll(minSize),
+          side: WidgetStatePropertyAll(hairline),
+          textStyle: WidgetStatePropertyAll(text.labelLarge),
+          backgroundColor: WidgetStateProperty.resolveWith(
+            (s) => s.contains(WidgetState.selected)
+                ? scheme.primary.withValues(alpha: 0.10)
+                : scheme.surfaceContainerLowest,
+          ),
+          foregroundColor: WidgetStateProperty.resolveWith(
+            (s) => s.contains(WidgetState.selected)
+                ? scheme.primary
+                : scheme.onSurface,
+          ),
+        ),
+      ),
       progressIndicatorTheme: ProgressIndicatorThemeData(
         color: scheme.primary,
         linearTrackColor: scheme.surfaceContainerHigh,

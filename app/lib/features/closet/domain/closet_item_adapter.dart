@@ -12,6 +12,9 @@ ClosetItem? closetItemFromParts({
   required String? subcategory,
   required String? primaryColor,
   required int? formality,
+  String? sampleAsset,
+  String? imageId,
+  String? thumbUrl,
 }) {
   if (category == null || primaryColor == null) {
     return null;
@@ -60,6 +63,9 @@ ClosetItem? closetItemFromParts({
     tags: tags,
     subcategory: subcategory,
     colorId: primaryColor,
+    sampleAsset: sampleAsset,
+    imageId: imageId,
+    thumbUrl: thumbUrl,
   );
 }
 
@@ -86,6 +92,9 @@ ClosetItem? closetItemFromSummary(GarmentSummary g) {
     subcategory: g.subcategory,
     primaryColor: g.primaryColor,
     formality: g.formality,
+    sampleAsset: g.isSample ? g.sampleAsset : null,
+    imageId: g.imageVersion,
+    thumbUrl: g.thumbUrl,
   );
 }
 
@@ -98,5 +107,6 @@ List<ClosetItem> closetItemsFromSample() => [
       subcategory: s.subcategory,
       primaryColor: s.primaryColor,
       formality: s.formality,
+      sampleAsset: s.asset,
     ),
 ];

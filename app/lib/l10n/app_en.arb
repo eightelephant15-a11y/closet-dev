@@ -752,6 +752,56 @@
   "dressCodeDesc2": "Tailored trousers, unconstructed blazers, loafers",
   "dressCodeDesc3": "Crisp button-downs, formal suiting, structured leather",
   "dressCodeDesc4": "Black tie, bespoke tailoring, evening attire",
+  "permStep": "Step {n} of {total}",
+  "@permStep": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "permNote": "You can change this any time in your phone settings.",
+  "firstItemsEyebrow": "Getting started",
+  "ruleTitleTops": "Tops",
+  "ruleTitleBottoms": "Bottoms",
+  "ruleTitleShoes": "Shoes",
+  "ruleTitleDress": "A dress",
+  "ruleCount": "{have} of {need} added",
+  "@ruleCount": {
+    "placeholders": {
+      "have": {
+        "type": "int"
+      },
+      "need": {
+        "type": "int"
+      }
+    }
+  },
+  "ruleRowLabel": "{title}, {count}",
+  "@ruleRowLabel": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "firstItemsAway": "{n, plural, =1{You are 1 piece away from your first outfit.} other{You are {n} pieces away from your first outfit.}}",
+  "@firstItemsAway": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "firstItemsLocked": "Add more items to unlock your first look",
+  "outfitWhyTitle": "Why this works",
+  "firstOutfitSubtitle": "Built from the pieces you just added.",
   "taxCatTop": "Top",
   "taxSubTShirt": "T-shirt",
   "taxSubLongSleeveTee": "Long-sleeve tee",

@@ -193,9 +193,10 @@ void main() {
       await allowPermissions(tester);
       expect(find.text('Add your first 10 items'), findsWidgets);
       expect(find.text('0 of 10 items'), findsWidgets);
-      expect(find.text('Tops: 0 of 2'), findsOneWidget);
-      expect(find.text('Bottoms: 0 of 2'), findsOneWidget);
-      expect(find.text('A dress: 0 of 1'), findsOneWidget);
+      expect(find.text('Tops'), findsOneWidget);
+      expect(find.text('0 of 2 added'), findsNWidgets(2));
+      expect(find.text('Bottoms'), findsOneWidget);
+      expect(find.text('A dress'), findsOneWidget);
       final see = tester.widget<FilledButton>(
         find.widgetWithText(FilledButton, 'See my first outfit'),
       );

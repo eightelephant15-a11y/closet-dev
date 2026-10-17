@@ -9,6 +9,7 @@ import 'package:stylist/features/closet/presentation/closet_routes.dart';
 import 'package:stylist/features/closet/presentation/closet_widgets.dart';
 import 'package:stylist/features/onboarding/application/onboarding_controller.dart';
 import 'package:stylist/l10n/gen/app_localizations.dart';
+import 'package:stylist/shared/widgets/atelier.dart';
 import 'package:stylist/shared/widgets/state_views.dart';
 import 'package:stylist/theme/tokens.dart';
 
@@ -59,13 +60,27 @@ class _FirstItemsScreenState extends ConsumerState<FirstItemsScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final textTheme = Theme.of(context).textTheme;
+    final scheme = Theme.of(context).colorScheme;
+    final text = Theme.of(context).textTheme;
     final p = _progress;
+    final big = MediaQuery.textScalerOf(context).scale(1) > 1.3;
+    Widget pair(Widget a, Widget b) => big
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              a,
+              const SizedBox(height: Spacing.sm),
+              b,
+            ],
+          )
+        : Row(
+            children: [
+              Expanded(child: a),
+              const SizedBox(width: Spacing.sm),
+              Expanded(child: b),
+            ],
+          );
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.firstItemsTitle),
-        automaticallyImplyLeading: false,
-      ),
       body: PageBody(
         child: _failed
             ? ErrorView(message: l10n.errorGeneric, onRetry: _load)
@@ -73,64 +88,121 @@ class _FirstItemsScreenState extends ConsumerState<FirstItemsScreen> {
             ? const LoadingView()
             : ListView(
                 children: [
-                  Text(l10n.firstItemsBody, style: textTheme.bodyLarge),
+                  Eyebrow(l10n.firstItemsEyebrow, align: TextAlign.center),
+                  const SizedBox(height: Spacing.xs),
+                  Semantics(
+                    header: true,
+                    child: Text(
+                      l10n.firstItemsTitle,
+                      textAlign: TextAlign.center,
+                      style: text.headlineLarge,
+                    ),
+                  ),
+                  const SizedBox(height: Spacing.sm),
+                  Text(
+                    l10n.firstItemsBody,
+                    textAlign: TextAlign.center,
+                    style: text.bodyLarge?.copyWith(
+                      color: scheme.onSurfaceVariant,
+                    ),
+                  ),
                   const SizedBox(height: Spacing.lg),
                   Center(child: _ProgressRing(progress: p)),
+                  const SizedBox(height: Spacing.md),
+                  Semantics(
+                    liveRegion: true,
+                    child: NoteCard(
+                      icon: p.isUnlocked
+                          ? Icons.check_circle_outline
+                          : Icons.auto_awesome_outlined,
+                      child: Text(
+                        p.isUnlocked
+                            ? l10n.firstItemsUnlocked
+                            : l10n.firstItemsAway(p.itemsAway),
+                      ),
+                    ),
+                  ),
                   const SizedBox(height: Spacing.lg),
-                  Text(l10n.unlockRuleTitle, style: textTheme.titleLarge),
+                  Semantics(
+                    header: true,
+                    child: Text(l10n.unlockRuleTitle, style: text.titleLarge),
+                  ),
                   const SizedBox(height: Spacing.sm),
                   _Rule(
-                    label: l10n.ruleTops(p.tops.clamp(0, 2)),
-                    done: p.tops >= 2,
+                    icon: Icons.checkroom_outlined,
+                    title: l10n.ruleTitleTops,
+                    have: p.tops,
+                    need: 2,
                   ),
                   _Rule(
-                    label: l10n.ruleBottoms(p.bottoms.clamp(0, 2)),
-                    done: p.bottoms >= 2,
+                    icon: Icons.straighten_outlined,
+                    title: l10n.ruleTitleBottoms,
+                    have: p.bottoms,
+                    need: 2,
                   ),
                   _Rule(
-                    label: l10n.ruleShoes(p.shoes.clamp(0, 1)),
-                    done: p.shoes >= 1,
+                    icon: Icons.hiking_outlined,
+                    title: l10n.ruleTitleShoes,
+                    have: p.shoes,
+                    need: 1,
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: Spacing.xs),
-                    child: Text(l10n.unlockRuleOr, style: textTheme.labelLarge),
+                    child: Center(
+                      child: Eyebrow(
+                        l10n.unlockRuleOr,
+                        color: scheme.onSurfaceVariant,
+                      ),
+                    ),
                   ),
                   _Rule(
-                    label: l10n.ruleDress(p.dresses.clamp(0, 1)),
-                    done: p.dresses >= 1,
+                    icon: Icons.dry_cleaning_outlined,
+                    title: l10n.ruleTitleDress,
+                    have: p.dresses,
+                    need: 1,
                   ),
                   _Rule(
-                    label: l10n.ruleShoes(p.shoes.clamp(0, 1)),
-                    done: p.shoes >= 1,
+                    icon: Icons.hiking_outlined,
+                    title: l10n.ruleTitleShoes,
+                    have: p.shoes,
+                    need: 1,
                   ),
                   const SizedBox(height: Spacing.lg),
-                  if (p.isUnlocked)
-                    Semantics(
-                      liveRegion: true,
-                      child: Text(
-                        l10n.firstItemsUnlocked,
-                        style: textTheme.titleMedium,
+                  if (!p.isUnlocked) ...[
+                    SizedBox(
+                      width: double.infinity,
+                      child: FilledButton.tonal(
+                        style: FilledButton.styleFrom(
+                          backgroundColor: scheme.surfaceContainerHigh,
+                          foregroundColor: scheme.onSurface,
+                        ),
+                        onPressed: _busy ? null : () => _load(useSample: true),
+                        child: Text(l10n.useSampleCloset),
                       ),
-                    )
-                  else
-                    Text(l10n.firstItemsHint),
-                  const SizedBox(height: Spacing.md),
-                  if (!p.isUnlocked)
-                    FilledButton(
-                      onPressed: _busy ? null : () => _load(useSample: true),
-                      child: Text(l10n.useSampleCloset),
                     ),
-                  const SizedBox(height: Spacing.sm),
-                  OutlinedButton.icon(
-                    onPressed: () => _open(ClosetRoutes.add),
-                    icon: const Icon(Icons.add_a_photo_outlined),
-                    label: Text(l10n.addWithCamera),
-                  ),
-                  const SizedBox(height: Spacing.sm),
-                  OutlinedButton.icon(
-                    onPressed: () => _open(ClosetRoutes.addFromLibrary),
-                    icon: const Icon(Icons.photo_library_outlined),
-                    label: Text(l10n.firstItemsAddPhotos),
+                    const SizedBox(height: Spacing.sm),
+                  ],
+                  pair(
+                    SizedBox(
+                      height: 52,
+                      child: FilledButton.icon(
+                        onPressed: () => _open(ClosetRoutes.add),
+                        icon: const Icon(Icons.photo_camera_outlined),
+                        label: Text(l10n.addWithCamera),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 52,
+                      child: OutlinedButton.icon(
+                        style: OutlinedButton.styleFrom(
+                          backgroundColor: scheme.surfaceContainerLowest,
+                          foregroundColor: scheme.onSurface,
+                        ),
+                        onPressed: () => _open(ClosetRoutes.addFromLibrary),
+                        icon: const Icon(Icons.photo_library_outlined),
+                        label: Text(l10n.firstItemsAddPhotos),
+                      ),
+                    ),
                   ),
                   if (ref
                           .watch(uploadItemsProvider)
@@ -141,15 +213,34 @@ class _FirstItemsScreenState extends ConsumerState<FirstItemsScreen> {
                       padding: EdgeInsets.only(top: Spacing.sm),
                       child: UploadBanner(),
                     ),
-                  const SizedBox(height: Spacing.sm),
-                  FilledButton(
-                    onPressed: p.isUnlocked
-                        ? ref
-                              .read(onboardingControllerProvider.notifier)
-                              .completeFirstItems
-                        : null,
-                    child: Text(l10n.seeFirstOutfit),
+                  const SizedBox(height: Spacing.md),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 52,
+                    child: FilledButton.icon(
+                      onPressed: p.isUnlocked
+                          ? ref
+                                .read(onboardingControllerProvider.notifier)
+                                .completeFirstItems
+                          : null,
+                      icon: Icon(
+                        p.isUnlocked ? Icons.arrow_forward : Icons.lock_outline,
+                        size: 20,
+                      ),
+                      label: Text(l10n.seeFirstOutfit),
+                    ),
                   ),
+                  if (!p.isUnlocked)
+                    Padding(
+                      padding: const EdgeInsets.only(top: Spacing.xs),
+                      child: Text(
+                        l10n.firstItemsLocked,
+                        textAlign: TextAlign.center,
+                        style: text.bodySmall?.copyWith(
+                          color: scheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ),
                 ],
               ),
       ),
@@ -164,6 +255,7 @@ class _ProgressRing extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final scheme = Theme.of(context).colorScheme;
     final label = l10n.firstItemsProgress(
       progress.total.clamp(0, firstItemsTarget),
       firstItemsTarget,
@@ -173,8 +265,8 @@ class _ProgressRing extends StatelessWidget {
       value: '${(progress.ringProgress * 100).round()}%',
       child: ExcludeSemantics(
         child: SizedBox(
-          width: 140,
-          height: 140,
+          width: 168,
+          height: 168,
           child: Stack(
             alignment: Alignment.center,
             children: [
@@ -183,16 +275,20 @@ class _ProgressRing extends StatelessWidget {
                   tween: Tween(begin: 0, end: progress.ringProgress),
                   duration: MotionTokens.slow,
                   curve: MotionTokens.curve,
-                  builder: (_, v, _) =>
-                      CircularProgressIndicator(value: v, strokeWidth: 10),
+                  builder: (_, v, _) => CircularProgressIndicator(
+                    value: v,
+                    strokeWidth: 8,
+                    strokeCap: StrokeCap.round,
+                    backgroundColor: scheme.surfaceContainerHigh,
+                  ),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(Spacing.md),
+                padding: const EdgeInsets.all(Spacing.lg),
                 child: Text(
                   label,
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.labelLarge,
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),
             ],
@@ -203,25 +299,90 @@ class _ProgressRing extends StatelessWidget {
   }
 }
 
+/// One line of the unlock checklist: icon, name and a "2 of 2 added" pill (green when done).
 class _Rule extends StatelessWidget {
-  const _Rule({required this.label, required this.done});
-  final String label;
-  final bool done;
+  const _Rule({
+    required this.icon,
+    required this.title,
+    required this.have,
+    required this.need,
+  });
+  final IconData icon;
+  final String title;
+  final int have;
+  final int need;
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final scheme = Theme.of(context).colorScheme;
+    final text = Theme.of(context).textTheme;
+    final done = have >= need;
+    final count = l10n.ruleCount(have.clamp(0, need), need);
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: Spacing.xs),
-      child: Row(
-        children: [
-          Icon(
-            done ? Icons.check_circle : Icons.radio_button_unchecked,
-            color: done ? scheme.primary : scheme.outline,
+      padding: const EdgeInsets.only(bottom: Spacing.sm),
+      child: Semantics(
+        container: true,
+        label: l10n.ruleRowLabel(title, count),
+        excludeSemantics: true,
+        child: Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: Spacing.md,
+            vertical: Spacing.sm + 4,
           ),
-          const SizedBox(width: Spacing.sm),
-          Expanded(child: Text(label)),
-        ],
+          decoration: BoxDecoration(
+            color: scheme.surfaceContainerLow,
+            borderRadius: BorderRadius.circular(RadiusTokens.lg),
+            border: Border.all(color: scheme.outlineVariant),
+          ),
+          child: Row(
+            children: [
+              Icon(icon, color: scheme.primary),
+              const SizedBox(width: Spacing.sm + 4),
+              Expanded(child: Text(title, style: text.titleMedium)),
+              const SizedBox(width: Spacing.sm),
+              Flexible(
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: done
+                        ? scheme.secondaryContainer
+                        : scheme.surfaceContainerHigh,
+                    borderRadius: BorderRadius.circular(RadiusTokens.pill),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: Spacing.sm + 4,
+                      vertical: Spacing.xs + 1,
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (done) ...[
+                          Icon(
+                            Icons.check,
+                            size: 14,
+                            color: scheme.onSecondaryContainer,
+                          ),
+                          const SizedBox(width: Spacing.xs),
+                        ],
+                        Flexible(
+                          child: Text(
+                            count,
+                            style: text.labelMedium?.copyWith(
+                              color: done
+                                  ? scheme.onSecondaryContainer
+                                  : scheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

@@ -1390,6 +1390,59 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dressCodeDesc4 => 'Black tie, bespoke tailoring, evening attire';
 
   @override
+  String permStep(int n, int total) {
+    return 'Step $n of $total';
+  }
+
+  @override
+  String get permNote => 'You can change this any time in your phone settings.';
+
+  @override
+  String get firstItemsEyebrow => 'Getting started';
+
+  @override
+  String get ruleTitleTops => 'Tops';
+
+  @override
+  String get ruleTitleBottoms => 'Bottoms';
+
+  @override
+  String get ruleTitleShoes => 'Shoes';
+
+  @override
+  String get ruleTitleDress => 'A dress';
+
+  @override
+  String ruleCount(int have, int need) {
+    return '$have of $need added';
+  }
+
+  @override
+  String ruleRowLabel(String title, String count) {
+    return '$title, $count';
+  }
+
+  @override
+  String firstItemsAway(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'You are $n pieces away from your first outfit.',
+      one: 'You are 1 piece away from your first outfit.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get firstItemsLocked => 'Add more items to unlock your first look';
+
+  @override
+  String get outfitWhyTitle => 'Why this works';
+
+  @override
+  String get firstOutfitSubtitle => 'Built from the pieces you just added.';
+
+  @override
   String get taxCatTop => 'Top';
 
   @override
