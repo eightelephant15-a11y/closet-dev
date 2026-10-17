@@ -91,6 +91,36 @@ flutter:
   assets:
     - assets/sample_closet/
 
+  # Bundled so text looks the same offline and in tests. Both are variable fonts (SIL Open Font License,
+  # licences next to the files); each weight below selects that point on the wght axis.
+  fonts:
+    - family: Playfair Display
+      fonts:
+        - asset: assets/fonts/PlayfairDisplay-Variable.ttf
+          weight: 400
+        - asset: assets/fonts/PlayfairDisplay-Variable.ttf
+          weight: 500
+        - asset: assets/fonts/PlayfairDisplay-Variable.ttf
+          weight: 600
+        - asset: assets/fonts/PlayfairDisplay-Variable.ttf
+          weight: 700
+        - asset: assets/fonts/PlayfairDisplay-Italic-Variable.ttf
+          weight: 400
+          style: italic
+        - asset: assets/fonts/PlayfairDisplay-Italic-Variable.ttf
+          weight: 500
+          style: italic
+    - family: Plus Jakarta Sans
+      fonts:
+        - asset: assets/fonts/PlusJakartaSans-Variable.ttf
+          weight: 400
+        - asset: assets/fonts/PlusJakartaSans-Variable.ttf
+          weight: 500
+        - asset: assets/fonts/PlusJakartaSans-Variable.ttf
+          weight: 600
+        - asset: assets/fonts/PlusJakartaSans-Variable.ttf
+          weight: 700
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 

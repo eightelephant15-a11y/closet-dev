@@ -19,10 +19,8 @@ Future<void> seed(WidgetTester tester) async {
   await tester.pumpAndSettle();
 }
 
-Future<void> openFirstTile(WidgetTester tester, String name) async {
-  await tester.tap(find.text(name));
-  await tester.pumpAndSettle();
-}
+Future<void> openFirstTile(WidgetTester tester, String name) =>
+    scrollTap(tester, find.text(name));
 
 void main() {
   testWidgets('detail: favourite, unavailable with return date, archive', (
