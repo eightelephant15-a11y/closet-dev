@@ -142,6 +142,7 @@ class _ClosetScreenState extends ConsumerState<ClosetScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
+        heroTag: null,
         onPressed: () => context.push(ClosetRoutes.add),
         icon: const Icon(Icons.add_a_photo_outlined),
         label: Text(l10n.closetAdd),
@@ -744,7 +745,11 @@ class FilterSheet extends ConsumerWidget {
                 ),
               ],
             ),
-            Row(
+            Wrap(
+              alignment: WrapAlignment.spaceBetween,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: Spacing.sm,
+              runSpacing: Spacing.sm,
               children: [
                 TextButton(
                   onPressed:
@@ -755,7 +760,6 @@ class FilterSheet extends ConsumerWidget {
                             ClosetQuery(text: q.text, sort: q.sort),
                   child: Text(l10n.filterClear),
                 ),
-                const Spacer(),
                 FilledButton(
                   onPressed: () => Navigator.pop(context),
                   child: Text(l10n.filterApply(total)),

@@ -1284,6 +1284,34 @@ class AppLocalizationsEn extends AppLocalizations {
   String get firstItemsOpenCloset => 'Open my closet';
 
   @override
+  String get navHome => 'Home';
+
+  @override
+  String get navCloset => 'My Closet';
+
+  @override
+  String get navOutfits => 'Outfits';
+
+  @override
+  String get navSettings => 'Settings';
+
+  @override
+  String get outfitsTitle => 'Outfits';
+
+  @override
+  String get outfitsSoonTitle => 'Curated outfits are on the way';
+
+  @override
+  String get outfitsSoonBody =>
+      'Once your closet has a few pieces, your stylist will build outfits here from clothes you already own. Keep adding items.';
+
+  @override
+  String get outfitsSoonCta => 'Open my closet';
+
+  @override
+  String get brandEyebrow => 'STYLIST';
+
+  @override
   String get taxCatTop => 'Top';
 
   @override

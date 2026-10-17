@@ -203,7 +203,7 @@ Future<void> closetTour(WidgetTester tester) async {
 
   await tapVisible(tester, find.byTooltip('Filters'));
   await audit(tester, 'filter sheet');
-  tester.state<NavigatorState>(find.byType(Navigator).first).pop();
+  Navigator.of(tester.element(find.text('Filters').first)).pop();
   await tester.pumpAndSettle();
 
   await tapVisible(tester, find.byTooltip('Search your closet'));

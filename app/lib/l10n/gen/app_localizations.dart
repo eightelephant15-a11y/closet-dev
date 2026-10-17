@@ -2302,6 +2302,60 @@ abstract class AppLocalizations {
   /// **'Open my closet'**
   String get firstItemsOpenCloset;
 
+  /// No description provided for @navHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get navHome;
+
+  /// No description provided for @navCloset.
+  ///
+  /// In en, this message translates to:
+  /// **'My Closet'**
+  String get navCloset;
+
+  /// No description provided for @navOutfits.
+  ///
+  /// In en, this message translates to:
+  /// **'Outfits'**
+  String get navOutfits;
+
+  /// No description provided for @navSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get navSettings;
+
+  /// No description provided for @outfitsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Outfits'**
+  String get outfitsTitle;
+
+  /// No description provided for @outfitsSoonTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Curated outfits are on the way'**
+  String get outfitsSoonTitle;
+
+  /// No description provided for @outfitsSoonBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Once your closet has a few pieces, your stylist will build outfits here from clothes you already own. Keep adding items.'**
+  String get outfitsSoonBody;
+
+  /// No description provided for @outfitsSoonCta.
+  ///
+  /// In en, this message translates to:
+  /// **'Open my closet'**
+  String get outfitsSoonCta;
+
+  /// No description provided for @brandEyebrow.
+  ///
+  /// In en, this message translates to:
+  /// **'STYLIST'**
+  String get brandEyebrow;
+
   /// No description provided for @taxCatTop.
   ///
   /// In en, this message translates to:

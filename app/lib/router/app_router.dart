@@ -28,9 +28,11 @@ import 'package:stylist/features/onboarding/presentation/quiz_screen.dart';
 import 'package:stylist/features/onboarding/presentation/splash_screen.dart';
 import 'package:stylist/features/onboarding/presentation/welcome_screen.dart';
 import 'package:stylist/features/optional/optional_screens.dart';
+import 'package:stylist/features/outfits/outfits_screen.dart';
 import 'package:stylist/features/permissions/permissions_screen.dart';
 import 'package:stylist/features/settings/restore_screen.dart';
 import 'package:stylist/features/settings/settings_screen.dart';
+import 'package:stylist/shared/widgets/app_shell.dart';
 
 abstract final class Routes {
   static const splash = '/splash';
@@ -38,6 +40,7 @@ abstract final class Routes {
   static const signIn = '/signin';
   static const blocked = '/blocked';
   static const home = '/home';
+  static const outfits = '/outfits';
   static const resume = '/onboarding/resume';
   static const restore = '/restore';
 }
@@ -150,12 +153,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: Routes.welcome, builder: (_, _) => const WelcomeScreen()),
       GoRoute(path: Routes.signIn, builder: (_, _) => const SignInScreen()),
       GoRoute(path: Routes.blocked, builder: (_, _) => const BlockedScreen()),
-      GoRoute(path: Routes.home, builder: (_, _) => const HomeScreen()),
       GoRoute(path: Routes.restore, builder: (_, _) => const RestoreScreen()),
-      GoRoute(
-        path: ClosetRoutes.root,
-        builder: (_, _) => const ClosetScreen(),
-      ),
       GoRoute(
         path: ClosetRoutes.add,
         builder: (_, state) => CaptureScreen(
@@ -180,9 +178,42 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (_, state) =>
             ItemDetailScreen(garmentId: state.pathParameters['id']!),
       ),
-      GoRoute(
-        path: SettingsRoutes.root,
-        builder: (_, _) => const SettingsScreen(),
+      StatefulShellRoute.indexedStack(
+        builder: (_, _, shell) => AppShell(shell: shell),
+        branches: [
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.home,
+                builder: (_, _) => const HomeScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: ClosetRoutes.root,
+                builder: (_, _) => const ClosetScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.outfits,
+                builder: (_, _) => const OutfitsScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: SettingsRoutes.root,
+                builder: (_, _) => const SettingsScreen(),
+              ),
+            ],
+          ),
+        ],
       ),
       GoRoute(
         path: SettingsRoutes.consent,
