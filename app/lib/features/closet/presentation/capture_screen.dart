@@ -242,6 +242,7 @@ class _CaptureScreenState extends ConsumerState<CaptureScreen> {
 
   Widget _cameraBody(AppLocalizations l10n) {
     final scheme = Theme.of(context).colorScheme;
+    final text = Theme.of(context).textTheme;
     final problem = _cameraProblem;
     if (problem != null) {
       return Center(
@@ -250,7 +251,15 @@ class _CaptureScreenState extends ConsumerState<CaptureScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(problem, textAlign: TextAlign.center),
+              ExcludeSemantics(
+                child: Icon(
+                  Icons.no_photography_outlined,
+                  size: 56,
+                  color: scheme.primary,
+                ),
+              ),
+              const SizedBox(height: Spacing.md),
+              Text(problem, textAlign: TextAlign.center, style: text.bodyLarge),
               const SizedBox(height: Spacing.md),
               FilledButton(
                 onPressed: _fromLibrary,
@@ -274,162 +283,362 @@ class _CaptureScreenState extends ConsumerState<CaptureScreen> {
       null => l10n.captureHint,
     };
     final hintBad = hint != null && hint.level != LightingLevel.ok;
-    return Column(
-      children: [
-        Expanded(
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              if (_cameraReady)
-                ClipRect(child: _camera!.buildPreview())
-              else
-                const Center(child: CircularProgressIndicator()),
-              // Outline to line the garment up with.
-              Semantics(
-                label: l10n.captureFlip,
-                child: const ExcludeSemantics(
-                  child: CustomPaint(painter: _OutlinePainter(Colors.white)),
-                ),
-              ),
-            ],
-          ),
-        ),
-        Container(
-          width: double.infinity,
-          color: hintBad
-              ? scheme.errorContainer
-              : scheme.surfaceContainerHighest,
-          padding: const EdgeInsets.all(Spacing.md),
-          child: Semantics(
-            liveRegion: true,
-            child: Text(
-              hintText,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                color: hintBad ? scheme.onErrorContainer : scheme.onSurface,
+    final hintGood = hint != null && hint.level == LightingLevel.ok;
+    final bulkOn =
+        ref.watch(remoteConfigProvider).valueOrNull?.closetBulkAddEnabled ??
+        true;
+    const panelText = _panelText;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        Spacing.md,
+        Spacing.xs,
+        Spacing.md,
+        Spacing.md,
+      ),
+      child: Column(
+        children: [
+          Expanded(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(RadiusTokens.xl),
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  ColoredBox(
+                    color: _stage,
+                    child: _cameraReady
+                        ? ClipRect(child: _camera!.buildPreview())
+                        : const Center(child: CircularProgressIndicator()),
+                  ),
+                  // Outline to line the garment up.
+                  Semantics(
+                    label: l10n.captureFlip,
+                    child: const ExcludeSemantics(
+                      child: CustomPaint(
+                        painter: _OutlinePainter(Colors.white),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    left: Spacing.sm + 4,
+                    right: Spacing.sm + 4,
+                    top: Spacing.sm + 4,
+                    child: Semantics(
+                      liveRegion: true,
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: hintBad
+                              ? scheme.errorContainer
+                              : hintGood
+                              ? scheme.secondaryContainer
+                              : scheme.surface.withValues(alpha: 0.92),
+                          borderRadius: BorderRadius.circular(
+                            RadiusTokens.pill,
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: Spacing.md,
+                            vertical: Spacing.sm,
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              ExcludeSemantics(
+                                child: Icon(
+                                  hintBad
+                                      ? Icons.light_mode_outlined
+                                      : hintGood
+                                      ? Icons.check_circle_outline
+                                      : Icons.wb_twilight_outlined,
+                                  size: 18,
+                                  color: hintBad
+                                      ? scheme.onErrorContainer
+                                      : scheme.primary,
+                                ),
+                              ),
+                              const SizedBox(width: Spacing.sm),
+                              Flexible(
+                                child: Text(
+                                  hintText,
+                                  style: text.labelLarge?.copyWith(
+                                    color: hintBad
+                                        ? scheme.onErrorContainer
+                                        : scheme.onSurface,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
-        ),
-        if (_error != null)
-          Padding(
-            padding: const EdgeInsets.all(Spacing.sm),
-            child: Text(_error!, style: TextStyle(color: scheme.error)),
-          ),
-        Padding(
-          padding: const EdgeInsets.all(Spacing.md),
-          child: Row(
-            children: [
-              Expanded(
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: TextButton.icon(
-                    onPressed: _fromLibrary,
-                    icon: const Icon(Icons.photo_library_outlined),
-                    label: Text(l10n.captureLibrary),
+          if (_error != null)
+            Padding(
+              padding: const EdgeInsets.only(top: Spacing.sm),
+              child: Text(_error!, style: TextStyle(color: scheme.error)),
+            ),
+          const SizedBox(height: Spacing.sm + 4),
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: Spacing.md,
+              vertical: Spacing.sm + 4,
+            ),
+            decoration: BoxDecoration(
+              color: _panel,
+              borderRadius: BorderRadius.circular(RadiusTokens.xl),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: _PanelButton(
+                    icon: Icons.photo_library_outlined,
+                    label: l10n.captureLibraryShort,
+                    semantic: l10n.captureLibrary,
+                    color: panelText,
+                    onTap: _fromLibrary,
                   ),
                 ),
-              ),
-              Semantics(
-                button: true,
-                label: l10n.captureTake,
-                excludeSemantics: true,
-                onTap: _cameraReady ? _shoot : null,
-                child: InkResponse(
+                Semantics(
+                  button: true,
+                  label: l10n.captureTake,
+                  excludeSemantics: true,
                   onTap: _cameraReady ? _shoot : null,
-                  radius: 44,
-                  child: Container(
-                    width: 72,
-                    height: 72,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: scheme.primary,
-                      border: Border.all(color: scheme.onSurface, width: 4),
+                  child: InkResponse(
+                    onTap: _cameraReady ? _shoot : null,
+                    radius: 48,
+                    child: Container(
+                      width: 72,
+                      height: 72,
+                      padding: const EdgeInsets.all(5),
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: panelText,
+                      ),
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: scheme.primaryContainer,
+                          border: Border.all(
+                            color: _panel,
+                            width: 3,
+                          ),
+                        ),
+                        child: Icon(
+                          Icons.camera_alt,
+                          color: scheme.onPrimaryContainer,
+                        ),
+                      ),
                     ),
-                    child: Icon(Icons.camera_alt, color: scheme.onPrimary),
                   ),
                 ),
-              ),
-              const Expanded(child: SizedBox()),
-            ],
+                Expanded(
+                  child: bulkOn
+                      ? _PanelButton(
+                          icon: Icons.collections_outlined,
+                          label: l10n.captureBulkShort,
+                          semantic: l10n.closetAddMany,
+                          color: panelText,
+                          onTap: () =>
+                              context.pushReplacement(ClosetRoutes.bulk),
+                        )
+                      : const SizedBox.shrink(),
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
   Widget _previewBody(AppLocalizations l10n) {
+    final scheme = Theme.of(context).colorScheme;
+    final text = Theme.of(context).textTheme;
     final image = _picked!;
     final crop = _crop;
-    return Column(
-      children: [
-        Expanded(
-          child: Semantics(
-            label: l10n.captureReview,
-            image: true,
-            child: LayoutBuilder(
-              builder: (context, box) => ColoredBox(
-                color: Colors.black,
-                child: Center(
-                  child: AspectRatio(
-                    aspectRatio: _aspect,
-                    child: Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        Image.memory(
-                          image.bytes,
-                          fit: BoxFit.fill,
-                          excludeFromSemantics: true,
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        Spacing.md,
+        Spacing.xs,
+        Spacing.md,
+        Spacing.md,
+      ),
+      child: Column(
+        children: [
+          Expanded(
+            child: Semantics(
+              label: l10n.captureReview,
+              image: true,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(RadiusTokens.xl),
+                child: ColoredBox(
+                  color: _stage,
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(Spacing.sm + 4),
+                      child: AspectRatio(
+                        aspectRatio: _aspect,
+                        child: Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(
+                                RadiusTokens.md,
+                              ),
+                              child: Image.memory(
+                                image.bytes,
+                                fit: BoxFit.fill,
+                                excludeFromSemantics: true,
+                              ),
+                            ),
+                            if (crop != null && _useCrop)
+                              ExcludeSemantics(
+                                child: CustomPaint(
+                                  painter: _CropPainter(crop),
+                                ),
+                              ),
+                          ],
                         ),
-                        if (crop != null && _useCrop)
-                          ExcludeSemantics(
-                            child: CustomPaint(painter: _CropPainter(crop)),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          if (crop != null) ...[
+            const SizedBox(height: Spacing.sm + 4),
+            Container(
+              decoration: BoxDecoration(
+                color: scheme.surfaceContainerLow,
+                borderRadius: BorderRadius.circular(RadiusTokens.lg),
+                border: Border.all(color: scheme.outlineVariant),
+              ),
+              child: SwitchListTile(
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: Spacing.md,
+                  vertical: Spacing.xs,
+                ),
+                title: Text(
+                  l10n.captureCrop,
+                  style: text.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
+                ),
+                subtitle: Text(l10n.captureCropBody),
+                value: _useCrop,
+                onChanged: (v) => setState(() => _useCrop = v),
+              ),
+            ),
+          ],
+          if (_error != null)
+            Padding(
+              padding: const EdgeInsets.only(top: Spacing.sm),
+              child: Text(_error!, style: TextStyle(color: scheme.error)),
+            ),
+          const SizedBox(height: Spacing.md),
+          Row(
+            children: [
+              Expanded(
+                child: SizedBox(
+                  height: 52,
+                  child: OutlinedButton.icon(
+                    style: OutlinedButton.styleFrom(
+                      backgroundColor: scheme.surfaceContainerLowest,
+                      foregroundColor: scheme.primary,
+                    ),
+                    onPressed: _retake,
+                    icon: const Icon(Icons.refresh),
+                    label: Text(l10n.captureRetake),
+                  ),
+                ),
+              ),
+              const SizedBox(width: Spacing.sm + 4),
+              Expanded(
+                flex: 2,
+                child: SizedBox(
+                  height: 52,
+                  child: FilledButton(
+                    onPressed: _use,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Flexible(
+                          child: Text(
+                            l10n.captureUse,
+                            textAlign: TextAlign.center,
                           ),
+                        ),
+                        const SizedBox(width: Spacing.sm),
+                        const ExcludeSemantics(
+                          child: Icon(Icons.arrow_forward, size: 20),
+                        ),
                       ],
                     ),
                   ),
                 ),
               ),
-            ),
-          ),
-        ),
-        if (crop != null)
-          SwitchListTile(
-            title: Text(l10n.captureCrop),
-            value: _useCrop,
-            onChanged: (v) => setState(() => _useCrop = v),
-          ),
-        if (_error != null)
-          Padding(
-            padding: const EdgeInsets.all(Spacing.sm),
-            child: Text(
-              _error!,
-              style: TextStyle(color: Theme.of(context).colorScheme.error),
-            ),
-          ),
-        Padding(
-          padding: const EdgeInsets.all(Spacing.md),
-          child: Row(
-            children: [
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: _retake,
-                  child: Text(l10n.captureRetake),
-                ),
-              ),
-              const SizedBox(width: Spacing.md),
-              Expanded(
-                child: FilledButton(
-                  onPressed: _use,
-                  child: Text(l10n.captureUse),
-                ),
-              ),
             ],
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
+}
+
+/// The camera stage and control panel stay dark in both themes (like any camera app).
+const Color _stage = Color(0xFF1B1816);
+const Color _panel = Color(0xFF2F2A28);
+const Color _panelText = Color(0xFFF3EDE4);
+
+/// A labelled icon button on the dark control panel (>= 48dp).
+class _PanelButton extends StatelessWidget {
+  const _PanelButton({
+    required this.icon,
+    required this.label,
+    required this.semantic,
+    required this.color,
+    required this.onTap,
+  });
+  final IconData icon;
+  final String label;
+  final String semantic;
+  final Color color;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) => Semantics(
+    button: true,
+    label: semantic,
+    excludeSemantics: true,
+    onTap: onTap,
+    child: InkWell(
+      borderRadius: BorderRadius.circular(RadiusTokens.md),
+      onTap: onTap,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(
+          minHeight: Spacing.minTouchTarget + 16,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: color),
+            const SizedBox(height: Spacing.xs),
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              style: Theme.of(
+                context,
+              ).textTheme.labelMedium?.copyWith(color: color),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
 }
 
 class _OutlinePainter extends CustomPainter {

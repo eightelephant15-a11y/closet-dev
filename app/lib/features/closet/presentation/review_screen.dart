@@ -15,6 +15,7 @@ import 'package:stylist/features/closet/presentation/closet_widgets.dart';
 import 'package:stylist/features/closet/presentation/garment_fields_editor.dart';
 import 'package:stylist/features/onboarding/application/onboarding_controller.dart';
 import 'package:stylist/l10n/gen/app_localizations.dart';
+import 'package:stylist/shared/widgets/atelier.dart';
 import 'package:stylist/shared/widgets/state_views.dart';
 import 'package:stylist/theme/tokens.dart';
 
@@ -167,13 +168,13 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                 children: [
                   if (item != null) const UploadBanner(),
                   const SizedBox(height: Spacing.sm),
+                  _StatusLine(item: item, garment: garment),
+                  const SizedBox(height: Spacing.md),
                   _PhotoBox(
                     local: _localPhoto,
                     garment: garment,
                     label: l10n.reviewPhoto,
                   ),
-                  const SizedBox(height: Spacing.md),
-                  _StatusLine(item: item, garment: garment),
                   if (_saveFailed)
                     Semantics(
                       liveRegion: true,
@@ -192,11 +193,15 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                     onChanged: (c) => _onChanged(c, garment),
                   ),
                   const SizedBox(height: Spacing.sm),
-                  FilledButton(
-                    onPressed: garmentId == null
-                        ? null
-                        : () => _finish(garmentId),
-                    child: Text(l10n.reviewDone),
+                  SizedBox(
+                    height: 52,
+                    child: FilledButton.icon(
+                      onPressed: garmentId == null
+                          ? null
+                          : () => _finish(garmentId),
+                      icon: const Icon(Icons.check),
+                      label: Text(l10n.reviewDone),
+                    ),
                   ),
                   TextButton(
                     onPressed: () => context.canPop()
@@ -229,7 +234,7 @@ class _PhotoBox extends StatelessWidget {
       image: true,
       label: label,
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(RadiusTokens.md),
+        borderRadius: BorderRadius.circular(RadiusTokens.lg),
         child: SizedBox(
           height: 240,
           width: double.infinity,
@@ -289,36 +294,93 @@ class _StatusLine extends StatelessWidget {
                 : l10n.reviewAnalysing,
             true,
           );
+    final done = !failed && !offline && status == AnalysisStatus.done;
+    final manual = !failed && status == AnalysisStatus.needsManual;
+    final bg = failed
+        ? scheme.errorContainer
+        : done
+        ? scheme.secondaryContainer
+        : manual || offline
+        ? scheme.surfaceContainerHigh
+        : scheme.surfaceContainerLow;
+    final fg = failed
+        ? scheme.onErrorContainer
+        : done
+        ? scheme.onSecondaryContainer
+        : scheme.onSurface;
+    final title = failed
+        ? l10n.reviewBannerTitleFailed
+        : done
+        ? l10n.reviewBannerTitleDone
+        : manual
+        ? l10n.reviewBannerTitleManual
+        : l10n.reviewBannerTitleWorking;
     return Semantics(
       liveRegion: true,
       container: true,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ExcludeSemantics(
-            child: spinner
-                ? const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : Icon(
-                    failed ? Icons.error_outline : Icons.info_outline,
-                    color: failed ? scheme.error : scheme.primary,
+      child: Container(
+        padding: const EdgeInsets.all(Spacing.md),
+        decoration: BoxDecoration(
+          color: bg,
+          borderRadius: BorderRadius.circular(RadiusTokens.lg),
+          border: Border.all(color: scheme.outlineVariant),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ExcludeSemantics(
+              child: spinner
+                  ? SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2.5,
+                        color: scheme.primary,
+                      ),
+                    )
+                  : Icon(
+                      failed
+                          ? Icons.error_outline
+                          : done
+                          ? Icons.auto_awesome
+                          : Icons.info_outline,
+                      color: failed ? scheme.error : scheme.primary,
+                    ),
+            ),
+            const SizedBox(width: Spacing.sm + 4),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Eyebrow(title, color: fg.withValues(alpha: 0.8)),
+                  const SizedBox(height: Spacing.xs),
+                  Text(
+                    text,
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyMedium?.copyWith(color: fg),
                   ),
-          ),
-          const SizedBox(width: Spacing.sm),
-          Expanded(child: Text(text)),
-          if (failed && item != null)
-            Consumer(
-              builder: (context, ref, _) => TextButton(
-                onPressed: () => unawaited(
-                  ref.read(uploadQueueProvider).retry(item!.clientId),
-                ),
-                child: Text(l10n.uploadRetry),
+                  if (failed && item != null)
+                    Consumer(
+                      builder: (context, ref, _) => Padding(
+                        padding: const EdgeInsets.only(top: Spacing.xs),
+                        child: OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            backgroundColor: scheme.surfaceContainerLowest,
+                            foregroundColor: scheme.onSurface,
+                          ),
+                          onPressed: () => unawaited(
+                            ref.read(uploadQueueProvider).retry(item!.clientId),
+                          ),
+                          child: Text(l10n.uploadRetry),
+                        ),
+                      ),
+                    ),
+                ],
               ),
             ),
-        ],
+          ],
+        ),
       ),
     );
   }

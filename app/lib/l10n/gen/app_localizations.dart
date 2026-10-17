@@ -2740,6 +2740,72 @@ abstract class AppLocalizations {
   /// **'Pending deletion'**
   String get restoreEyebrow;
 
+  /// No description provided for @fieldSeasonsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick any'**
+  String get fieldSeasonsHint;
+
+  /// No description provided for @reviewBannerTitleDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Details filled in'**
+  String get reviewBannerTitleDone;
+
+  /// No description provided for @reviewBannerTitleWorking.
+  ///
+  /// In en, this message translates to:
+  /// **'Working on it'**
+  String get reviewBannerTitleWorking;
+
+  /// No description provided for @reviewBannerTitleManual.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs your input'**
+  String get reviewBannerTitleManual;
+
+  /// No description provided for @reviewBannerTitleFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload problem'**
+  String get reviewBannerTitleFailed;
+
+  /// No description provided for @reviewDoneCta.
+  ///
+  /// In en, this message translates to:
+  /// **'Looks good'**
+  String get reviewDoneCta;
+
+  /// No description provided for @detailStatusActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get detailStatusActive;
+
+  /// No description provided for @captureLibraryShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Library'**
+  String get captureLibraryShort;
+
+  /// No description provided for @captureBulkShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Bulk add'**
+  String get captureBulkShort;
+
+  /// No description provided for @captureCropBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Centre the garment and trim the plain background.'**
+  String get captureCropBody;
+
+  /// No description provided for @capturePreviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Check the photo'**
+  String get capturePreviewTitle;
+
   /// No description provided for @taxCatTop.
   ///
   /// In en, this message translates to:

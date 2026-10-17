@@ -165,16 +165,7 @@ class _ItemDetailScreenState extends ConsumerState<ItemDetailScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          g == null
-              ? l10n.detailTitle
-              : garmentName(
-                  l10n,
-                  category: g.category,
-                  subcategory: g.subcategory,
-                  color: g.primaryColor,
-                ),
-        ),
+        title: Text(l10n.detailTitle),
         actions: [
           if (g != null)
             IconButton(
@@ -226,6 +217,37 @@ class _ItemDetailScreenState extends ConsumerState<ItemDetailScreen> {
             : ListView(
                 children: [
                   _Photo(garment: g),
+                  const SizedBox(height: Spacing.md),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Semantics(
+                          header: true,
+                          child: Text(
+                            garmentName(
+                              l10n,
+                              category: g.category,
+                              subcategory: g.subcategory,
+                              color: g.primaryColor,
+                            ),
+                            style: Theme.of(context).textTheme.headlineLarge,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: Spacing.sm),
+                      _StatusPill(
+                        label: archived()
+                            ? l10n.closetItemArchived
+                            : availability != Availability.available
+                            ? availabilityLabel(l10n, availability)
+                            : l10n.detailStatusActive,
+                        active:
+                            !archived() &&
+                            availability == Availability.available,
+                      ),
+                    ],
+                  ),
                   const SizedBox(height: Spacing.md),
                   if (_error != null)
                     Semantics(
@@ -352,6 +374,42 @@ class _ItemDetailScreenState extends ConsumerState<ItemDetailScreen> {
   }
 }
 
+class _StatusPill extends StatelessWidget {
+  const _StatusPill({required this.label, required this.active});
+  final String label;
+  final bool active;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.only(top: Spacing.sm),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: active
+              ? scheme.secondaryContainer
+              : scheme.surfaceContainerHigh,
+          borderRadius: BorderRadius.circular(RadiusTokens.pill),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: Spacing.sm + 4,
+            vertical: Spacing.xs + 1,
+          ),
+          child: Text(
+            label,
+            style: Theme.of(context).textTheme.labelMedium?.copyWith(
+              color: active
+                  ? scheme.onSecondaryContainer
+                  : scheme.onSurfaceVariant,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _Photo extends StatelessWidget {
   const _Photo({required this.garment});
   final Garment garment;
@@ -389,7 +447,7 @@ class _Photo extends StatelessWidget {
       image: true,
       label: name,
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(RadiusTokens.md),
+        borderRadius: BorderRadius.circular(RadiusTokens.lg),
         child: SizedBox(height: 280, width: double.infinity, child: child),
       ),
     );

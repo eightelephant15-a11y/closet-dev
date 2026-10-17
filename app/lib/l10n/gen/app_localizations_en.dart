@@ -1553,6 +1553,40 @@ class AppLocalizationsEn extends AppLocalizations {
   String get restoreEyebrow => 'Pending deletion';
 
   @override
+  String get fieldSeasonsHint => 'Pick any';
+
+  @override
+  String get reviewBannerTitleDone => 'Details filled in';
+
+  @override
+  String get reviewBannerTitleWorking => 'Working on it';
+
+  @override
+  String get reviewBannerTitleManual => 'Needs your input';
+
+  @override
+  String get reviewBannerTitleFailed => 'Upload problem';
+
+  @override
+  String get reviewDoneCta => 'Looks good';
+
+  @override
+  String get detailStatusActive => 'Active';
+
+  @override
+  String get captureLibraryShort => 'Library';
+
+  @override
+  String get captureBulkShort => 'Bulk add';
+
+  @override
+  String get captureCropBody =>
+      'Centre the garment and trim the plain background.';
+
+  @override
+  String get capturePreviewTitle => 'Check the photo';
+
+  @override
   String get taxCatTop => 'Top';
 
   @override

@@ -102,11 +102,15 @@ class FieldSection extends StatelessWidget {
     required this.title,
     required this.children,
     this.flagged = false,
+    this.caption,
     super.key,
   });
   final String title;
   final List<Widget> children;
   final bool flagged;
+
+  /// Small muted note on the right of the title ("Pick any").
+  final String? caption;
 
   @override
   Widget build(BuildContext context) {
@@ -117,11 +121,12 @@ class FieldSection extends StatelessWidget {
       container: true,
       child: Container(
         margin: const EdgeInsets.only(bottom: Spacing.md),
-        padding: const EdgeInsets.all(Spacing.sm),
+        padding: flagged ? const EdgeInsets.all(Spacing.md) : EdgeInsets.zero,
         decoration: flagged
             ? BoxDecoration(
-                borderRadius: BorderRadius.circular(RadiusTokens.md),
-                border: Border.all(color: scheme.error, width: 2),
+                color: scheme.primary.withValues(alpha: 0.06),
+                borderRadius: BorderRadius.circular(RadiusTokens.lg),
+                border: Border.all(color: scheme.primary, width: 1.5),
               )
             : null,
         child: Column(
@@ -132,31 +137,53 @@ class FieldSection extends StatelessWidget {
               child: Wrap(
                 crossAxisAlignment: WrapCrossAlignment.center,
                 spacing: Spacing.sm,
+                runSpacing: Spacing.xs,
                 children: [
                   Text(title, style: theme.titleMedium),
                   if (flagged)
                     Semantics(
                       label: l10n.reviewLowConfidence(title),
                       child: ExcludeSemantics(
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.flag_outlined,
-                              size: 18,
-                              color: scheme.error,
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: scheme.primary,
+                            borderRadius: BorderRadius.circular(
+                              RadiusTokens.pill,
                             ),
-                            const SizedBox(width: Spacing.xs),
-                            Flexible(
-                              child: Text(
-                                l10n.reviewCheck,
-                                style: theme.labelLarge?.copyWith(
-                                  color: scheme.error,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: Spacing.sm + 2,
+                              vertical: 3,
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.flag_outlined,
+                                  size: 14,
+                                  color: scheme.onPrimary,
                                 ),
-                              ),
+                                const SizedBox(width: Spacing.xs),
+                                Flexible(
+                                  child: Text(
+                                    l10n.reviewCheck,
+                                    style: theme.labelMedium?.copyWith(
+                                      color: scheme.onPrimary,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
+                      ),
+                    )
+                  else if (caption != null)
+                    Text(
+                      caption!,
+                      style: theme.bodySmall?.copyWith(
+                        color: scheme.onSurfaceVariant,
                       ),
                     ),
                 ],
@@ -301,6 +328,7 @@ class GarmentFieldsEditor extends StatelessWidget {
         ),
         FieldSection(
           title: l10n.fieldSeasons,
+          caption: l10n.fieldSeasonsHint,
           flagged: flag('seasons'),
           children: [
             for (final s in tax.seasons)
