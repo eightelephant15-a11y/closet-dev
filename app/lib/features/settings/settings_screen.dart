@@ -5,8 +5,10 @@ import 'package:stylist/core/providers.dart';
 import 'package:stylist/features/auth/application/auth_flow.dart';
 import 'package:stylist/features/auth/application/session_controller.dart';
 import 'package:stylist/features/auth/domain/auth_provider.dart';
+import 'package:stylist/features/closet/application/closet_providers.dart';
 import 'package:stylist/features/settings/account_actions.dart';
 import 'package:stylist/l10n/gen/app_localizations.dart';
+import 'package:stylist/shared/widgets/atelier.dart';
 import 'package:stylist/shared/widgets/state_views.dart';
 import 'package:stylist/theme/tokens.dart';
 
@@ -57,95 +59,192 @@ class SettingsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
+    final scheme = Theme.of(context).colorScheme;
+    final text = Theme.of(context).textTheme;
     final session = ref.watch(sessionControllerProvider);
     final config = ref.watch(appConfigProvider);
     final remote = ref.watch(remoteConfigProvider).valueOrNull;
+    final summary = ref.watch(closetSummaryProvider).valueOrNull;
     final opener = ref.read(urlOpenerProvider);
     final isGuest = session.status == SessionStatus.guest;
+    final user = session.user;
+    final label = isGuest
+        ? l10n.settingsGuest
+        : (user?.displayName?.isNotEmpty ?? false)
+        ? user!.displayName!
+        : (user?.email ?? '');
+    final initial = label.isEmpty ? '?' : label.characters.first.toUpperCase();
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.settingsTitle)),
       body: PageBody(
         child: ListView(
           children: [
-            _Header(l10n.settingsAccount),
-            if (isGuest) ...[
-              ListTile(
-                leading: const Icon(Icons.person_outline),
-                title: Text(l10n.settingsGuest),
-                subtitle: Text(l10n.settingsGuestBody),
+            Eyebrow(l10n.brandEyebrow, color: scheme.onSurfaceVariant),
+            const SizedBox(height: Spacing.xs),
+            Semantics(
+              header: true,
+              child: Text(l10n.settingsTitle, style: text.headlineLarge),
+            ),
+            const SizedBox(height: Spacing.md),
+            Container(
+              padding: const EdgeInsets.all(Spacing.md),
+              decoration: BoxDecoration(
+                color: scheme.surfaceContainerLow,
+                borderRadius: BorderRadius.circular(RadiusTokens.xl),
+                border: Border.all(color: scheme.outlineVariant),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: Spacing.md),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: FilledButton(
-                    onPressed: () => _upgrade(context, ref),
-                    child: Text(l10n.signInWithGoogle),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      ExcludeSemantics(
+                        child: CircleAvatar(
+                          radius: 28,
+                          backgroundColor: scheme.primary,
+                          child: Text(
+                            initial,
+                            style: text.titleLarge?.copyWith(
+                              color: scheme.onPrimary,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: Spacing.md),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(label, style: text.titleLarge),
+                            Text(
+                              isGuest
+                                  ? l10n.settingsGuestBody
+                                  : l10n.settingsSignedInAs(user?.email ?? ''),
+                              style: text.bodySmall?.copyWith(
+                                color: scheme.onSurfaceVariant,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  if (summary != null) ...[
+                    const SizedBox(height: Spacing.md),
+                    Container(
+                      padding: const EdgeInsets.all(Spacing.md),
+                      decoration: BoxDecoration(
+                        color: scheme.surfaceContainerLowest,
+                        borderRadius: BorderRadius.circular(RadiusTokens.lg),
+                        border: Border.all(color: scheme.outlineVariant),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Wrap(
+                            alignment: WrapAlignment.spaceBetween,
+                            spacing: Spacing.md,
+                            children: [
+                              Text(
+                                l10n.settingsPlanFree,
+                                style: text.titleMedium,
+                              ),
+                              Text(
+                                l10n.closetCount(summary.used, summary.limit),
+                                style: text.labelLarge?.copyWith(
+                                  color: scheme.primary,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: Spacing.sm),
+                          ExcludeSemantics(
+                            child: LinearProgressIndicator(
+                              value: summary.limit == 0
+                                  ? 0
+                                  : (summary.used / summary.limit).clamp(0, 1),
+                              minHeight: 6,
+                              borderRadius: BorderRadius.circular(3),
+                            ),
+                          ),
+                          const SizedBox(height: Spacing.xs),
+                          Text(
+                            l10n.settingsSpotsLeft(summary.remaining),
+                            style: text.bodySmall?.copyWith(
+                              color: scheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                  if (isGuest) ...[
+                    const SizedBox(height: Spacing.md),
+                    SizedBox(
+                      width: double.infinity,
+                      child: FilledButton(
+                        onPressed: () => _upgrade(context, ref),
+                        child: Text(l10n.signInWithGoogle),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            GroupTitle(l10n.settingsPrivacySection),
+            SettingsGroup(
+              children: [
+                SettingsTile(
+                  icon: Icons.shield_outlined,
+                  title: l10n.settingsConsentCentre,
+                  onTap: () => context.push(SettingsRoutes.consent),
+                ),
+                SettingsTile(
+                  icon: Icons.policy_outlined,
+                  title: l10n.settingsPrivacyPolicy,
+                  trailing: const Icon(Icons.open_in_new, size: 18),
+                  onTap: () => opener.open(
+                    remote?.privacyPolicyUrl ?? config.privacyUrl,
                   ),
                 ),
-              ),
-            ] else
-              ListTile(
-                leading: const Icon(Icons.person_outline),
-                title: Text(l10n.settingsSignedInAs(session.user?.email ?? '')),
-              ),
-            _Header(l10n.settingsPrivacySection),
-            ListTile(
-              leading: const Icon(Icons.privacy_tip_outlined),
-              title: Text(l10n.settingsConsentCentre),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () => context.push(SettingsRoutes.consent),
+                SettingsTile(
+                  icon: Icons.description_outlined,
+                  title: l10n.settingsTerms,
+                  trailing: const Icon(Icons.open_in_new, size: 18),
+                  onTap: () => opener.open(remote?.termsUrl ?? config.termsUrl),
+                ),
+              ],
             ),
-            ListTile(
-              leading: const Icon(Icons.policy_outlined),
-              title: Text(l10n.settingsPrivacyPolicy),
-              onTap: () =>
-                  opener.open(remote?.privacyPolicyUrl ?? config.privacyUrl),
+            GroupTitle(l10n.settingsDataSection),
+            SettingsGroup(
+              children: [
+                SettingsTile(
+                  icon: Icons.download_outlined,
+                  title: l10n.settingsExport,
+                  onTap: () => context.push(SettingsRoutes.export),
+                ),
+                SettingsTile(
+                  icon: Icons.delete_outline,
+                  title: l10n.settingsDelete,
+                  destructive: true,
+                  onTap: () => context.push(SettingsRoutes.delete),
+                ),
+              ],
             ),
-            ListTile(
-              leading: const Icon(Icons.description_outlined),
-              title: Text(l10n.settingsTerms),
-              onTap: () => opener.open(remote?.termsUrl ?? config.termsUrl),
+            const SizedBox(height: Spacing.md),
+            SettingsGroup(
+              children: [
+                SettingsTile(
+                  icon: Icons.logout,
+                  title: l10n.settingsSignOut,
+                  showChevron: false,
+                  onTap: () => _signOut(context, ref),
+                ),
+              ],
             ),
-            _Header(l10n.settingsDataSection),
-            ListTile(
-              leading: const Icon(Icons.download_outlined),
-              title: Text(l10n.settingsExport),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () => context.push(SettingsRoutes.export),
-            ),
-            ListTile(
-              leading: Icon(
-                Icons.delete_outline,
-                color: Theme.of(context).colorScheme.error,
-              ),
-              title: Text(l10n.settingsDelete),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () => context.push(SettingsRoutes.delete),
-            ),
-            const Divider(),
-            ListTile(
-              leading: const Icon(Icons.logout),
-              title: Text(l10n.settingsSignOut),
-              onTap: () => _signOut(context, ref),
-            ),
+            const SizedBox(height: Spacing.lg),
           ],
         ),
       ),
     );
   }
-}
-
-class _Header extends StatelessWidget {
-  const _Header(this.text);
-  final String text;
-
-  @override
-  Widget build(BuildContext context) => Semantics(
-    header: true,
-    child: Padding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
-      child: Text(text, style: Theme.of(context).textTheme.labelLarge),
-    ),
-  );
 }

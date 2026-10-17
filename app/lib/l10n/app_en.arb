@@ -320,7 +320,7 @@
     }
   },
   "exportTitle": "Export my data",
-  "exportBody": "We'll prepare a JSON file with everything we hold about you. It can take a moment.",
+  "exportBody": "We'll prepare a ZIP file with everything we hold about you: your profile and settings, your garments with their details, and your photos. It can take a moment.",
   "exportRequest": "Request export",
   "exportPreparing": "Preparing your export\u2026",
   "exportReady": "Your export is ready.",
@@ -810,6 +810,51 @@
   "homeViewAll": "View all",
   "homeClosetOpen": "Open",
   "homeGreetingLead": "Hi, ",
+  "settingsPlanFree": "Free plan",
+  "settingsSpotsLeft": "{n, plural, =0{No spots left} =1{1 spot left} other{{n} spots left}}",
+  "@settingsSpotsLeft": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "privacyEyebrow": "Privacy",
+  "privacyIntro": "You decide how your information is used.",
+  "privacyNoteTitle": "Your photos stay yours",
+  "privacyNoteBody": "Your garment photos and style preferences are private to you. They are never shared or sold.",
+  "exportEyebrow": "Your data",
+  "exportStepRequest": "1. Request",
+  "exportStepPrepare": "2. Preparing",
+  "exportStepDownload": "3. Download",
+  "exportContentsTitle": "What is included",
+  "exportContentsBody": "{garments} garments, {archived} archived",
+  "@exportContentsBody": {
+    "placeholders": {
+      "garments": {
+        "type": "int"
+      },
+      "archived": {
+        "type": "int"
+      }
+    }
+  },
+  "deleteEyebrow": "Cannot be undone",
+  "deleteListTitle": "What will be removed",
+  "deleteListGarments": "{n, plural, =0{Your closet} =1{1 garment and its photos} other{{n} garments and their photos}}",
+  "@deleteListGarments": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "deleteListProfile": "Your style profile and quiz answers",
+  "deleteListAccount": "Your account and sign-in",
+  "deleteGraceTitle": "30 days to change your mind",
+  "deleteGraceBody": "Your account is scheduled for deletion and removed for good after 30 days. Sign back in any time before then to cancel.",
+  "deleteKeep": "Cancel and keep my account",
+  "restoreEyebrow": "Pending deletion",
   "taxCatTop": "Top",
   "taxSubTShirt": "T-shirt",
   "taxSubLongSleeveTee": "Long-sleeve tee",

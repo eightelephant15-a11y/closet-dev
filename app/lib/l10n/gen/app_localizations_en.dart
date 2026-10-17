@@ -649,7 +649,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get exportBody =>
-      'We\'ll prepare a JSON file with everything we hold about you. It can take a moment.';
+      'We\'ll prepare a ZIP file with everything we hold about you: your profile and settings, your garments with their details, and your photos. It can take a moment.';
 
   @override
   String get exportRequest => 'Request export';
@@ -1466,6 +1466,91 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get homeGreetingLead => 'Hi, ';
+
+  @override
+  String get settingsPlanFree => 'Free plan';
+
+  @override
+  String settingsSpotsLeft(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n spots left',
+      one: '1 spot left',
+      zero: 'No spots left',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get privacyEyebrow => 'Privacy';
+
+  @override
+  String get privacyIntro => 'You decide how your information is used.';
+
+  @override
+  String get privacyNoteTitle => 'Your photos stay yours';
+
+  @override
+  String get privacyNoteBody =>
+      'Your garment photos and style preferences are private to you. They are never shared or sold.';
+
+  @override
+  String get exportEyebrow => 'Your data';
+
+  @override
+  String get exportStepRequest => '1. Request';
+
+  @override
+  String get exportStepPrepare => '2. Preparing';
+
+  @override
+  String get exportStepDownload => '3. Download';
+
+  @override
+  String get exportContentsTitle => 'What is included';
+
+  @override
+  String exportContentsBody(int garments, int archived) {
+    return '$garments garments, $archived archived';
+  }
+
+  @override
+  String get deleteEyebrow => 'Cannot be undone';
+
+  @override
+  String get deleteListTitle => 'What will be removed';
+
+  @override
+  String deleteListGarments(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n garments and their photos',
+      one: '1 garment and its photos',
+      zero: 'Your closet',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get deleteListProfile => 'Your style profile and quiz answers';
+
+  @override
+  String get deleteListAccount => 'Your account and sign-in';
+
+  @override
+  String get deleteGraceTitle => '30 days to change your mind';
+
+  @override
+  String get deleteGraceBody =>
+      'Your account is scheduled for deletion and removed for good after 30 days. Sign back in any time before then to cancel.';
+
+  @override
+  String get deleteKeep => 'Cancel and keep my account';
+
+  @override
+  String get restoreEyebrow => 'Pending deletion';
 
   @override
   String get taxCatTop => 'Top';

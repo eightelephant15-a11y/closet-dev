@@ -1249,7 +1249,7 @@ abstract class AppLocalizations {
   /// No description provided for @exportBody.
   ///
   /// In en, this message translates to:
-  /// **'We\'ll prepare a JSON file with everything we hold about you. It can take a moment.'**
+  /// **'We\'ll prepare a ZIP file with everything we hold about you: your profile and settings, your garments with their details, and your photos. It can take a moment.'**
   String get exportBody;
 
   /// No description provided for @exportRequest.
@@ -2613,6 +2613,132 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Hi, '**
   String get homeGreetingLead;
+
+  /// No description provided for @settingsPlanFree.
+  ///
+  /// In en, this message translates to:
+  /// **'Free plan'**
+  String get settingsPlanFree;
+
+  /// No description provided for @settingsSpotsLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'{n, plural, =0{No spots left} =1{1 spot left} other{{n} spots left}}'**
+  String settingsSpotsLeft(int n);
+
+  /// No description provided for @privacyEyebrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy'**
+  String get privacyEyebrow;
+
+  /// No description provided for @privacyIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'You decide how your information is used.'**
+  String get privacyIntro;
+
+  /// No description provided for @privacyNoteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your photos stay yours'**
+  String get privacyNoteTitle;
+
+  /// No description provided for @privacyNoteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your garment photos and style preferences are private to you. They are never shared or sold.'**
+  String get privacyNoteBody;
+
+  /// No description provided for @exportEyebrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data'**
+  String get exportEyebrow;
+
+  /// No description provided for @exportStepRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'1. Request'**
+  String get exportStepRequest;
+
+  /// No description provided for @exportStepPrepare.
+  ///
+  /// In en, this message translates to:
+  /// **'2. Preparing'**
+  String get exportStepPrepare;
+
+  /// No description provided for @exportStepDownload.
+  ///
+  /// In en, this message translates to:
+  /// **'3. Download'**
+  String get exportStepDownload;
+
+  /// No description provided for @exportContentsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What is included'**
+  String get exportContentsTitle;
+
+  /// No description provided for @exportContentsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{garments} garments, {archived} archived'**
+  String exportContentsBody(int garments, int archived);
+
+  /// No description provided for @deleteEyebrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot be undone'**
+  String get deleteEyebrow;
+
+  /// No description provided for @deleteListTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What will be removed'**
+  String get deleteListTitle;
+
+  /// No description provided for @deleteListGarments.
+  ///
+  /// In en, this message translates to:
+  /// **'{n, plural, =0{Your closet} =1{1 garment and its photos} other{{n} garments and their photos}}'**
+  String deleteListGarments(int n);
+
+  /// No description provided for @deleteListProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Your style profile and quiz answers'**
+  String get deleteListProfile;
+
+  /// No description provided for @deleteListAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account and sign-in'**
+  String get deleteListAccount;
+
+  /// No description provided for @deleteGraceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'30 days to change your mind'**
+  String get deleteGraceTitle;
+
+  /// No description provided for @deleteGraceBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account is scheduled for deletion and removed for good after 30 days. Sign back in any time before then to cancel.'**
+  String get deleteGraceBody;
+
+  /// No description provided for @deleteKeep.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel and keep my account'**
+  String get deleteKeep;
+
+  /// No description provided for @restoreEyebrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending deletion'**
+  String get restoreEyebrow;
 
   /// No description provided for @taxCatTop.
   ///
