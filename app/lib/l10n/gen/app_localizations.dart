@@ -2356,6 +2356,84 @@ abstract class AppLocalizations {
   /// **'STYLIST'**
   String get brandEyebrow;
 
+  /// No description provided for @welcomePill.
+  ///
+  /// In en, this message translates to:
+  /// **'Stylist lookbook'**
+  String get welcomePill;
+
+  /// No description provided for @welcomeTabTop.
+  ///
+  /// In en, this message translates to:
+  /// **'{n}. {word}'**
+  String welcomeTabTop(int n, String word);
+
+  /// No description provided for @welcomeTab1Word.
+  ///
+  /// In en, this message translates to:
+  /// **'Wardrobe'**
+  String get welcomeTab1Word;
+
+  /// No description provided for @welcomeTab1Sub.
+  ///
+  /// In en, this message translates to:
+  /// **'Styled'**
+  String get welcomeTab1Sub;
+
+  /// No description provided for @welcomeTab2Word.
+  ///
+  /// In en, this message translates to:
+  /// **'Outfits'**
+  String get welcomeTab2Word;
+
+  /// No description provided for @welcomeTab2Sub.
+  ///
+  /// In en, this message translates to:
+  /// **'Feel like you'**
+  String get welcomeTab2Sub;
+
+  /// No description provided for @welcomeTab3Word.
+  ///
+  /// In en, this message translates to:
+  /// **'Dress'**
+  String get welcomeTab3Word;
+
+  /// No description provided for @welcomeTab3Sub.
+  ///
+  /// In en, this message translates to:
+  /// **'Less thinking'**
+  String get welcomeTab3Sub;
+
+  /// No description provided for @welcomeTerms.
+  ///
+  /// In en, this message translates to:
+  /// **'By continuing, you agree to our terms and privacy policy.'**
+  String get welcomeTerms;
+
+  /// No description provided for @welcomeArt1.
+  ///
+  /// In en, this message translates to:
+  /// **'Illustration: a garment rail with a draped coat and a leafy branch'**
+  String get welcomeArt1;
+
+  /// No description provided for @welcomeArt2.
+  ///
+  /// In en, this message translates to:
+  /// **'Illustration: trousers, knitwear and shoes laid out as an outfit'**
+  String get welcomeArt2;
+
+  /// No description provided for @welcomeArt3.
+  ///
+  /// In en, this message translates to:
+  /// **'Illustration: morning light and an easy, calm routine'**
+  String get welcomeArt3;
+
+  /// No description provided for @welcomeSlideLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{title}. Slide {n} of {total}'**
+  String welcomeSlideLabel(String title, int n, int total);
+
   /// No description provided for @taxCatTop.
   ///
   /// In en, this message translates to:

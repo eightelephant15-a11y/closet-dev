@@ -1312,6 +1312,53 @@ class AppLocalizationsEn extends AppLocalizations {
   String get brandEyebrow => 'STYLIST';
 
   @override
+  String get welcomePill => 'Stylist lookbook';
+
+  @override
+  String welcomeTabTop(int n, String word) {
+    return '$n. $word';
+  }
+
+  @override
+  String get welcomeTab1Word => 'Wardrobe';
+
+  @override
+  String get welcomeTab1Sub => 'Styled';
+
+  @override
+  String get welcomeTab2Word => 'Outfits';
+
+  @override
+  String get welcomeTab2Sub => 'Feel like you';
+
+  @override
+  String get welcomeTab3Word => 'Dress';
+
+  @override
+  String get welcomeTab3Sub => 'Less thinking';
+
+  @override
+  String get welcomeTerms =>
+      'By continuing, you agree to our terms and privacy policy.';
+
+  @override
+  String get welcomeArt1 =>
+      'Illustration: a garment rail with a draped coat and a leafy branch';
+
+  @override
+  String get welcomeArt2 =>
+      'Illustration: trousers, knitwear and shoes laid out as an outfit';
+
+  @override
+  String get welcomeArt3 =>
+      'Illustration: morning light and an easy, calm routine';
+
+  @override
+  String welcomeSlideLabel(String title, int n, int total) {
+    return '$title. Slide $n of $total';
+  }
+
+  @override
   String get taxCatTop => 'Top';
 
   @override

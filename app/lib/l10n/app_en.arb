@@ -700,6 +700,42 @@
   "outfitsSoonBody": "Once your closet has a few pieces, your stylist will build outfits here from clothes you already own. Keep adding items.",
   "outfitsSoonCta": "Open my closet",
   "brandEyebrow": "STYLIST",
+  "welcomePill": "Stylist lookbook",
+  "welcomeTabTop": "{n}. {word}",
+  "@welcomeTabTop": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "word": {
+        "type": "String"
+      }
+    }
+  },
+  "welcomeTab1Word": "Wardrobe",
+  "welcomeTab1Sub": "Styled",
+  "welcomeTab2Word": "Outfits",
+  "welcomeTab2Sub": "Feel like you",
+  "welcomeTab3Word": "Dress",
+  "welcomeTab3Sub": "Less thinking",
+  "welcomeTerms": "By continuing, you agree to our terms and privacy policy.",
+  "welcomeArt1": "Illustration: a garment rail with a draped coat and a leafy branch",
+  "welcomeArt2": "Illustration: trousers, knitwear and shoes laid out as an outfit",
+  "welcomeArt3": "Illustration: morning light and an easy, calm routine",
+  "welcomeSlideLabel": "{title}. Slide {n} of {total}",
+  "@welcomeSlideLabel": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "taxCatTop": "Top",
   "taxSubTShirt": "T-shirt",
   "taxSubLongSleeveTee": "Long-sleeve tee",

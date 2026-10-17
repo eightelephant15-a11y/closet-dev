@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:stylist/core/analytics/analytics_event.dart';
 import 'package:stylist/core/providers.dart';
 import 'package:stylist/features/auth/application/auth_flow.dart';
@@ -48,34 +49,93 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
     }
   }
 
+  static const _art = [
+    'assets/illustrations/welcome_wardrobe.svg',
+    'assets/illustrations/welcome_outfits.svg',
+    'assets/illustrations/welcome_morning.svg',
+  ];
+
+  void _goTo(int page) => _pages.animateToPage(
+    page,
+    duration: MotionTokens.medium,
+    curve: MotionTokens.curve,
+  );
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final scheme = Theme.of(context).colorScheme;
+    final text = Theme.of(context).textTheme;
     final guestEnabled =
         ref.watch(remoteConfigProvider).valueOrNull?.guestModeEnabled ?? true;
     final titles = [l10n.welcomeTitle1, l10n.welcomeTitle2, l10n.welcomeTitle3];
     final bodies = [l10n.welcomeBody1, l10n.welcomeBody2, l10n.welcomeBody3];
+    final arts = [l10n.welcomeArt1, l10n.welcomeArt2, l10n.welcomeArt3];
+    final words = [
+      l10n.welcomeTab1Word,
+      l10n.welcomeTab2Word,
+      l10n.welcomeTab3Word,
+    ];
+    final subs = [
+      l10n.welcomeTab1Sub,
+      l10n.welcomeTab2Sub,
+      l10n.welcomeTab3Sub,
+    ];
     final last = _page == titles.length - 1;
     return Scaffold(
       body: PageBody(
         child: Column(
           children: [
-            Align(
-              alignment: Alignment.centerRight,
-              child: Visibility(
-                visible: !last,
-                maintainSize: true,
-                maintainAnimation: true,
-                maintainState: true,
-                child: TextButton(
-                  onPressed: () => _pages.animateToPage(
-                    titles.length - 1,
-                    duration: MotionTokens.medium,
-                    curve: MotionTokens.curve,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Flexible(
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: scheme.surfaceContainerHigh,
+                      borderRadius: BorderRadius.circular(RadiusTokens.pill),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: Spacing.sm + 2,
+                        vertical: Spacing.xs + 2,
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          ExcludeSemantics(
+                            child: Icon(
+                              Icons.auto_awesome,
+                              size: 16,
+                              color: scheme.primary,
+                            ),
+                          ),
+                          const SizedBox(width: Spacing.xs + 2),
+                          Flexible(
+                            child: Text(
+                              l10n.welcomePill.toUpperCase(),
+                              style: text.labelSmall?.copyWith(
+                                color: scheme.onSurfaceVariant,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                  child: Text(l10n.skip),
                 ),
-              ),
+                const SizedBox(width: Spacing.sm),
+                Visibility(
+                  visible: !last,
+                  maintainSize: true,
+                  maintainAnimation: true,
+                  maintainState: true,
+                  child: TextButton(
+                    onPressed: () => _goTo(titles.length - 1),
+                    child: Text(l10n.skip),
+                  ),
+                ),
+              ],
             ),
             Expanded(
               child: PageView.builder(
@@ -83,34 +143,43 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
                 itemCount: titles.length,
                 onPageChanged: (i) => setState(() => _page = i),
                 itemBuilder: (_, i) => Semantics(
+                  container: true,
                   label: l10n.welcomePageIndicator(i + 1, titles.length),
                   child: SingleChildScrollView(
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const SizedBox(height: Spacing.xl),
-                        ExcludeSemantics(
-                          child: Icon(
-                            [
-                              Icons.checkroom,
-                              Icons.auto_awesome,
-                              Icons.wb_sunny_outlined,
-                            ][i],
-                            size: 96,
-                            color: Theme.of(context).colorScheme.primary,
+                        const SizedBox(height: Spacing.sm),
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(Spacing.md),
+                          decoration: BoxDecoration(
+                            color: scheme.surfaceContainerLow,
+                            borderRadius: BorderRadius.circular(
+                              RadiusTokens.xl,
+                            ),
+                            border: Border.all(color: scheme.outlineVariant),
+                          ),
+                          child: AspectRatio(
+                            aspectRatio: 4 / 3,
+                            child: SvgPicture.asset(
+                              _art[i],
+                              semanticsLabel: arts[i],
+                            ),
                           ),
                         ),
                         const SizedBox(height: Spacing.lg),
                         Text(
                           titles[i],
                           textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.displaySmall,
+                          style: text.headlineLarge,
                         ),
-                        const SizedBox(height: Spacing.md),
+                        const SizedBox(height: Spacing.sm),
                         Text(
                           bodies[i],
                           textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.bodyLarge,
+                          style: text.bodyLarge?.copyWith(
+                            color: scheme.onSurfaceVariant,
+                          ),
                         ),
                       ],
                     ),
@@ -118,6 +187,7 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
                 ),
               ),
             ),
+            const SizedBox(height: Spacing.sm),
             ExcludeSemantics(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -130,15 +200,22 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
                       height: 8,
                       decoration: BoxDecoration(
                         color: i == _page
-                            ? Theme.of(context).colorScheme.primary
-                            : Theme.of(context).colorScheme.outline,
+                            ? scheme.primary
+                            : scheme.outlineVariant,
                         borderRadius: BorderRadius.circular(RadiusTokens.pill),
                       ),
                     ),
                 ],
               ),
             ),
-            const SizedBox(height: Spacing.lg),
+            const SizedBox(height: Spacing.sm),
+            _SlideTabs(
+              selected: _page,
+              words: words,
+              subs: subs,
+              onSelect: _goTo,
+            ),
+            const SizedBox(height: Spacing.md),
             if (_busy)
               const SizedBox(
                 height: Spacing.minTouchTarget,
@@ -148,24 +225,159 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
               if (guestEnabled)
                 SizedBox(
                   width: double.infinity,
+                  height: 52,
                   child: FilledButton(
                     onPressed: () =>
                         _run(ref.read(authFlowProvider).startGuest),
-                    child: Text(l10n.tryItFirst),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Flexible(
+                          child: Text(
+                            l10n.tryItFirst,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        const SizedBox(width: Spacing.sm),
+                        const ExcludeSemantics(
+                          child: Icon(Icons.arrow_forward, size: 20),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               const SizedBox(height: Spacing.sm),
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    backgroundColor: scheme.surfaceContainerLowest,
+                    foregroundColor: scheme.onSurface,
+                  ),
                   onPressed: () =>
                       _run(ref.read(authFlowProvider).signInWithGoogle),
-                  child: Text(l10n.signInWithGoogle),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ExcludeSemantics(
+                        child: SvgPicture.asset(
+                          'assets/illustrations/google_g.svg',
+                          width: 20,
+                          height: 20,
+                        ),
+                      ),
+                      const SizedBox(width: Spacing.sm + 4),
+                      Flexible(
+                        child: Text(
+                          l10n.signInWithGoogle,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
+            const SizedBox(height: Spacing.sm),
+            Text(
+              l10n.welcomeTerms,
+              textAlign: TextAlign.center,
+              style: text.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
+            ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// The three-slide outline under the dots: a segmented control that jumps to a slide.
+class _SlideTabs extends StatelessWidget {
+  const _SlideTabs({
+    required this.selected,
+    required this.words,
+    required this.subs,
+    required this.onSelect,
+  });
+  final int selected;
+  final List<String> words;
+  final List<String> subs;
+  final ValueChanged<int> onSelect;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final scheme = Theme.of(context).colorScheme;
+    final text = Theme.of(context).textTheme;
+    return Container(
+      padding: const EdgeInsets.all(Spacing.xs),
+      decoration: BoxDecoration(
+        color: scheme.surfaceContainer,
+        borderRadius: BorderRadius.circular(RadiusTokens.lg),
+      ),
+      child: Row(
+        children: [
+          for (var i = 0; i < words.length; i++)
+            Expanded(
+              child: Semantics(
+                button: true,
+                selected: i == selected,
+                label: '${l10n.welcomeTabTop(i + 1, words[i])}, ${subs[i]}',
+                excludeSemantics: true,
+                onTap: () => onSelect(i),
+                child: Material(
+                  color: i == selected
+                      ? scheme.surfaceContainerLowest
+                      : Colors.transparent,
+                  borderRadius: BorderRadius.circular(RadiusTokens.md),
+                  elevation: i == selected ? 1 : 0,
+                  shadowColor: scheme.shadow.withValues(alpha: 0.2),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(RadiusTokens.md),
+                    onTap: () => onSelect(i),
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(
+                        minHeight: Spacing.minTouchTarget,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: Spacing.xs,
+                          vertical: Spacing.xs + 2,
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              l10n.welcomeTabTop(i + 1, words[i]).toUpperCase(),
+                              textAlign: TextAlign.center,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: text.labelSmall?.copyWith(
+                                color: i == selected
+                                    ? scheme.primary
+                                    : scheme.onSurfaceVariant,
+                              ),
+                            ),
+                            Text(
+                              subs[i],
+                              textAlign: TextAlign.center,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: text.bodySmall?.copyWith(
+                                color: i == selected
+                                    ? scheme.onSurface
+                                    : scheme.onSurfaceVariant,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }

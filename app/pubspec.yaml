@@ -58,6 +58,7 @@ dependencies:
   camera: ^0.12.0+2
   image_picker: ^1.2.4
   image: ^4.12.0
+  flutter_svg: ^2.3.0
 
 dev_dependencies:
   flutter_test:
@@ -90,6 +91,7 @@ flutter:
 
   assets:
     - assets/sample_closet/
+    - assets/illustrations/
 
   # Bundled so text looks the same offline and in tests. Both are variable fonts (SIL Open Font License,
   # licences next to the files); each weight below selects that point on the wght axis.
