@@ -1443,6 +1443,31 @@ class AppLocalizationsEn extends AppLocalizations {
   String get firstOutfitSubtitle => 'Built from the pieces you just added.';
 
   @override
+  String get homeTodayTitle => 'Today\'s outfit';
+
+  @override
+  String get homeTodaySoonTitle => 'Daily outfits are coming soon';
+
+  @override
+  String get homeTodaySoonBody =>
+      'Soon your stylist will suggest what to wear each morning, using only clothes you already own. The more you add, the better it gets.';
+
+  @override
+  String get homeTodayCta => 'Add more clothes';
+
+  @override
+  String get homeRecentTitle => 'Recent additions';
+
+  @override
+  String get homeViewAll => 'View all';
+
+  @override
+  String get homeClosetOpen => 'Open';
+
+  @override
+  String get homeGreetingLead => 'Hi, ';
+
+  @override
   String get taxCatTop => 'Top';
 
   @override

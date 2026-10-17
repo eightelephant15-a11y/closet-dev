@@ -58,7 +58,7 @@ Future<Harness> openCloset(WidgetTester tester, {Harness? harness}) async {
   await h.seedFinishedOnboarding();
   useTallScreen(tester);
   await h.pumpApp(tester);
-  await tester.tap(find.text('My closet'));
+  await tester.tap(find.text('My Closet'));
   await tester.pumpAndSettle();
   return h;
 }

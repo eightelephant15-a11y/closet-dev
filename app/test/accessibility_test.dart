@@ -190,7 +190,7 @@ Future<void> closetTour(WidgetTester tester) async {
   h.imageProcessor = const InlineImageProcessor();
   await h.seedFinishedOnboarding();
   await h.pumpApp(tester);
-  await tapLabel(tester, 'My closet');
+  await tapLabel(tester, 'My Closet');
   await audit(tester, 'closet (empty)');
 
   final c = appContainer(tester);

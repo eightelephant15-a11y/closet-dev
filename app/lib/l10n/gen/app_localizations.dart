@@ -2566,6 +2566,54 @@ abstract class AppLocalizations {
   /// **'Built from the pieces you just added.'**
   String get firstOutfitSubtitle;
 
+  /// No description provided for @homeTodayTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s outfit'**
+  String get homeTodayTitle;
+
+  /// No description provided for @homeTodaySoonTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily outfits are coming soon'**
+  String get homeTodaySoonTitle;
+
+  /// No description provided for @homeTodaySoonBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Soon your stylist will suggest what to wear each morning, using only clothes you already own. The more you add, the better it gets.'**
+  String get homeTodaySoonBody;
+
+  /// No description provided for @homeTodayCta.
+  ///
+  /// In en, this message translates to:
+  /// **'Add more clothes'**
+  String get homeTodayCta;
+
+  /// No description provided for @homeRecentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent additions'**
+  String get homeRecentTitle;
+
+  /// No description provided for @homeViewAll.
+  ///
+  /// In en, this message translates to:
+  /// **'View all'**
+  String get homeViewAll;
+
+  /// No description provided for @homeClosetOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get homeClosetOpen;
+
+  /// No description provided for @homeGreetingLead.
+  ///
+  /// In en, this message translates to:
+  /// **'Hi, '**
+  String get homeGreetingLead;
+
   /// No description provided for @taxCatTop.
   ///
   /// In en, this message translates to:
