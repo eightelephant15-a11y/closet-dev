@@ -37,11 +37,11 @@ class OptionChip extends StatelessWidget {
       onTap: onTap,
       child: Material(
         color: selected
-            ? scheme.primary.withValues(alpha: 0.12)
-            : scheme.surface,
+            ? scheme.primary.withValues(alpha: 0.10)
+            : scheme.surfaceContainerLow,
         shape: StadiumBorder(
           side: BorderSide(
-            color: selected ? scheme.primary : scheme.outline,
+            color: selected ? scheme.primary : scheme.outlineVariant,
             width: selected ? 2 : 1,
           ),
         ),
@@ -67,7 +67,11 @@ class OptionChip extends StatelessWidget {
                   ],
                   if (selected) ...[
                     ExcludeSemantics(
-                      child: Icon(Icons.check, size: 18, color: scheme.primary),
+                      child: Icon(
+                        Icons.check_circle_outline,
+                        size: 18,
+                        color: scheme.primary,
+                      ),
                     ),
                     const SizedBox(width: Spacing.xs),
                   ],
@@ -78,7 +82,7 @@ class OptionChip extends StatelessWidget {
                         fontWeight: selected
                             ? FontWeight.w700
                             : FontWeight.w500,
-                        color: scheme.onSurface,
+                        color: selected ? scheme.primary : scheme.onSurface,
                       ),
                     ),
                   ),

@@ -81,6 +81,7 @@ class _ClosetScreenState extends ConsumerState<ClosetScreen> {
     final config = ref.watch(remoteConfigProvider).valueOrNull;
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: 64,
         title: _searching
             ? TextField(
                 controller: _searchCtl,
@@ -92,7 +93,19 @@ class _ClosetScreenState extends ConsumerState<ClosetScreen> {
                 ),
                 onChanged: _onSearch,
               )
-            : Text(l10n.closetTitle),
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    l10n.brandEyebrow,
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                  Text(l10n.closetTitle),
+                ],
+              ),
         actions: [
           IconButton(
             tooltip: _searching ? l10n.closetSearchClear : l10n.closetSearch,
@@ -322,9 +335,9 @@ class _Tile extends StatelessWidget {
     // The screen-reader node is the name band only (>= 48dp tall): a node that also covered the picture
     // could not be contrast-checked, and sighted users get the whole tile as the tap target anyway.
     return Material(
-      color: scheme.surface,
+      color: scheme.surfaceContainerLowest,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(RadiusTokens.md),
+        borderRadius: BorderRadius.circular(RadiusTokens.lg),
         side: BorderSide(color: scheme.outlineVariant),
       ),
       clipBehavior: Clip.antiAlias,
@@ -394,9 +407,9 @@ class _Tile extends StatelessWidget {
                     vertical: Spacing.xs,
                   ),
                   child: Align(
-                    alignment: Alignment.centerLeft,
                     child: Text(
                       name,
+                      textAlign: TextAlign.center,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
@@ -556,11 +569,13 @@ class _ClosetMeterCardState extends ConsumerState<ClosetMeterCard> {
               children: [
                 Text(
                   l10n.closetCount(widget.summary.used, widget.summary.limit),
-                  style: Theme.of(context).textTheme.titleMedium,
+                  style: Theme.of(context).textTheme.headlineMedium,
                 ),
                 Text(
                   l10n.meterOutfits(m.outfits),
-                  style: Theme.of(context).textTheme.labelLarge,
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                    color: scheme.primary,
+                  ),
                 ),
               ],
             ),
