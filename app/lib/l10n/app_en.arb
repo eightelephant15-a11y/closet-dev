@@ -739,6 +739,19 @@
   "ageEyebrow": "Age check",
   "ageNote": "We only record that you confirmed it, not your birth date.",
   "ageBadge": "16+",
+  "quizPercent": "{percent}% done",
+  "@quizPercent": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "dressCodeDesc0": "Loungewear, relaxed tees, soft fleece",
+  "dressCodeDesc1": "Quality denim, chore jackets, casual shirting",
+  "dressCodeDesc2": "Tailored trousers, unconstructed blazers, loafers",
+  "dressCodeDesc3": "Crisp button-downs, formal suiting, structured leather",
+  "dressCodeDesc4": "Black tie, bespoke tailoring, evening attire",
   "taxCatTop": "Top",
   "taxSubTShirt": "T-shirt",
   "taxSubLongSleeveTee": "Long-sleeve tee",

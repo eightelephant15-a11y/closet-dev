@@ -1368,6 +1368,28 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ageBadge => '16+';
 
   @override
+  String quizPercent(int percent) {
+    return '$percent% done';
+  }
+
+  @override
+  String get dressCodeDesc0 => 'Loungewear, relaxed tees, soft fleece';
+
+  @override
+  String get dressCodeDesc1 => 'Quality denim, chore jackets, casual shirting';
+
+  @override
+  String get dressCodeDesc2 =>
+      'Tailored trousers, unconstructed blazers, loafers';
+
+  @override
+  String get dressCodeDesc3 =>
+      'Crisp button-downs, formal suiting, structured leather';
+
+  @override
+  String get dressCodeDesc4 => 'Black tie, bespoke tailoring, evening attire';
+
+  @override
   String get taxCatTop => 'Top';
 
   @override

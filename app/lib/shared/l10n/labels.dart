@@ -35,6 +35,14 @@ extension QuizLabels on AppLocalizations {
     _ => dressCode4,
   };
 
+  String dressCodeDescription(int level) => switch (level) {
+    0 => dressCodeDesc0,
+    1 => dressCodeDesc1,
+    2 => dressCodeDesc2,
+    3 => dressCodeDesc3,
+    _ => dressCodeDesc4,
+  };
+
   String goal(Goal g) => switch (g) {
     Goal.work => goalWork,
     Goal.dates => goalDates,

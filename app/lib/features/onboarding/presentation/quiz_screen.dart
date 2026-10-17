@@ -79,19 +79,31 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
       body: PageBody(
         child: Column(
           children: [
-            Semantics(
-              label: l10n.quizProgress(index + 1, total),
-              child: LinearProgressIndicator(
-                value: (index + 1) / total,
-                minHeight: 6,
-              ),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    l10n.quizProgress(index + 1, total),
+                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                ),
+                Text(
+                  l10n.quizPercent((index + 1) * 100 ~/ total),
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ],
             ),
             const SizedBox(height: Spacing.sm),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                l10n.quizProgress(index + 1, total),
-                style: Theme.of(context).textTheme.labelLarge,
+            Semantics(
+              label: l10n.quizProgress(index + 1, total),
+              child: ExcludeSemantics(
+                child: LinearProgressIndicator(
+                  value: (index + 1) / total,
+                  minHeight: 4,
+                  borderRadius: BorderRadius.circular(2),
+                ),
               ),
             ),
             const SizedBox(height: Spacing.md),
@@ -113,17 +125,30 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
             const SizedBox(height: Spacing.md),
             Row(
               children: [
-                if (index > 0)
-                  TextButton(
+                if (index > 0) ...[
+                  OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      backgroundColor: Theme.of(
+                        context,
+                      ).colorScheme.surfaceContainerLowest,
+                    ),
                     onPressed: () => _goTo(index - 1),
                     child: Text(l10n.back),
                   ),
-                const Spacer(),
-                FilledButton(
-                  onPressed: answers.isAnswered(q)
-                      ? (isLast ? _ctl.completeQuiz : () => _goTo(index + 1))
-                      : null,
-                  child: Text(isLast ? l10n.quizFinish : l10n.next),
+                  const SizedBox(width: Spacing.sm),
+                ],
+                Expanded(
+                  child: SizedBox(
+                    height: 52,
+                    child: FilledButton(
+                      onPressed: answers.isAnswered(q)
+                          ? (isLast
+                                ? _ctl.completeQuiz
+                                : () => _goTo(index + 1))
+                          : null,
+                      child: Text(isLast ? l10n.quizFinish : l10n.next),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -159,35 +184,32 @@ class _QuizCard extends StatelessWidget {
       QuizQuestion.dressCode => l10n.quizDressCodeHint,
       _ => null,
     };
-    return Card(
-      margin: EdgeInsets.zero,
-      elevation: 0,
-      color: Theme.of(context).colorScheme.surface,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(RadiusTokens.lg),
-        side: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
-      ),
-      child: ListView(
-        padding: const EdgeInsets.all(Spacing.md),
-        children: [
-          Semantics(
-            header: true,
-            child: Text(
-              l10n.question(question),
-              style: Theme.of(context).textTheme.titleLarge,
+    final text = Theme.of(context).textTheme;
+    return ListView(
+      padding: EdgeInsets.zero,
+      children: [
+        Semantics(
+          header: true,
+          child: Text(l10n.question(question), style: text.headlineMedium),
+        ),
+        if (hint != null) ...[
+          const SizedBox(height: Spacing.xs),
+          Text(
+            hint,
+            style: text.bodyMedium?.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
-          if (hint != null) ...[
-            const SizedBox(height: Spacing.xs),
-            Text(hint, style: Theme.of(context).textTheme.bodyMedium),
-          ],
-          const SizedBox(height: Spacing.md),
+        ],
+        const SizedBox(height: Spacing.md),
+        if (question == QuizQuestion.colors)
+          _TwoColumns(children: _options(context, l10n))
+        else
           ..._options(
             context,
             l10n,
           ).expand((w) => [w, const SizedBox(height: Spacing.sm)]),
-        ],
-      ),
+      ],
     );
   }
 
@@ -261,6 +283,7 @@ class _QuizCard extends StatelessWidget {
           for (var i = 0; i < dressCodeLevels; i++)
             SelectableTile(
               label: l10n.dressCode(i),
+              subtitle: l10n.dressCodeDescription(i),
               selected: answers.dressCode == i,
               onTap: () => onAnswer(
                 question,
@@ -323,4 +346,44 @@ class _Swatch extends StatelessWidget {
       ),
     ),
   );
+}
+
+/// Two equal columns that stack tiles of the same row at the same height; one column at large text.
+class _TwoColumns extends StatelessWidget {
+  const _TwoColumns({required this.children});
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    final narrow = MediaQuery.textScalerOf(context).scale(1) > 1.3;
+    if (narrow) {
+      return Column(
+        children: [
+          for (final c in children) ...[c, const SizedBox(height: Spacing.sm)],
+        ],
+      );
+    }
+    final rows = <Widget>[];
+    for (var i = 0; i < children.length; i += 2) {
+      rows
+        ..add(
+          IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(child: children[i]),
+                const SizedBox(width: Spacing.sm),
+                Expanded(
+                  child: i + 1 < children.length
+                      ? children[i + 1]
+                      : const SizedBox.shrink(),
+                ),
+              ],
+            ),
+          ),
+        )
+        ..add(const SizedBox(height: Spacing.sm));
+    }
+    return Column(children: rows);
+  }
 }

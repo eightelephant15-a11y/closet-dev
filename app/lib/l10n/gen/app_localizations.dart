@@ -2452,6 +2452,42 @@ abstract class AppLocalizations {
   /// **'16+'**
   String get ageBadge;
 
+  /// No description provided for @quizPercent.
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% done'**
+  String quizPercent(int percent);
+
+  /// No description provided for @dressCodeDesc0.
+  ///
+  /// In en, this message translates to:
+  /// **'Loungewear, relaxed tees, soft fleece'**
+  String get dressCodeDesc0;
+
+  /// No description provided for @dressCodeDesc1.
+  ///
+  /// In en, this message translates to:
+  /// **'Quality denim, chore jackets, casual shirting'**
+  String get dressCodeDesc1;
+
+  /// No description provided for @dressCodeDesc2.
+  ///
+  /// In en, this message translates to:
+  /// **'Tailored trousers, unconstructed blazers, loafers'**
+  String get dressCodeDesc2;
+
+  /// No description provided for @dressCodeDesc3.
+  ///
+  /// In en, this message translates to:
+  /// **'Crisp button-downs, formal suiting, structured leather'**
+  String get dressCodeDesc3;
+
+  /// No description provided for @dressCodeDesc4.
+  ///
+  /// In en, this message translates to:
+  /// **'Black tie, bespoke tailoring, evening attire'**
+  String get dressCodeDesc4;
+
   /// No description provided for @taxCatTop.
   ///
   /// In en, this message translates to:
