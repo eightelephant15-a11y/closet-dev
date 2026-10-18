@@ -1672,6 +1672,9 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get basicsEyebrow => 'Optional';
+
+  @override
   String get taxCatTop => 'Top';
 
   @override

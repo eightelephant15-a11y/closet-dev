@@ -2944,6 +2944,12 @@ abstract class AppLocalizations {
   /// **'{n} active'**
   String filterActiveCount(int n);
 
+  /// No description provided for @basicsEyebrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional'**
+  String get basicsEyebrow;
+
   /// No description provided for @taxCatTop.
   ///
   /// In en, this message translates to:

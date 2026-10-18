@@ -910,6 +910,7 @@
       }
     }
   },
+  "basicsEyebrow": "Optional",
   "taxCatTop": "Top",
   "taxSubTShirt": "T-shirt",
   "taxSubLongSleeveTee": "Long-sleeve tee",

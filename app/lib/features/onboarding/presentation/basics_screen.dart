@@ -7,6 +7,7 @@ import 'package:stylist/features/auth/application/session_controller.dart';
 import 'package:stylist/features/auth/domain/app_user.dart';
 import 'package:stylist/features/onboarding/application/onboarding_controller.dart';
 import 'package:stylist/l10n/gen/app_localizations.dart';
+import 'package:stylist/shared/widgets/atelier.dart';
 import 'package:stylist/theme/tokens.dart';
 
 class BasicsScreen extends ConsumerStatefulWidget {
@@ -83,7 +84,6 @@ class _BasicsScreenState extends ConsumerState<BasicsScreen> {
     final textTheme = Theme.of(context).textTheme;
     return Scaffold(
       appBar: AppBar(
-        title: Text(l10n.basicsTitle),
         automaticallyImplyLeading: false,
         actions: [TextButton(onPressed: _submit, child: Text(l10n.skip))],
       ),
@@ -94,13 +94,32 @@ class _BasicsScreenState extends ConsumerState<BasicsScreen> {
             child: ListView(
               padding: const EdgeInsets.all(Spacing.lg),
               children: [
-                Text(l10n.basicsBody, style: textTheme.bodyLarge),
+                Eyebrow(l10n.basicsEyebrow),
+                const SizedBox(height: Spacing.xs),
+                Semantics(
+                  header: true,
+                  child: Text(l10n.basicsTitle, style: textTheme.headlineLarge),
+                ),
+                const SizedBox(height: Spacing.sm),
+                Text(
+                  l10n.basicsBody,
+                  style: textTheme.bodyLarge?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                ),
                 const SizedBox(height: Spacing.lg),
                 TextField(
                   controller: _name,
                   textCapitalization: TextCapitalization.words,
                   textInputAction: TextInputAction.next,
                   maxLength: 100,
+                  buildCounter:
+                      (
+                        _, {
+                        required currentLength,
+                        required isFocused,
+                        maxLength,
+                      }) => null,
                   autofillHints: const [AutofillHints.givenName],
                   decoration: InputDecoration(labelText: l10n.basicsNameLabel),
                 ),
@@ -108,6 +127,7 @@ class _BasicsScreenState extends ConsumerState<BasicsScreen> {
                 Text(l10n.basicsUnitsLabel, style: textTheme.labelLarge),
                 const SizedBox(height: Spacing.sm),
                 SegmentedButton<Units>(
+                  showSelectedIcon: false,
                   segments: [
                     ButtonSegment(
                       value: Units.imperial,
@@ -129,9 +149,12 @@ class _BasicsScreenState extends ConsumerState<BasicsScreen> {
                   decoration: InputDecoration(
                     labelText: l10n.basicsCityLabel,
                     hintText: l10n.basicsCityHint,
-                    helperText: l10n.basicsCityPrivacy,
-                    helperMaxLines: 3,
                   ),
+                ),
+                const SizedBox(height: Spacing.sm),
+                NoteCard(
+                  icon: Icons.lock_outline,
+                  child: Text(l10n.basicsCityPrivacy),
                 ),
                 for (final s in _suggestions)
                   ListTile(
@@ -149,9 +172,12 @@ class _BasicsScreenState extends ConsumerState<BasicsScreen> {
                     ),
                   ),
                 const SizedBox(height: Spacing.xl),
-                FilledButton(
-                  onPressed: _submit,
-                  child: Text(l10n.continueLabel),
+                SizedBox(
+                  height: 52,
+                  child: FilledButton(
+                    onPressed: _submit,
+                    child: Text(l10n.continueLabel),
+                  ),
                 ),
               ],
             ),
