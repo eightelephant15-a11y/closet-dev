@@ -901,6 +901,15 @@
   "closetTip1": "Lay the garment flat or hang it against a clear wall.",
   "closetTip2": "We read the type, colours, pattern and season.",
   "closetTip3": "Fix anything with a single tap.",
+  "filterEyebrow": "Refine your closet",
+  "filterActiveCount": "{n} active",
+  "@filterActiveCount": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
   "taxCatTop": "Top",
   "taxSubTShirt": "T-shirt",
   "taxSubLongSleeveTee": "Long-sleeve tee",

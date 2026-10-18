@@ -2932,6 +2932,18 @@ abstract class AppLocalizations {
   /// **'Fix anything with a single tap.'**
   String get closetTip3;
 
+  /// No description provided for @filterEyebrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Refine your closet'**
+  String get filterEyebrow;
+
+  /// No description provided for @filterActiveCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{n} active'**
+  String filterActiveCount(int n);
+
   /// No description provided for @taxCatTop.
   ///
   /// In en, this message translates to:

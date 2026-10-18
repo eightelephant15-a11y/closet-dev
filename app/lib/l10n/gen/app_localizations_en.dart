@@ -1664,6 +1664,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get closetTip3 => 'Fix anything with a single tap.';
 
   @override
+  String get filterEyebrow => 'Refine your closet';
+
+  @override
+  String filterActiveCount(int n) {
+    return '$n active';
+  }
+
+  @override
   String get taxCatTop => 'Top';
 
   @override

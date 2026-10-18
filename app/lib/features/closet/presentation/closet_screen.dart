@@ -707,16 +707,35 @@ class FilterSheet extends ConsumerWidget {
             Spacing.md,
           ),
           children: [
-            Semantics(
-              header: true,
-              child: Text(
-                l10n.closetFilters,
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Eyebrow(l10n.filterEyebrow),
+                      Semantics(
+                        header: true,
+                        child: Text(
+                          l10n.closetFilters,
+                          style: Theme.of(context).textTheme.headlineMedium,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                IconButton(
+                  tooltip: l10n.close,
+                  icon: const Icon(Icons.close),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
             ),
             const SizedBox(height: Spacing.md),
             FieldSection(
               title: l10n.filterColour,
+              caption: q.color == null ? null : l10n.filterActiveCount(1),
               children: [
                 OptionChip(
                   label: l10n.filterAll,
@@ -734,6 +753,7 @@ class FilterSheet extends ConsumerWidget {
             ),
             FieldSection(
               title: l10n.filterSeason,
+              caption: q.season == null ? null : l10n.filterActiveCount(1),
               children: [
                 OptionChip(
                   label: l10n.filterAll,
